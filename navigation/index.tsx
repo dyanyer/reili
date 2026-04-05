@@ -1,27 +1,30 @@
-import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as Notifications from 'expo-notifications';
-import { supabase } from '../lib/supabase';
-import { PageProvider } from '../context/PageContext';
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Notifications from "expo-notifications";
+import { supabase } from "../lib/supabase";
+import { PageProvider } from "../context/PageContext";
 
-import WelcomeScreen from '../screens/WelcomeScreen';
-import OTPVerifyScreen from '../screens/OTPVerifyScreen';
-import DashboardScreen from '../screens/DashboardScreen';
-import TriggersScreen from '../screens/TriggersScreen';
-import CreateTriggerScreen from '../screens/CreateTriggerScreen';
-import ConversationsScreen from '../screens/ConversationsScreen';
-import ConversationThreadScreen from '../screens/ConversationThreadScreen';
-import PageSettingsScreen from '../screens/PageSettingsScreen';
-import OrdersScreen from '../screens/OrdersScreen';
-import AnalyticsScreen from '../screens/AnalyticsScreen';
-import BroadcastScreen from '../screens/BroadcastScreen';
-import ConnectPageScreen from '../screens/ConnectPageScreen';
-import MoreScreen from '../screens/MoreScreen';
+import WelcomeScreen from "../screens/WelcomeScreen";
+import OTPVerifyScreen from "../screens/OTPVerifyScreen";
+import DashboardScreen from "../screens/DashboardScreen";
+import TriggersScreen from "../screens/TriggersScreen";
+import CreateTriggerScreen from "../screens/CreateTriggerScreen";
+import ConversationsScreen from "../screens/ConversationsScreen";
+import ConversationThreadScreen from "../screens/ConversationThreadScreen";
+import PageSettingsScreen from "../screens/PageSettingsScreen";
+import OrdersScreen from "../screens/OrdersScreen";
+import AnalyticsScreen from "../screens/AnalyticsScreen";
+import BroadcastScreen from "../screens/BroadcastScreen";
+import ConnectPageScreen from "../screens/ConnectPageScreen";
+import MoreScreen from "../screens/MoreScreen";
 
 // ─── Param lists ────────────────────────────────────────────────────────────
 
@@ -79,7 +82,10 @@ function ChatsNavigator() {
   return (
     <ChatsStack.Navigator screenOptions={{ headerShown: false }}>
       <ChatsStack.Screen name="Conversations" component={ConversationsScreen} />
-      <ChatsStack.Screen name="ConversationThread" component={ConversationThreadScreen} />
+      <ChatsStack.Screen
+        name="ConversationThread"
+        component={ConversationThreadScreen}
+      />
     </ChatsStack.Navigator>
   );
 }
@@ -110,11 +116,26 @@ function MoreNavigator() {
 
 // ─── Custom Tab Bar ──────────────────────────────────────────────────────────
 
-const TAB_CONFIG: Record<string, { label: string; icon: string; activeIcon: string }> = {
-  HomeTab:   { label: 'Home',   icon: 'home-outline',        activeIcon: 'home' },
-  ChatsTab:  { label: 'Chats',  icon: 'chatbubbles-outline', activeIcon: 'chatbubbles' },
-  OrdersTab: { label: 'Orders', icon: 'bag-outline',         activeIcon: 'bag' },
-  MoreTab:   { label: 'More',   icon: 'grid-outline',        activeIcon: 'grid' },
+const TAB_CONFIG: Record<
+  string,
+  { label: string; icon: string; activeIcon: string }
+> = {
+  HomeTab: { label: "Home", icon: "home-outline", activeIcon: "home" },
+  ChatsTab: {
+    label: "Chats",
+    icon: "chatbubbles-outline",
+    activeIcon: "chatbubbles",
+  },
+  OrdersTab: { label: "Orders", icon: "bag-outline", activeIcon: "bag" },
+  MoreTab: { label: "More", icon: "grid-outline", activeIcon: "grid" },
+};
+
+const C = {
+  white:  '#FFFFFF',
+  navy:   '#163172',
+  text3:  'rgba(22,49,114,0.40)',
+  border: 'rgba(22,49,114,0.10)',
+  bg:     '#F6F6F6',
 };
 
 function CustomTabBar({ state, navigation }: any) {
@@ -124,31 +145,38 @@ function CustomTabBar({ state, navigation }: any) {
   const activeTab = state.routes[state.index];
   const nestedState = activeTab?.state;
   const nestedRouteName = nestedState?.routes?.[nestedState?.index ?? 0]?.name;
-  if (nestedRouteName === 'ConversationThread') {
-    return <View style={{ height: insets.bottom, backgroundColor: '#fff' }} />;
+  if (nestedRouteName === "ConversationThread") {
+    return (
+      <View style={{ height: insets.bottom, backgroundColor: C.white }} />
+    );
   }
 
   return (
-    // Outer shell — matches screen background to create "floating" illusion
-    <View style={{
-      backgroundColor: '#F6F6F6',
-      paddingHorizontal: 16,
-      paddingTop: 10,
-      paddingBottom: Math.max(insets.bottom, 12),
-    }}>
-      {/* White floating card */}
-      <View style={{
-        flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 28,
-        paddingVertical: 6,
-        paddingHorizontal: 6,
-        shadowColor: '#163172',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.12,
-        shadowRadius: 20,
-        elevation: 12,
-      }}>
+    <View
+      style={{
+        backgroundColor: C.white,
+        paddingHorizontal: 16,
+        paddingTop: 10,
+        paddingBottom: Math.max(insets.bottom, 12),
+        borderTopWidth: 1,
+        borderTopColor: C.border,
+        shadowColor: C.navy,
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+        elevation: 8,
+      }}
+    >
+      {/* Pill container */}
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: C.white,
+          borderRadius: 28,
+          paddingVertical: 6,
+          paddingHorizontal: 6,
+        }}
+      >
         {state.routes.map((route: any, index: number) => {
           const focused = state.index === index;
           const cfg = TAB_CONFIG[route.name];
@@ -157,29 +185,58 @@ function CustomTabBar({ state, navigation }: any) {
               key={route.key}
               onPress={() => navigation.navigate(route.name)}
               activeOpacity={0.7}
-              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               {focused ? (
-                // Active: navy rounded rect with cyan icon + white label
-                <View style={{
-                  backgroundColor: '#163172',
-                  borderRadius: 22,
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  alignItems: 'center',
-                  gap: 3,
-                  minWidth: 64,
-                }}>
-                  <Ionicons name={cfg.activeIcon as any} size={20} color="#D6E4F0" />
-                  <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '700', letterSpacing: 0.2 }}>
+                // Active: navy solid pill, white icon + text
+                <View
+                  style={{
+                    backgroundColor: C.navy,
+                    borderRadius: 22,
+                    paddingHorizontal: 12,
+                    paddingVertical: 10,
+                    alignItems: "center",
+                    gap: 3,
+                    minWidth: 64,
+                  }}
+                >
+                  <Ionicons
+                    name={cfg.activeIcon as any}
+                    size={20}
+                    color={C.white}
+                  />
+                  <Text
+                    style={{
+                      color: C.white,
+                      fontSize: 10,
+                      fontWeight: "700",
+                      letterSpacing: 0.2,
+                    }}
+                  >
                     {cfg.label}
                   </Text>
                 </View>
               ) : (
-                // Inactive: just icon + label, muted gray
-                <View style={{ alignItems: 'center', gap: 3, paddingVertical: 10 }}>
-                  <Ionicons name={cfg.icon as any} size={20} color="#B0B3B8" />
-                  <Text style={{ color: '#B0B3B8', fontSize: 10, fontWeight: '500' }}>
+                // Inactive: no bg, muted navy
+                <View
+                  style={{ alignItems: "center", gap: 3, paddingVertical: 10 }}
+                >
+                  <Ionicons
+                    name={cfg.icon as any}
+                    size={20}
+                    color={C.text3}
+                  />
+                  <Text
+                    style={{
+                      color: C.text3,
+                      fontSize: 10,
+                      fontWeight: "500",
+                    }}
+                  >
                     {cfg.label}
                   </Text>
                 </View>
@@ -202,10 +259,10 @@ function MainTabs() {
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <Tab.Screen name="HomeTab"   component={HomeNavigator} />
-      <Tab.Screen name="ChatsTab"  component={ChatsNavigator} />
+      <Tab.Screen name="HomeTab" component={HomeNavigator} />
+      <Tab.Screen name="ChatsTab" component={ChatsNavigator} />
       <Tab.Screen name="OrdersTab" component={OrdersNavigator} />
-      <Tab.Screen name="MoreTab"   component={MoreNavigator} />
+      <Tab.Screen name="MoreTab" component={MoreNavigator} />
     </Tab.Navigator>
   );
 }
@@ -216,36 +273,40 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export default function Navigation() {
-  const [initialRoute, setInitialRoute] = useState<'Welcome' | 'Main'>('Welcome');
+  const [initialRoute, setInitialRoute] = useState<"Welcome" | "Main">(
+    "Welcome",
+  );
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setInitialRoute(session ? 'Main' : 'Welcome');
+      setInitialRoute(session ? "Main" : "Welcome");
       setReady(true);
     });
   }, []);
 
   useEffect(() => {
-    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data as {
-        conversationId?: string;
-        customerName?: string;
-      };
-      if (data?.conversationId && navigationRef.isReady()) {
-        // Navigate into ChatsTab → ConversationThread
-        (navigationRef as any).navigate('Main', {
-          screen: 'ChatsTab',
-          params: {
-            screen: 'ConversationThread',
+    const sub = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const data = response.notification.request.content.data as {
+          conversationId?: string;
+          customerName?: string;
+        };
+        if (data?.conversationId && navigationRef.isReady()) {
+          // Navigate into ChatsTab → ConversationThread
+          (navigationRef as any).navigate("Main", {
+            screen: "ChatsTab",
             params: {
-              conversationId: data.conversationId,
-              customerName: data.customerName ?? 'Customer',
+              screen: "ConversationThread",
+              params: {
+                conversationId: data.conversationId,
+                customerName: data.customerName ?? "Customer",
+              },
             },
-          },
-        });
-      }
-    });
+          });
+        }
+      },
+    );
     return () => sub.remove();
   }, []);
 
@@ -254,7 +315,10 @@ export default function Navigation() {
   return (
     <PageProvider>
       <NavigationContainer ref={navigationRef}>
-        <RootStack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+        <RootStack.Navigator
+          initialRouteName={initialRoute}
+          screenOptions={{ headerShown: false }}
+        >
           <RootStack.Screen name="Welcome" component={WelcomeScreen} />
           <RootStack.Screen name="OTPVerify" component={OTPVerifyScreen} />
           <RootStack.Screen name="Main" component={MainTabs} />

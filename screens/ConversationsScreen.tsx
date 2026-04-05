@@ -1,12 +1,6 @@
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  TextInput,
-  ActivityIndicator,
-  RefreshControl,
-  Alert,
+  View, Text, TouchableOpacity, FlatList, TextInput,
+  ActivityIndicator, RefreshControl, Alert,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,19 +27,35 @@ type Conversation = {
 const FILTERS = ['All', 'Unread', 'Pinned', 'Archived'] as const;
 type Filter = typeof FILTERS[number];
 
-// Color palette for avatars based on name initial
+const C = {
+  bg:       '#F6F6F6',
+  white:    '#FFFFFF',
+  light:    '#D6E4F0',
+  blue:     '#1E56A0',
+  navy:     '#163172',
+  navyFade: 'rgba(22,49,114,0.08)',
+  navyMid:  'rgba(22,49,114,0.18)',
+  text:     '#163172',
+  text2:    '#1E56A0',
+  text3:    'rgba(22,49,114,0.40)',
+  border:   'rgba(22,49,114,0.10)',
+  green:    '#16A34A',
+  greenBg:  'rgba(22,163,74,0.10)',
+  red:      '#DC2626',
+  redBg:    'rgba(220,38,38,0.09)',
+};
+
 const AVATAR_COLORS = [
-  { bg: '#D6E4F0', text: '#163172' },
-  { bg: '#D1FAE5', text: '#065F46' },
-  { bg: '#FEF3C7', text: '#92400E' },
-  { bg: '#F3E8FF', text: '#5B21B6' },
-  { bg: '#FFE4E6', text: '#9F1239' },
-  { bg: '#DBEAFE', text: '#1E40AF' },
+  { bg: 'rgba(30,86,160,0.12)',  text: '#1E56A0' },
+  { bg: 'rgba(22,49,114,0.12)',  text: '#163172' },
+  { bg: 'rgba(22,49,114,0.18)',  text: '#163172' },
+  { bg: 'rgba(30,86,160,0.18)',  text: '#1E56A0' },
+  { bg: 'rgba(214,228,240,0.8)', text: '#163172' },
+  { bg: 'rgba(22,49,114,0.10)',  text: '#1E56A0' },
 ];
 
 function getAvatarColor(name: string) {
-  const index = name.charCodeAt(0) % AVATAR_COLORS.length;
-  return AVATAR_COLORS[index];
+  return AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
 }
 
 function timeAgo(dateStr: string) {
@@ -65,7 +75,6 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   const [pageId, setPageId] = useState(route.params?.pageId ?? activePage?.id ?? '');
   const [pageName, setPageName] = useState(route.params?.pageName ?? activePage?.name ?? '');
 
-  // Sync when active page changes from MoreScreen switcher
   useEffect(() => {
     if (activePage && activePage.id !== pageId) {
       setPageId(activePage.id);
@@ -94,11 +103,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
     }
   }, [pageId, activeFilter]);
 
-  async function onRefresh() {
-    setRefreshing(true);
-    await loadConversations();
-    setRefreshing(false);
-  }
+  async function onRefresh() { setRefreshing(true); await loadConversations(); setRefreshing(false); }
 
   useEffect(() => {
     setLoading(true);
@@ -109,20 +114,14 @@ export default function ConversationsScreen({ route, navigation }: Props) {
 
   async function handleTogglePin(convo: Conversation) {
     setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_pinned: !c.is_pinned } : c));
-    try {
-      await conversationsApi.togglePin(convo.id);
-    } catch {
-      setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_pinned: convo.is_pinned } : c));
-    }
+    try { await conversationsApi.togglePin(convo.id); }
+    catch { setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_pinned: convo.is_pinned } : c)); }
   }
 
   async function handleToggleArchive(convo: Conversation) {
     setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_archived: !c.is_archived } : c));
-    try {
-      await conversationsApi.toggleArchive(convo.id);
-    } catch {
-      setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_archived: convo.is_archived } : c));
-    }
+    try { await conversationsApi.toggleArchive(convo.id); }
+    catch { setConversations((prev) => prev.map((c) => c.id === convo.id ? { ...c, is_archived: convo.is_archived } : c)); }
   }
 
   const nonArchived = conversations.filter((c) => !c.is_archived);
@@ -146,20 +145,19 @@ export default function ConversationsScreen({ route, navigation }: Props) {
       return 0;
     });
 
-  // No page selected state
   if (!pageId) {
     return (
-      <View className="flex-1 bg-[#F6F6F6]">
+      <View style={{ flex: 1, backgroundColor: C.bg }}>
         <StatusBar style="dark" />
-        <View className="bg-white pt-14 pb-4 px-4 border-b border-[#E4E6EB]">
-          <Text className="text-[#1C1E21] text-xl font-bold">Chats</Text>
+        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Chats</Text>
         </View>
-        <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
-            <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="chatbubbles-outline" size={36} color={C.navy} />
           </View>
-          <Text className="text-[#1C1E21] font-bold text-base">No page selected</Text>
-          <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No page selected</Text>
+          <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
             Go to Home and tap a page to start viewing conversations.
           </Text>
         </View>
@@ -168,44 +166,44 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F6F6F6]">
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="bg-white pt-14 pb-3 px-4 border-b border-[#E4E6EB]">
-        <View className="flex-row items-center justify-between mb-3">
-          <Text className="text-[#1C1E21] text-xl font-bold">Chats</Text>
-          <View className="flex-row items-center">
+      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Chats</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <PageSwitcherPill
               currentPageId={pageId}
               currentPageName={pageName}
               onSwitch={(id, name) => { setPageId(id); setPageName(name); }}
             />
-            <TouchableOpacity onPress={loadConversations} className="p-2">
-              <Ionicons name="refresh-outline" size={20} color="#65676B" />
+            <TouchableOpacity onPress={loadConversations} style={{ padding: 8 }}>
+              <Ionicons name="refresh-outline" size={19} color={C.text2} />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Search */}
-        <View className="flex-row items-center bg-[#F6F6F6] rounded-xl px-3 gap-2 mb-3">
-          <Ionicons name="search" size={15} color="#65676B" />
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: C.white, borderRadius: 12, paddingHorizontal: 12, gap: 8, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+          <Ionicons name="search" size={14} color={C.text3} />
           <TextInput
-            className="flex-1 py-2.5 text-[#1C1E21] text-sm"
+            style={{ flex: 1, paddingVertical: 10, color: C.text, fontSize: 14 }}
             placeholder="Search conversations..."
-            placeholderTextColor="#65676B"
+            placeholderTextColor={C.text3}
             value={search}
             onChangeText={setSearch}
           />
           {search.length > 0 && (
             <TouchableOpacity onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={16} color="#65676B" />
+              <Ionicons name="close-circle" size={16} color={C.text3} />
             </TouchableOpacity>
           )}
         </View>
 
         {/* Filter pills */}
-        <View className="flex-row gap-2">
+        <View style={{ flexDirection: 'row', gap: 8 }}>
           {FILTERS.map((f) => {
             const isActive = activeFilter === f;
             const badge = f === 'Unread' ? unreadCount : 0;
@@ -213,12 +211,18 @@ export default function ConversationsScreen({ route, navigation }: Props) {
               <TouchableOpacity
                 key={f}
                 onPress={() => setActiveFilter(f)}
-                className={`flex-row items-center gap-1 px-3 py-1.5 rounded-full ${isActive ? 'bg-navy' : 'bg-[#E4E6EB]'}`}
+                style={{
+                  flexDirection: 'row', alignItems: 'center', gap: 5,
+                  paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99,
+                  backgroundColor: isActive ? C.navy : C.light,
+                  borderWidth: 1,
+                  borderColor: isActive ? C.navy : C.border,
+                }}
               >
-                <Text className={`text-xs font-semibold ${isActive ? 'text-white' : 'text-[#65676B]'}`}>{f}</Text>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: isActive ? C.white : C.navy }}>{f}</Text>
                 {badge > 0 && (
-                  <View className="bg-[#D6E4F0] rounded-full w-4 h-4 items-center justify-center">
-                    <Text className="text-[#163172] text-xs font-bold" style={{ fontSize: 9 }}>{badge}</Text>
+                  <View style={{ backgroundColor: C.blue, borderRadius: 99, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: '#fff', fontSize: 9, fontWeight: '800' }}>{badge}</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -228,36 +232,34 @@ export default function ConversationsScreen({ route, navigation }: Props) {
       </View>
 
       {loading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={C.navy} />
         </View>
       ) : error ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <Ionicons name="cloud-offline" size={48} color="#cbd5e1" />
-          <Text className="text-[#65676B] text-base mt-3 text-center">{error}</Text>
-          <TouchableOpacity className="mt-4 bg-navy rounded-xl px-6 py-3" onPress={loadConversations}>
-            <Text className="text-white font-semibold">Try Again</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <Ionicons name="cloud-offline" size={48} color={C.text3} />
+          <Text style={{ color: C.text2, fontSize: 15, marginTop: 12, textAlign: 'center' }}>{error}</Text>
+          <TouchableOpacity style={{ marginTop: 16, backgroundColor: C.navy, borderRadius: 14, paddingHorizontal: 24, paddingVertical: 12 }} onPress={loadConversations}>
+            <Text style={{ color: C.white, fontWeight: '700' }}>Try Again</Text>
           </TouchableOpacity>
         </View>
       ) : filtered.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
-            <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="chatbubbles-outline" size={36} color={C.navy} />
           </View>
-          <Text className="text-[#1C1E21] font-bold text-base">
-            {search ? 'No results found' : 'No conversations yet'}
-          </Text>
-          <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
-            {search ? 'Try a different search term' : 'When customers message your Facebook Page, they\'ll appear here.'}
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>{search ? 'No results found' : 'No conversations yet'}</Text>
+          <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
+            {search ? 'Try a different search term' : "When customers message your Facebook Page, they'll appear here."}
           </Text>
         </View>
       ) : (
         <FlatList
           data={filtered}
           keyExtractor={(c) => c.id}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.navy} />}
           contentContainerStyle={{ paddingBottom: 24 }}
-          ItemSeparatorComponent={() => <View className="h-px bg-[#E4E6EB] ml-20" />}
+          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: C.border, marginLeft: 80 }} />}
           renderItem={({ item: c }) => {
             const displayName = c.customer_name ?? `User ${c.customer_facebook_id.slice(-4)}`;
             const initials = displayName.slice(0, 2).toUpperCase();
@@ -266,11 +268,8 @@ export default function ConversationsScreen({ route, navigation }: Props) {
 
             return (
               <TouchableOpacity
-                className="bg-white flex-row items-center px-4 py-3"
-                onPress={() => navigation.navigate('ConversationThread', {
-                  conversationId: c.id,
-                  customerName: displayName,
-                })}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: C.white }}
+                onPress={() => navigation.navigate('ConversationThread', { conversationId: c.id, customerName: displayName })}
                 onLongPress={() =>
                   Alert.alert(displayName, 'Choose an action', [
                     { text: 'Cancel', style: 'cancel' },
@@ -281,31 +280,23 @@ export default function ConversationsScreen({ route, navigation }: Props) {
                 activeOpacity={0.7}
               >
                 {/* Avatar */}
-                <View
-                  className="w-14 h-14 rounded-full items-center justify-center mr-3 flex-shrink-0"
-                  style={{ backgroundColor: avatarColor.bg }}
-                >
-                  <Text className="text-base font-bold" style={{ color: avatarColor.text }}>{initials}</Text>
+                <View style={{ width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginRight: 12, flexShrink: 0, backgroundColor: avatarColor.bg, borderWidth: 1, borderColor: C.border }}>
+                  <Text style={{ fontSize: 14, fontWeight: '800', color: avatarColor.text }}>{initials}</Text>
                 </View>
 
                 {/* Content */}
-                <View className="flex-1 min-w-0">
-                  <View className="flex-row items-center justify-between mb-0.5">
-                    <View className="flex-row items-center gap-1 flex-1 mr-2">
-                      {c.is_pinned && <Ionicons name="pin" size={11} color="#D6E4F0" />}
-                      <Text
-                        className="text-sm flex-1"
-                        style={{ color: '#1C1E21', fontWeight: hasUnread ? '700' : '500' }}
-                        numberOfLines={1}
-                      >
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, flex: 1, marginRight: 8 }}>
+                      {c.is_pinned && <Ionicons name="pin" size={10} color={C.blue} />}
+                      <Text style={{ fontSize: 14, flex: 1, color: C.text, fontWeight: hasUnread ? '800' : '600' }} numberOfLines={1}>
                         {displayName}
                       </Text>
                     </View>
-                    <Text className="text-xs text-[#65676B] flex-shrink-0">{timeAgo(c.last_message_at)}</Text>
+                    <Text style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{timeAgo(c.last_message_at)}</Text>
                   </View>
                   <Text
-                    className="text-sm leading-5"
-                    style={{ color: hasUnread ? '#1C1E21' : '#65676B', fontWeight: hasUnread ? '500' : '400' }}
+                    style={{ fontSize: 13, lineHeight: 18, color: hasUnread ? C.text2 : C.text3, fontWeight: hasUnread ? '500' : '400' }}
                     numberOfLines={1}
                   >
                     {c.last_message}
@@ -313,10 +304,8 @@ export default function ConversationsScreen({ route, navigation }: Props) {
                 </View>
 
                 {/* Unread dot */}
-                <View className="ml-2 flex-shrink-0 w-5 items-center">
-                  {hasUnread && (
-                    <View className="w-3 h-3 rounded-full bg-[#D6E4F0]" />
-                  )}
+                <View style={{ marginLeft: 8, flexShrink: 0, width: 20, alignItems: 'center' }}>
+                  {hasUnread && <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.blue }} />}
                 </View>
               </TouchableOpacity>
             );

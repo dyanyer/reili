@@ -5,51 +5,67 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { MoreStackParamList } from '../navigation';
 import { useActivePage } from '../context/PageContext';
 import { supabase } from '../lib/supabase';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import PageSwitcherPill from '../components/PageSwitcherPill';
 
 type Props = NativeStackScreenProps<MoreStackParamList, 'MoreHome'>;
 
+const C = {
+  bg:       '#F6F6F6',
+  white:    '#FFFFFF',
+  light:    '#D6E4F0',
+  blue:     '#1E56A0',
+  navy:     '#163172',
+  navyFade: 'rgba(22,49,114,0.08)',
+  navyMid:  'rgba(22,49,114,0.18)',
+  text:     '#163172',
+  text2:    '#1E56A0',
+  text3:    'rgba(22,49,114,0.40)',
+  border:   'rgba(22,49,114,0.10)',
+  green:    '#16A34A',
+  greenBg:  'rgba(22,163,74,0.10)',
+  red:      '#DC2626',
+  redBg:    'rgba(220,38,38,0.09)',
+};
+
 type MenuItemProps = {
   icon: string;
-  iconBg: string;
   iconColor: string;
+  iconBgColor: string;
   label: string;
   subtitle: string;
   onPress: () => void;
   danger?: boolean;
 };
 
-function MenuItem({ icon, iconBg, iconColor, label, subtitle, onPress, danger }: MenuItemProps) {
+function MenuItem({ icon, iconColor, iconBgColor, label, subtitle, onPress, danger }: MenuItemProps) {
   return (
     <TouchableOpacity
-      className="flex-row items-center px-4 py-3.5 bg-white"
+      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14 }}
       onPress={onPress}
       activeOpacity={0.6}
     >
-      <View className="w-10 h-10 rounded-xl items-center justify-center mr-3" style={{ backgroundColor: iconBg }}>
-        <Ionicons name={icon as any} size={20} color={iconColor} />
+      <View style={{ width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginRight: 13, backgroundColor: iconBgColor, borderWidth: 1, borderColor: `${iconColor}30` }}>
+        <Ionicons name={icon as any} size={19} color={iconColor} />
       </View>
-      <View className="flex-1">
-        <Text className={`text-sm font-semibold ${danger ? 'text-red-500' : 'text-[#1C1E21]'}`}>{label}</Text>
-        <Text className="text-xs text-[#65676B] mt-0.5">{subtitle}</Text>
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 14, fontWeight: '700', color: danger ? C.red : C.text }}>{label}</Text>
+        <Text style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{subtitle}</Text>
       </View>
-      {!danger && <Ionicons name="chevron-forward" size={16} color="#C5C5C7" />}
+      {!danger && <Ionicons name="chevron-forward" size={15} color={C.text3} />}
     </TouchableOpacity>
   );
 }
 
 function SectionHeader({ title }: { title: string }) {
   return (
-    <Text className="text-xs font-bold text-[#65676B] uppercase tracking-wider px-4 pt-5 pb-2">
+    <Text style={{ fontSize: 11, fontWeight: '800', color: C.text3, letterSpacing: 1, textTransform: 'uppercase', paddingHorizontal: 16, paddingTop: 20, paddingBottom: 8 }}>
       {title}
     </Text>
   );
 }
 
 function Divider() {
-  return <View className="h-px bg-[#E4E6EB] ml-16" />;
+  return <View style={{ height: 1, backgroundColor: C.border, marginLeft: 69 }} />;
 }
 
 export default function MoreScreen({ navigation }: Props) {
@@ -58,49 +74,36 @@ export default function MoreScreen({ navigation }: Props) {
   async function handleLogout() {
     Alert.alert('Log Out', 'Are you sure you want to log out?', [
       { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Log Out',
-        style: 'destructive',
-        onPress: async () => {
-          await supabase.auth.signOut();
-          setActivePage(null);
-        },
-      },
+      { text: 'Log Out', style: 'destructive', onPress: async () => { await supabase.auth.signOut(); setActivePage(null); } },
     ]);
   }
 
-  const noPage = !activePage;
-
   return (
-    <View className="flex-1 bg-[#F6F6F6]">
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="bg-white pt-14 pb-4 px-4 border-b border-[#E4E6EB]">
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center gap-3">
-            <Image
-              source={require('../assets/reili.png')}
-              style={{ width: 28, height: 28 }}
-              resizeMode="contain"
-            />
-            <Text className="text-[#1C1E21] text-xl font-bold">More</Text>
+      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
+            <Image source={require('../assets/reili.png')} style={{ width: 20, height: 20 }} resizeMode="contain" />
           </View>
+          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>More</Text>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
 
         {/* Active Page Card */}
-        <View className="mx-4 mt-4 bg-white rounded-2xl p-4" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
+        <View style={{ marginHorizontal: 16, marginTop: 16, backgroundColor: C.white, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: C.border }}>
           {activePage ? (
-            <View className="flex-row items-center">
-              <View className="w-10 h-10 rounded-xl bg-[#D6E4F0] items-center justify-center mr-3">
-                <Ionicons name="logo-facebook" size={20} color="#163172" />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                <Ionicons name="logo-facebook" size={20} color={C.blue} />
               </View>
-              <View className="flex-1">
-                <Text className="text-xs text-[#65676B] font-medium">Active Page</Text>
-                <Text className="text-sm font-semibold text-[#1C1E21] mt-0.5" numberOfLines={1}>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 11, color: C.text3, fontWeight: '600' }}>Active Page</Text>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: C.text, marginTop: 1 }} numberOfLines={1}>
                   {activePage.name}
                 </Text>
               </View>
@@ -111,13 +114,13 @@ export default function MoreScreen({ navigation }: Props) {
               />
             </View>
           ) : (
-            <View className="flex-row items-center">
-              <View className="w-10 h-10 rounded-xl bg-[#F6F6F6] items-center justify-center mr-3">
-                <Ionicons name="alert-circle-outline" size={20} color="#65676B" />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                <Ionicons name="alert-circle-outline" size={20} color={C.text3} />
               </View>
-              <View className="flex-1">
-                <Text className="text-sm font-semibold text-[#1C1E21]">No page selected</Text>
-                <Text className="text-xs text-[#65676B] mt-0.5">Go to Home and tap a page to activate it</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 14, fontWeight: '700', color: C.text }}>No page selected</Text>
+                <Text style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>Go to Home and tap a page to activate it</Text>
               </View>
             </View>
           )}
@@ -125,11 +128,11 @@ export default function MoreScreen({ navigation }: Props) {
 
         {/* Automation */}
         <SectionHeader title="Automation" />
-        <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
+        <View style={{ marginHorizontal: 16, backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}>
           <MenuItem
             icon="flash"
-            iconBg="#D6E4F0"
-            iconColor="#163172"
+            iconColor={C.blue}
+            iconBgColor={C.light}
             label="Triggers"
             subtitle="Manage keyword auto-replies"
             onPress={() => {
@@ -140,8 +143,8 @@ export default function MoreScreen({ navigation }: Props) {
           <Divider />
           <MenuItem
             icon="settings-outline"
-            iconBg="#F3E8FF"
-            iconColor="#7C3AED"
+            iconColor={C.navy}
+            iconBgColor={C.light}
             label="Bot Settings"
             subtitle="Default reply, welcome message, away mode"
             onPress={() => {
@@ -153,11 +156,11 @@ export default function MoreScreen({ navigation }: Props) {
 
         {/* Marketing */}
         <SectionHeader title="Marketing" />
-        <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
+        <View style={{ marginHorizontal: 16, backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}>
           <MenuItem
             icon="megaphone-outline"
-            iconBg="#FEF3C7"
-            iconColor="#D97706"
+            iconColor={C.navy}
+            iconBgColor={C.light}
             label="Broadcast"
             subtitle="Send messages to all your contacts"
             onPress={() => {
@@ -169,11 +172,11 @@ export default function MoreScreen({ navigation }: Props) {
 
         {/* Insights */}
         <SectionHeader title="Insights" />
-        <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
+        <View style={{ marginHorizontal: 16, backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}>
           <MenuItem
             icon="bar-chart-outline"
-            iconBg="#D1FAE5"
-            iconColor="#059669"
+            iconColor={C.green}
+            iconBgColor={C.greenBg}
             label="Analytics"
             subtitle="Messages, bot efficiency, weekly stats"
             onPress={() => {
@@ -185,11 +188,11 @@ export default function MoreScreen({ navigation }: Props) {
 
         {/* Account */}
         <SectionHeader title="Account" />
-        <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
+        <View style={{ marginHorizontal: 16, backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}>
           <MenuItem
             icon="add-circle-outline"
-            iconBg="#D6E4F0"
-            iconColor="#1E56A0"
+            iconColor={C.blue}
+            iconBgColor={C.light}
             label="Connect a Page"
             subtitle="Add another Facebook Page"
             onPress={() => navigation.navigate('ConnectPage')}
@@ -197,8 +200,8 @@ export default function MoreScreen({ navigation }: Props) {
           <Divider />
           <MenuItem
             icon="log-out-outline"
-            iconBg="#FEE2E2"
-            iconColor="#DC2626"
+            iconColor={C.red}
+            iconBgColor={C.redBg}
             label="Log Out"
             subtitle="Sign out of your account"
             onPress={handleLogout}
@@ -206,7 +209,6 @@ export default function MoreScreen({ navigation }: Props) {
           />
         </View>
 
-        <View className="h-10" />
       </ScrollView>
     </View>
   );

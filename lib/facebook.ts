@@ -1,10 +1,10 @@
-import * as WebBrowser from 'expo-web-browser';
+import * as WebBrowser from "expo-web-browser";
 
 // Ensure browser sessions are completed when redirected back
 WebBrowser.maybeCompleteAuthSession();
 
-const API_URL = 'https://botmate-api-production.up.railway.app';
-const APP_SCHEME = 'reili';
+const API_URL = "https://botmate-api-production.up.railway.app";
+const APP_SCHEME = "reili";
 
 /**
  * Open Facebook OAuth via the backend (backend-routed flow).
@@ -22,31 +22,31 @@ const APP_SCHEME = 'reili';
  * @returns The Facebook access token, or null if cancelled/failed
  */
 export async function facebookAuth(
-  mode: 'login' | 'connect-pages' = 'login',
+  mode: "login" | "connect-pages" = "login",
   userId?: string,
 ): Promise<string | null> {
   const params = new URLSearchParams({ mode });
-  if (userId) params.set('user_id', userId);
+  if (userId) params.set("user_id", userId);
 
   const authUrl = `${API_URL}/connect/mobile-auth?${params.toString()}`;
   const redirectUrl = `${APP_SCHEME}://auth`;
 
   const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
 
-  if (result.type !== 'success') {
+  if (result.type !== "success") {
     return null;
   }
 
   // Parse the redirect URL: reili://auth?access_token=...&mode=...
   const url = result.url;
-  const queryString = url.split('?')[1];
+  const queryString = url.split("?")[1];
   if (!queryString) return null;
 
   const params2 = new URLSearchParams(queryString);
 
   // Check for errors
-  const error = params2.get('error');
+  const error = params2.get("error");
   if (error) return null;
 
-  return params2.get('access_token');
+  return params2.get("access_token");
 }

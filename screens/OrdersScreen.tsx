@@ -29,22 +29,36 @@ type Order = {
 
 const STATUSES = ['All', 'Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled'];
 
+const C = {
+  bg:       '#F6F6F6',
+  white:    '#FFFFFF',
+  light:    '#D6E4F0',
+  blue:     '#1E56A0',
+  navy:     '#163172',
+  navyFade: 'rgba(22,49,114,0.08)',
+  navyMid:  'rgba(22,49,114,0.18)',
+  text:     '#163172',
+  text2:    '#1E56A0',
+  text3:    'rgba(22,49,114,0.40)',
+  border:   'rgba(22,49,114,0.10)',
+  green:    '#16A34A',
+  greenBg:  'rgba(22,163,74,0.10)',
+  red:      '#DC2626',
+  redBg:    'rgba(220,38,38,0.09)',
+};
+
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: string }> = {
-  pending:   { label: 'Pending',   color: '#D97706', bg: '#FEF3C7', icon: 'time-outline' },
-  confirmed: { label: 'Confirmed', color: '#163172', bg: '#D6E4F0', icon: 'checkmark-circle-outline' },
-  packed:    { label: 'Packed',    color: '#7C3AED', bg: '#F3E8FF', icon: 'cube-outline' },
-  shipped:   { label: 'Shipped',   color: '#1E56A0', bg: '#DBEAFE', icon: 'bicycle-outline' },
-  delivered: { label: 'Delivered', color: '#059669', bg: '#D1FAE5', icon: 'checkmark-done-circle-outline' },
-  cancelled: { label: 'Cancelled', color: '#DC2626', bg: '#FEE2E2', icon: 'close-circle-outline' },
+  pending:   { label: 'Pending',   color: '#D97706',  bg: 'rgba(217,119,6,0.10)',    icon: 'time-outline' },
+  confirmed: { label: 'Confirmed', color: C.blue,     bg: C.light,                   icon: 'checkmark-circle-outline' },
+  packed:    { label: 'Packed',    color: '#7C3AED',  bg: 'rgba(124,58,237,0.10)',   icon: 'cube-outline' },
+  shipped:   { label: 'Shipped',   color: C.blue,     bg: C.light,                   icon: 'bicycle-outline' },
+  delivered: { label: 'Delivered', color: C.green,    bg: C.greenBg,                 icon: 'checkmark-done-circle-outline' },
+  cancelled: { label: 'Cancelled', color: C.red,      bg: C.redBg,                   icon: 'close-circle-outline' },
 };
 
 const NEXT_STATUSES: Record<string, string[]> = {
-  pending:   ['confirmed', 'cancelled'],
-  confirmed: ['packed', 'cancelled'],
-  packed:    ['shipped', 'cancelled'],
-  shipped:   ['delivered'],
-  delivered: [],
-  cancelled: [],
+  pending: ['confirmed', 'cancelled'], confirmed: ['packed', 'cancelled'],
+  packed: ['shipped', 'cancelled'], shipped: ['delivered'], delivered: [], cancelled: [],
 };
 
 function timeAgo(dateStr: string) {
@@ -62,20 +76,14 @@ export default function OrdersScreen({ route }: Props) {
   const rootNav = useNavigation<any>();
 
   function openConversation(conversationId: string, customerName: string) {
-    rootNav.navigate('ChatsTab', {
-      screen: 'ConversationThread',
-      params: { conversationId, customerName },
-    });
+    rootNav.navigate('ChatsTab', { screen: 'ConversationThread', params: { conversationId, customerName } });
   }
+
   const [pageId, setPageId] = useState(route.params?.pageId ?? activePage?.id ?? '');
   const [pageName, setPageName] = useState(route.params?.pageName ?? activePage?.name ?? '');
 
-  // Sync when active page changes from MoreScreen switcher
   useEffect(() => {
-    if (activePage && activePage.id !== pageId) {
-      setPageId(activePage.id);
-      setPageName(activePage.name);
-    }
+    if (activePage && activePage.id !== pageId) { setPageId(activePage.id); setPageName(activePage.name); }
   }, [activePage]);
 
   const [orders, setOrders] = useState<Order[]>([]);
@@ -88,42 +96,25 @@ export default function OrdersScreen({ route }: Props) {
 
   const loadOrders = useCallback(async () => {
     if (!pageId) { setLoading(false); return; }
-    try {
-      setError('');
-      const data = await ordersApi.getAll(pageId);
-      setOrders(data);
-    } catch {
-      setError('Failed to load orders');
-    } finally {
-      setLoading(false);
-    }
+    try { setError(''); const data = await ordersApi.getAll(pageId); setOrders(data); }
+    catch { setError('Failed to load orders'); }
+    finally { setLoading(false); }
   }, [pageId]);
 
-  async function onRefresh() {
-    setRefreshing(true);
-    await loadOrders();
-    setRefreshing(false);
-  }
-
+  async function onRefresh() { setRefreshing(true); await loadOrders(); setRefreshing(false); }
   useEffect(() => { loadOrders(); }, [loadOrders]);
 
-  const filtered = orders.filter((o) =>
-    activeFilter === 'All' ? true : o.status === activeFilter.toLowerCase()
-  );
+  const filtered = orders.filter((o) => activeFilter === 'All' ? true : o.status === activeFilter.toLowerCase());
 
   function handleUpdateStatus(order: Order) {
     const next = NEXT_STATUSES[order.status] ?? [];
     if (next.length === 0) return;
-
     const doUpdate = async (s: string) => {
       try {
         const updated = await ordersApi.updateStatus(order.id, s);
         setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, status: updated.status } : o)));
-      } catch {
-        Alert.alert('Error', 'Failed to update order status');
-      }
+      } catch { Alert.alert('Error', 'Failed to update order status'); }
     };
-
     const options = next.map((s) => ({
       text: STATUS_CONFIG[s]?.label ?? s,
       style: s === 'cancelled' ? ('destructive' as const) : ('default' as const),
@@ -133,9 +124,7 @@ export default function OrdersScreen({ route }: Props) {
             { text: 'No', style: 'cancel' },
             { text: 'Yes, Cancel', style: 'destructive', onPress: () => doUpdate(s) },
           ]);
-        } else {
-          doUpdate(s);
-        }
+        } else { doUpdate(s); }
       },
     }));
     Alert.alert('Update Status', `${order.item} × ${order.quantity}`, [...options, { text: 'Cancel', style: 'cancel' as const }]);
@@ -144,18 +133,12 @@ export default function OrdersScreen({ route }: Props) {
   async function handleSavePrice(orderId: string) {
     const val = priceInput.trim();
     const parsed = val === '' ? null : parseFloat(val);
-    if (val !== '' && (isNaN(parsed!) || parsed! < 0)) {
-      Alert.alert('Invalid', 'Enter a valid price (e.g. 250)');
-      return;
-    }
+    if (val !== '' && (isNaN(parsed!) || parsed! < 0)) { Alert.alert('Invalid', 'Enter a valid price (e.g. 250)'); return; }
     try {
       const updated = await ordersApi.updatePrice(orderId, parsed);
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, total_price: updated.total_price } : o)));
-      setEditingPriceId(null);
-      setPriceInput('');
-    } catch {
-      Alert.alert('Error', 'Failed to update price');
-    }
+      setEditingPriceId(null); setPriceInput('');
+    } catch { Alert.alert('Error', 'Failed to update price'); }
   }
 
   async function exportCSV() {
@@ -174,26 +157,24 @@ export default function OrdersScreen({ route }: Props) {
     try {
       await FileSystem.writeAsStringAsync(fileUri, csv, { encoding: FileSystem.EncodingType.UTF8 });
       await Sharing.shareAsync(fileUri, { mimeType: 'text/csv', dialogTitle: 'Export Orders' });
-    } catch {
-      Alert.alert('Export failed', 'Could not export orders.');
-    }
+    } catch { Alert.alert('Export failed', 'Could not export orders.'); }
   }
 
   const pendingCount = orders.filter((o) => o.status === 'pending').length;
 
   if (!pageId) {
     return (
-      <View className="flex-1 bg-[#F6F6F6]">
+      <View style={{ flex: 1, backgroundColor: C.bg }}>
         <StatusBar style="dark" />
-        <View className="bg-white pt-14 pb-4 px-4 border-b border-[#E4E6EB]">
-          <Text className="text-[#1C1E21] text-xl font-bold">Orders</Text>
+        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Orders</Text>
         </View>
-        <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
-            <Ionicons name="bag-outline" size={40} color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="bag-outline" size={36} color={C.blue} />
           </View>
-          <Text className="text-[#1C1E21] font-bold text-base">No page selected</Text>
-          <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No page selected</Text>
+          <Text style={{ color: C.text2, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
             Go to Home and tap a page to view its orders.
           </Text>
         </View>
@@ -202,28 +183,28 @@ export default function OrdersScreen({ route }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F6F6F6]">
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="bg-white pt-14 pb-3 px-4 border-b border-[#E4E6EB]">
-        <View className="flex-row items-center justify-between mb-3">
-          <View className="flex-1 mr-3 flex-row items-center gap-2">
-            <Text className="text-[#1C1E21] text-xl font-bold">Orders</Text>
+      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <View style={{ flex: 1, marginRight: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Orders</Text>
             {pendingCount > 0 && (
-              <View className="bg-[#FEF3C7] rounded-full px-2 py-0.5">
-                <Text className="text-[#D97706] text-xs font-bold">{pendingCount} pending</Text>
+              <View style={{ backgroundColor: 'rgba(217,119,6,0.10)', borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3, borderWidth: 1, borderColor: 'rgba(217,119,6,0.30)' }}>
+                <Text style={{ color: '#D97706', fontSize: 11, fontWeight: '800' }}>{pendingCount} pending</Text>
               </View>
             )}
           </View>
-          <View className="flex-row items-center">
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
             <PageSwitcherPill
               currentPageId={pageId}
               currentPageName={pageName}
               onSwitch={(id, name) => { setPageId(id); setPageName(name); }}
             />
-            <TouchableOpacity onPress={exportCSV} className="p-2">
-              <Ionicons name="download-outline" size={20} color="#65676B" />
+            <TouchableOpacity onPress={exportCSV} style={{ padding: 8 }}>
+              <Ionicons name="download-outline" size={19} color={C.text2} />
             </TouchableOpacity>
           </View>
         </View>
@@ -234,40 +215,40 @@ export default function OrdersScreen({ route }: Props) {
             <TouchableOpacity
               key={f}
               onPress={() => setActiveFilter(f)}
-              className={`px-3 py-1.5 rounded-full ${activeFilter === f ? 'bg-navy' : 'bg-[#E4E6EB]'}`}
+              style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: activeFilter === f ? C.navy : C.white, borderWidth: 1, borderColor: activeFilter === f ? C.navy : C.border }}
             >
-              <Text className={`text-xs font-semibold ${activeFilter === f ? 'text-white' : 'text-[#65676B]'}`}>{f}</Text>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: activeFilter === f ? C.white : C.text2 }}>{f}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
 
       {loading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={C.navy} />
         </View>
       ) : error ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <Ionicons name="cloud-offline" size={48} color="#cbd5e1" />
-          <Text className="text-[#65676B] text-base mt-3 text-center">{error}</Text>
-          <TouchableOpacity className="mt-4 bg-navy rounded-xl px-6 py-3" onPress={loadOrders}>
-            <Text className="text-white font-semibold">Try Again</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <Ionicons name="cloud-offline" size={48} color={C.text3} />
+          <Text style={{ color: C.text2, fontSize: 15, marginTop: 12, textAlign: 'center' }}>{error}</Text>
+          <TouchableOpacity style={{ marginTop: 16, backgroundColor: C.navy, borderRadius: 14, paddingHorizontal: 24, paddingVertical: 12 }} onPress={loadOrders}>
+            <Text style={{ color: C.white, fontWeight: '700' }}>Try Again</Text>
           </TouchableOpacity>
         </View>
       ) : filtered.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
-            <Ionicons name="bag-outline" size={40} color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="bag-outline" size={36} color={C.blue} />
           </View>
-          <Text className="text-[#1C1E21] font-bold text-base">No orders yet</Text>
-          <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No orders yet</Text>
+          <Text style={{ color: C.text2, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
             When customers say "order" or "bili", the bot guides them through the order flow automatically.
           </Text>
         </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ padding: 12, paddingBottom: 24 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.navy} />}
           showsVerticalScrollIndicator={false}
         >
           {filtered.map((order) => {
@@ -278,95 +259,97 @@ export default function OrdersScreen({ route }: Props) {
             return (
               <View
                 key={order.id}
-                className="bg-white rounded-2xl mb-3 overflow-hidden"
-                style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}
+                style={{ backgroundColor: C.white, borderRadius: 20, marginBottom: 12, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}
               >
+                {/* Status accent line */}
+                <View style={{ height: 3, backgroundColor: cfg.color, opacity: 0.8 }} />
+
                 {/* Card header */}
-                <View className="flex-row items-center justify-between px-4 pt-3.5 pb-3 border-b border-[#F6F6F6]">
-                  <View className="flex-1 mr-3">
-                    <Text className="text-[#1C1E21] font-bold text-sm" numberOfLines={1}>{order.item}</Text>
-                    <View className="flex-row items-center gap-2 mt-0.5 flex-wrap">
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingTop: 12, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: C.border }}>
+                  <View style={{ flex: 1, marginRight: 12 }}>
+                    <Text style={{ color: C.text, fontWeight: '800', fontSize: 14 }} numberOfLines={1}>{order.item}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
                       {order.order_number && (
-                        <Text className="text-[#163172] text-xs font-bold">{order.order_number}</Text>
+                        <Text style={{ color: C.blue, fontSize: 11, fontWeight: '800' }}>{order.order_number}</Text>
                       )}
-                      <Text className="text-[#65676B] text-xs">·</Text>
-                      <Text className="text-[#65676B] text-xs">{customerName}</Text>
-                      <Text className="text-[#65676B] text-xs">·</Text>
-                      <Text className="text-[#65676B] text-xs">{timeAgo(order.created_at)}</Text>
+                      <Text style={{ color: C.text3, fontSize: 11 }}>·</Text>
+                      <Text style={{ color: C.text3, fontSize: 11 }}>{customerName}</Text>
+                      <Text style={{ color: C.text3, fontSize: 11 }}>·</Text>
+                      <Text style={{ color: C.text3, fontSize: 11 }}>{timeAgo(order.created_at)}</Text>
                     </View>
                   </View>
-                  <View className="rounded-xl px-2.5 py-1" style={{ backgroundColor: cfg.bg }}>
-                    <Text className="text-xs font-bold" style={{ color: cfg.color }}>{cfg.label}</Text>
+                  <View style={{ borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5, backgroundColor: cfg.bg, borderWidth: 1, borderColor: `${cfg.color}40` }}>
+                    <Text style={{ fontSize: 11, fontWeight: '800', color: cfg.color }}>{cfg.label}</Text>
                   </View>
                 </View>
 
                 {/* Details */}
-                <View className="px-4 py-3 gap-2">
-                  <View className="flex-row items-center gap-2">
-                    <Ionicons name="cube-outline" size={13} color="#65676B" />
-                    <Text className="text-[#65676B] text-sm">Qty: <Text className="text-[#1C1E21] font-medium">{order.quantity}</Text></Text>
+                <View style={{ paddingHorizontal: 14, paddingVertical: 12, gap: 8 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <Ionicons name="cube-outline" size={13} color={C.text3} />
+                    <Text style={{ color: C.text2, fontSize: 13 }}>Qty: <Text style={{ color: C.text, fontWeight: '600' }}>{order.quantity}</Text></Text>
                   </View>
-                  <View className="flex-row items-start gap-2">
-                    <Ionicons name="location-outline" size={13} color="#65676B" style={{ marginTop: 1 }} />
-                    <Text className="text-[#65676B] text-sm flex-1 leading-5">{order.address}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+                    <Ionicons name="location-outline" size={13} color={C.text3} style={{ marginTop: 1 }} />
+                    <Text style={{ color: C.text2, fontSize: 13, flex: 1, lineHeight: 18 }}>{order.address}</Text>
                   </View>
 
                   {/* Price row */}
-                  <View className="flex-row items-center gap-2 pt-2 border-t border-[#F6F6F6]">
-                    <Ionicons name="cash-outline" size={13} color="#65676B" />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: C.border }}>
+                    <Ionicons name="cash-outline" size={13} color={C.text3} />
                     {editingPriceId === order.id ? (
-                      <View className="flex-1 flex-row items-center gap-2">
-                        <Text className="text-[#65676B] text-sm">₱</Text>
+                      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <Text style={{ color: C.text2, fontSize: 13 }}>₱</Text>
                         <TextInput
-                          className="flex-1 bg-[#F6F6F6] rounded-lg px-3 py-1.5 text-[#1C1E21] text-sm"
+                          style={{ flex: 1, backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6, color: C.navy, fontSize: 13 }}
                           value={priceInput}
                           onChangeText={setPriceInput}
                           placeholder="0.00"
-                          placeholderTextColor="#65676B"
+                          placeholderTextColor={C.text3}
                           keyboardType="decimal-pad"
                           autoFocus
                         />
-                        <TouchableOpacity className="bg-navy rounded-lg px-3 py-1.5" onPress={() => handleSavePrice(order.id)}>
-                          <Text className="text-white text-xs font-semibold">Save</Text>
+                        <TouchableOpacity style={{ backgroundColor: C.navy, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 7 }} onPress={() => handleSavePrice(order.id)}>
+                          <Text style={{ color: C.white, fontSize: 12, fontWeight: '700' }}>Save</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setEditingPriceId(null); setPriceInput(''); }}>
-                          <Ionicons name="close" size={16} color="#65676B" />
+                          <Ionicons name="close" size={16} color={C.text3} />
                         </TouchableOpacity>
                       </View>
                     ) : (
                       <TouchableOpacity
-                        className="flex-1 flex-row items-center gap-1"
+                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}
                         onPress={() => { setEditingPriceId(order.id); setPriceInput(order.total_price != null ? String(order.total_price) : ''); }}
                       >
                         {order.total_price != null ? (
-                          <Text className="text-[#163172] text-sm font-bold">₱{Number(order.total_price).toLocaleString()}</Text>
+                          <Text style={{ color: C.blue, fontSize: 14, fontWeight: '800' }}>₱{Number(order.total_price).toLocaleString()}</Text>
                         ) : (
-                          <Text className="text-[#D6E4F0] text-xs font-semibold">+ Set Price</Text>
+                          <Text style={{ color: C.text3, fontSize: 12, fontWeight: '600' }}>+ Set Price</Text>
                         )}
-                        <Ionicons name="pencil-outline" size={11} color="#65676B" />
+                        <Ionicons name="pencil-outline" size={11} color={C.text3} />
                       </TouchableOpacity>
                     )}
                   </View>
                 </View>
 
                 {/* Actions */}
-                <View className="flex-row border-t border-[#F6F6F6]">
+                <View style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: C.border }}>
                   <TouchableOpacity
-                    className="flex-row flex-1 items-center justify-center gap-1.5 py-3"
+                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12 }}
                     onPress={() => openConversation(order.conversation_id, customerName)}
                   >
-                    <Ionicons name="chatbubble-outline" size={15} color="#65676B" />
-                    <Text className="text-[#65676B] text-xs font-medium">Message</Text>
+                    <Ionicons name="chatbubble-outline" size={14} color={C.text2} />
+                    <Text style={{ color: C.text2, fontSize: 12, fontWeight: '600' }}>Message</Text>
                   </TouchableOpacity>
                   {canUpdate && (
                     <>
-                      <View className="w-px bg-[#F6F6F6]" />
+                      <View style={{ width: 1, backgroundColor: C.border }} />
                       <TouchableOpacity
-                        className="flex-row flex-1 items-center justify-center gap-1.5 py-3"
+                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12 }}
                         onPress={() => handleUpdateStatus(order)}
                       >
-                        <Ionicons name="arrow-forward-circle-outline" size={15} color="#163172" />
-                        <Text className="text-[#163172] text-xs font-semibold">Update Status</Text>
+                        <Ionicons name="arrow-forward-circle-outline" size={14} color={C.navy} />
+                        <Text style={{ color: C.navy, fontSize: 12, fontWeight: '700' }}>Update Status</Text>
                       </TouchableOpacity>
                     </>
                   )}

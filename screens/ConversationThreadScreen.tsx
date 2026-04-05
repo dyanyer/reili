@@ -1,15 +1,6 @@
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  RefreshControl,
-  Alert,
-  Image,
+  View, Text, TouchableOpacity, ScrollView, ActivityIndicator,
+  TextInput, KeyboardAvoidingView, Platform, RefreshControl, Alert, Image,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,10 +22,33 @@ type Message = {
   sent_at: string;
 };
 
+const C = {
+  bg:       '#F6F6F6',
+  white:    '#FFFFFF',
+  light:    '#D6E4F0',
+  blue:     '#1E56A0',
+  navy:     '#163172',
+  navyFade: 'rgba(22,49,114,0.08)',
+  navyMid:  'rgba(22,49,114,0.18)',
+  text:     '#163172',
+  text2:    '#1E56A0',
+  text3:    'rgba(22,49,114,0.40)',
+  border:   'rgba(22,49,114,0.10)',
+  green:    '#16A34A',
+  greenBg:  'rgba(22,163,74,0.10)',
+  red:      '#DC2626',
+  redBg:    'rgba(220,38,38,0.09)',
+};
+
+// Keep amber accent specifically for notes UI
+const AMBER = '#D97706';
+const AMBER_BG = 'rgba(217,119,6,0.08)';
+const AMBER_BORDER = 'rgba(217,119,6,0.20)';
+const AMBER_MUTED = 'rgba(217,119,6,0.45)';
+
 function formatTime(dateStr: string) {
   return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
   const today = new Date();
@@ -86,21 +100,12 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
 
   async function handleSaveNote() {
     setSavingNote(true);
-    try {
-      await conversationsApi.updateNote(conversationId, notes);
-      setNotesExpanded(false);
-    } catch {
-      Alert.alert('Error', 'Failed to save note');
-    } finally {
-      setSavingNote(false);
-    }
+    try { await conversationsApi.updateNote(conversationId, notes); setNotesExpanded(false); }
+    catch { Alert.alert('Error', 'Failed to save note'); }
+    finally { setSavingNote(false); }
   }
 
-  async function onRefresh() {
-    setRefreshing(true);
-    await loadMessages();
-    setRefreshing(false);
-  }
+  async function onRefresh() { setRefreshing(true); await loadMessages(); setRefreshing(false); }
 
   useEffect(() => {
     loadMessages();
@@ -109,14 +114,8 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
   }, [loadMessages]);
 
   async function handlePickImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.7,
-      allowsEditing: true,
-    });
-    if (!result.canceled && result.assets?.[0]) {
-      setPendingImage(result.assets[0].uri);
-    }
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.7, allowsEditing: true });
+    if (!result.canceled && result.assets?.[0]) setPendingImage(result.assets[0].uri);
   }
 
   async function handleSend() {
@@ -127,13 +126,8 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
     let imageUrl: string | undefined;
     if (pendingImage) {
       setUploadingImage(true);
-      try {
-        imageUrl = await uploadImageToCloudinary(pendingImage);
-      } catch {
-        Alert.alert('Error', 'Failed to upload image');
-        setUploadingImage(false);
-        return;
-      }
+      try { imageUrl = await uploadImageToCloudinary(pendingImage); }
+      catch { Alert.alert('Error', 'Failed to upload image'); setUploadingImage(false); return; }
       setUploadingImage(false);
     }
 
@@ -142,12 +136,8 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
     setPendingImage(null);
 
     const tempMessage: Message = {
-      id: `temp-${Date.now()}`,
-      message_text: text || null,
-      image_url: imageUrl ?? null,
-      direction: 'outbound',
-      sender_type: 'owner',
-      sent_at: new Date().toISOString(),
+      id: `temp-${Date.now()}`, message_text: text || null, image_url: imageUrl ?? null,
+      direction: 'outbound', sender_type: 'owner', sent_at: new Date().toISOString(),
     };
     setMessages((prev) => [...prev, tempMessage]);
     scrollRef.current?.scrollToEnd({ animated: true });
@@ -158,15 +148,12 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
     } catch (err: any) {
       setMessages((prev) => prev.filter((m) => m.id !== tempMessage.id));
       setReplyText(text);
-
       let title = 'Failed to send';
       let body = 'Could not send message. Please try again.';
       try {
         const parsed = JSON.parse(err?.message?.replace(/^API error \d+: /, '') ?? '{}');
         if (parsed.message) body = parsed.message;
-      } catch {
-        if (err?.message) body = err.message;
-      }
+      } catch { if (err?.message) body = err.message; }
       if (body.includes('24-hour') || body.includes('messaging window')) title = '⏰ Messaging window closed';
       else if (body.includes('token') || body.includes('reconnect')) title = '🔑 Connection issue';
       Alert.alert(title, body);
@@ -187,70 +174,68 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
     else grouped.push({ date, messages: [msg] });
   });
 
+  const canSend = replyText.trim().length > 0 || !!pendingImage;
+
   return (
-    <KeyboardAvoidingView
-      className="flex-1"
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <View className="flex-1 bg-[#F6F6F6]">
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1, backgroundColor: C.bg }}>
         <StatusBar style="dark" />
 
         {/* Header */}
-        <View className="bg-white pt-14 px-4 pb-3 flex-row items-center gap-3 border-b border-[#E4E6EB]">
-          <TouchableOpacity onPress={() => navigation.goBack()} className="p-1">
-            <Ionicons name="arrow-back" size={24} color="#1C1E21" />
+        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingHorizontal: 16, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
+            <Ionicons name="arrow-back" size={22} color={C.navy} />
           </TouchableOpacity>
-          {/* Avatar */}
-          <View className="w-10 h-10 rounded-full bg-[#D6E4F0] items-center justify-center">
-            <Text className="text-navy text-sm font-bold">{initials}</Text>
+          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: C.navy, fontSize: 13, fontWeight: '800' }}>{initials}</Text>
           </View>
-          <View className="flex-1">
-            <Text className="text-[#1C1E21] font-bold text-base" numberOfLines={1}>{customerName}</Text>
-            <Text className="text-[#65676B] text-xs">via Messenger</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }} numberOfLines={1}>{customerName}</Text>
+            <Text style={{ color: C.text3, fontSize: 11 }}>via Messenger</Text>
           </View>
           <TouchableOpacity
             onPress={() => { setSearchVisible((v) => !v); if (searchVisible) setSearchText(''); }}
-            className="p-2"
+            style={{ padding: 8 }}
           >
-            <Ionicons name={searchVisible ? 'close' : 'search-outline'} size={20} color="#65676B" />
+            <Ionicons name={searchVisible ? 'close' : 'search-outline'} size={19} color={C.text2} />
           </TouchableOpacity>
         </View>
 
         {loading ? (
-          <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#163172" />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator size="large" color={C.navy} />
           </View>
         ) : error ? (
-          <View className="flex-1 items-center justify-center px-8">
-            <Ionicons name="cloud-offline" size={48} color="#cbd5e1" />
-            <Text className="text-[#65676B] text-base mt-3 text-center">{error}</Text>
-            <TouchableOpacity className="mt-4 bg-navy rounded-xl px-6 py-3" onPress={loadMessages}>
-              <Text className="text-white font-semibold">Try Again</Text>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+            <Ionicons name="cloud-offline" size={48} color={C.text3} />
+            <Text style={{ color: C.text2, fontSize: 15, marginTop: 12, textAlign: 'center' }}>{error}</Text>
+            <TouchableOpacity style={{ marginTop: 16, backgroundColor: C.navy, borderRadius: 14, paddingHorizontal: 24, paddingVertical: 12 }} onPress={loadMessages}>
+              <Text style={{ color: C.white, fontWeight: '700' }}>Try Again</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <>
             {/* Search bar */}
             {searchVisible && (
-              <View className="bg-white border-b border-[#E4E6EB] px-4 py-2">
-                <View className="flex-row items-center bg-[#F6F6F6] rounded-xl px-3 gap-2">
-                  <Ionicons name="search" size={15} color="#65676B" />
+              <View style={{ backgroundColor: C.white, borderBottomWidth: 1, borderBottomColor: C.border, paddingHorizontal: 16, paddingVertical: 8 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: C.white, borderRadius: 12, paddingHorizontal: 12, gap: 8, borderWidth: 1, borderColor: C.border }}>
+                  <Ionicons name="search" size={14} color={C.text3} />
                   <TextInput
-                    className="flex-1 py-2.5 text-[#1C1E21] text-sm"
+                    style={{ flex: 1, paddingVertical: 9, color: C.text, fontSize: 14 }}
                     placeholder="Search messages..."
-                    placeholderTextColor="#65676B"
+                    placeholderTextColor={C.text3}
                     value={searchText}
                     onChangeText={setSearchText}
                     autoFocus
                   />
                   {searchText.length > 0 && (
                     <TouchableOpacity onPress={() => setSearchText('')}>
-                      <Ionicons name="close-circle" size={16} color="#65676B" />
+                      <Ionicons name="close-circle" size={15} color={C.text3} />
                     </TouchableOpacity>
                   )}
                 </View>
                 {searchText.length > 0 && (
-                  <Text className="text-[#65676B] text-xs mt-1 ml-1">
+                  <Text style={{ color: C.text3, fontSize: 11, marginTop: 4, marginLeft: 4 }}>
                     {messages.filter((m) => (m.message_text ?? '').toLowerCase().includes(searchText.toLowerCase())).length} result(s)
                   </Text>
                 )}
@@ -259,42 +244,35 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
 
             {/* Notes bar */}
             <TouchableOpacity
-              className="bg-amber-50 border-b border-amber-100 px-4 py-2.5 flex-row items-center gap-2"
+              style={{ backgroundColor: AMBER_BG, borderBottomWidth: 1, borderBottomColor: AMBER_BORDER, borderLeftWidth: 3, borderLeftColor: AMBER, paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', gap: 8 }}
               onPress={() => setNotesExpanded((v) => !v)}
               activeOpacity={0.7}
             >
-              <Ionicons name="document-text-outline" size={14} color="#92400e" />
-              <Text className="flex-1 text-amber-800 text-xs font-medium" numberOfLines={1}>
+              <Ionicons name="document-text-outline" size={13} color={AMBER} />
+              <Text style={{ flex: 1, color: AMBER, fontSize: 12, fontWeight: '500' }} numberOfLines={1}>
                 {notes.trim() ? notes.trim() : 'Add a private note about this customer…'}
               </Text>
-              <Ionicons name={notesExpanded ? 'chevron-up' : 'chevron-down'} size={13} color="#92400e" />
+              <Ionicons name={notesExpanded ? 'chevron-up' : 'chevron-down'} size={12} color={AMBER} />
             </TouchableOpacity>
             {notesExpanded && (
-              <View className="bg-amber-50 border-b border-amber-100 px-4 pb-3">
+              <View style={{ backgroundColor: AMBER_BG, borderBottomWidth: 1, borderBottomColor: AMBER_BORDER, paddingHorizontal: 16, paddingBottom: 12 }}>
                 <TextInput
-                  className="bg-white border border-amber-200 rounded-xl px-3 py-2.5 text-slate-700 text-sm mt-2"
+                  style={{ backgroundColor: C.white, borderWidth: 1, borderColor: AMBER_BORDER, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, color: C.text, fontSize: 13, marginTop: 8, minHeight: 72, textAlignVertical: 'top' }}
                   value={notes}
                   onChangeText={setNotes}
                   placeholder="Private notes (not visible to customer)"
-                  placeholderTextColor="#a16207"
+                  placeholderTextColor={AMBER_MUTED}
                   multiline
                   maxLength={1000}
-                  textAlignVertical="top"
-                  style={{ minHeight: 72 }}
                 />
-                <View className="flex-row justify-end mt-2">
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 8 }}>
                   <TouchableOpacity
-                    className="bg-amber-700 rounded-xl px-4 py-2 flex-row items-center gap-1"
+                    style={{ backgroundColor: 'rgba(217,119,6,0.12)', borderWidth: 1, borderColor: AMBER_BORDER, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 5 }}
                     onPress={handleSaveNote}
                     disabled={savingNote}
                   >
-                    {savingNote ? (
-                      <ActivityIndicator size="small" color="white" />
-                    ) : (
-                      <>
-                        <Ionicons name="checkmark" size={13} color="white" />
-                        <Text className="text-white text-xs font-semibold">Save Note</Text>
-                      </>
+                    {savingNote ? <ActivityIndicator size="small" color={AMBER} /> : (
+                      <><Ionicons name="checkmark" size={13} color={AMBER} /><Text style={{ color: AMBER, fontSize: 12, fontWeight: '700' }}>Save Note</Text></>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -305,31 +283,29 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
             <ScrollView
               ref={scrollRef}
               contentContainerStyle={{ paddingHorizontal: 12, paddingVertical: 16, paddingBottom: 8 }}
-              onContentSizeChange={() => {
-                if (isAtBottomRef.current) scrollRef.current?.scrollToEnd({ animated: false });
-              }}
+              onContentSizeChange={() => { if (isAtBottomRef.current) scrollRef.current?.scrollToEnd({ animated: false }); }}
               onScroll={(e) => {
                 const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
                 isAtBottomRef.current = contentOffset.y + layoutMeasurement.height >= contentSize.height - 80;
               }}
               scrollEventThrottle={200}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.navy} />}
             >
               {messages.length === 0 && (
-                <View className="items-center pt-16">
-                  <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
-                    <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
+                <View style={{ alignItems: 'center', paddingTop: 48 }}>
+                  <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                    <Ionicons name="chatbubbles-outline" size={32} color={C.navy} />
                   </View>
-                  <Text className="text-[#1C1E21] font-semibold">No messages yet</Text>
+                  <Text style={{ color: C.text2, fontWeight: '600' }}>No messages yet</Text>
                 </View>
               )}
 
               {grouped.map((group) => (
                 <View key={group.date}>
                   {/* Date separator */}
-                  <View className="items-center my-4">
-                    <View className="bg-[#E4E6EB] rounded-full px-3 py-1">
-                      <Text className="text-[#65676B] text-xs font-medium">{group.date}</Text>
+                  <View style={{ alignItems: 'center', marginVertical: 12 }}>
+                    <View style={{ backgroundColor: C.light, borderRadius: 99, paddingHorizontal: 12, paddingVertical: 4, borderWidth: 1, borderColor: C.border }}>
+                      <Text style={{ color: C.text3, fontSize: 11, fontWeight: '600' }}>{group.date}</Text>
                     </View>
                   </View>
 
@@ -340,25 +316,22 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                     const showAvatar = isInbound && (idx === 0 || prevMsg?.direction !== 'inbound');
 
                     return (
-                      <View
-                        key={msg.id}
-                        className={`mb-1 ${isInbound ? 'items-start' : 'items-end'}`}
-                      >
+                      <View key={msg.id} style={{ marginBottom: 4, alignItems: isInbound ? 'flex-start' : 'flex-end' }}>
                         {/* Bot label */}
                         {!isInbound && isBot && (
-                          <View className="flex-row items-center gap-1 mb-1 mr-1">
-                            <Ionicons name="flash" size={10} color="#D6E4F0" />
-                            <Text className="text-[#65676B] text-xs">Reili Bot</Text>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 3, marginRight: 4 }}>
+                            <Ionicons name="flash" size={9} color={C.blue} />
+                            <Text style={{ color: C.text3, fontSize: 10 }}>Reili Bot</Text>
                           </View>
                         )}
 
-                        <View className={`flex-row items-end gap-2 ${isInbound ? 'flex-row' : 'flex-row-reverse'}`}>
-                          {/* Customer avatar (only for first in a sequence) */}
+                        <View style={{ flexDirection: isInbound ? 'row' : 'row-reverse', alignItems: 'flex-end', gap: 8 }}>
+                          {/* Customer avatar */}
                           {isInbound && (
-                            <View className="w-7 h-7 flex-shrink-0">
+                            <View style={{ width: 26, height: 26, flexShrink: 0 }}>
                               {showAvatar && (
-                                <View className="w-7 h-7 rounded-full bg-[#D6E4F0] items-center justify-center">
-                                  <Text className="text-navy text-xs font-bold">{initials}</Text>
+                                <View style={{ width: 26, height: 26, borderRadius: 8, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
+                                  <Text style={{ color: C.navy, fontSize: 9, fontWeight: '800' }}>{initials}</Text>
                                 </View>
                               )}
                             </View>
@@ -369,36 +342,36 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                             {msg.image_url && (
                               <Image
                                 source={{ uri: msg.image_url }}
-                                style={{
-                                  width: 200,
-                                  height: 150,
-                                  borderRadius: 16,
-                                  marginBottom: msg.message_text ? 4 : 0,
-                                }}
+                                style={{ width: 200, height: 150, borderRadius: 14, marginBottom: msg.message_text ? 4 : 0 }}
                                 resizeMode="cover"
                               />
                             )}
                             {/* Text bubble */}
                             {msg.message_text ? (
-                              <View
-                                className={`px-4 py-2.5 rounded-2xl ${
-                                  isInbound
-                                    ? 'bg-white rounded-bl-sm'
-                                    : isBot
-                                    ? 'bg-navy-mid rounded-br-sm'
-                                    : 'bg-navy rounded-br-sm'
-                                }`}
-                                style={isInbound ? {
-                                  shadowColor: '#000',
-                                  shadowOffset: { width: 0, height: 1 },
-                                  shadowOpacity: 0.06,
-                                  shadowRadius: 3,
-                                  elevation: 1,
-                                } : {}}
-                              >
-                                <Text
-                                  className={`text-sm leading-5 ${isInbound ? 'text-[#1C1E21]' : 'text-white'}`}
-                                >
+                              <View style={{
+                                paddingHorizontal: 14,
+                                paddingVertical: 10,
+                                borderRadius: 18,
+                                ...(isInbound ? {
+                                  backgroundColor: C.white,
+                                  borderWidth: 1,
+                                  borderColor: C.border,
+                                  borderBottomLeftRadius: 4,
+                                } : isBot ? {
+                                  backgroundColor: C.light,
+                                  borderWidth: 1,
+                                  borderColor: C.border,
+                                  borderBottomRightRadius: 4,
+                                } : {
+                                  backgroundColor: C.navy,
+                                  borderBottomRightRadius: 4,
+                                }),
+                              }}>
+                                <Text style={{
+                                  fontSize: 14,
+                                  lineHeight: 20,
+                                  color: isInbound ? C.text : isBot ? C.navy : C.white,
+                                }}>
                                   {msg.message_text}
                                 </Text>
                               </View>
@@ -406,7 +379,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                           </View>
                         </View>
 
-                        <Text className={`text-xs text-[#65676B] mt-1 ${isInbound ? 'ml-9' : 'mr-1'}`}>
+                        <Text style={{ fontSize: 10, color: C.text3, marginTop: 3, ...(isInbound ? { marginLeft: 34 } : { marginRight: 4 }) }}>
                           {formatTime(msg.sent_at ?? '')}
                         </Text>
                       </View>
@@ -419,45 +392,46 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
         )}
 
         {/* Reply input bar */}
-        <View className="bg-white border-t border-[#E4E6EB] px-3 py-3">
+        <View style={{ backgroundColor: C.white, borderTopWidth: 1, borderTopColor: C.border, paddingHorizontal: 12, paddingVertical: 12 }}>
           {pendingImage && (
-            <View className="flex-row items-center mb-2 gap-2">
-              <Image source={{ uri: pendingImage }} className="w-16 h-16 rounded-xl" resizeMode="cover" />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 8 }}>
+              <Image source={{ uri: pendingImage }} style={{ width: 56, height: 56, borderRadius: 10 }} resizeMode="cover" />
               <TouchableOpacity onPress={() => setPendingImage(null)}>
-                <Ionicons name="close-circle" size={20} color="#ef4444" />
+                <Ionicons name="close-circle" size={20} color={C.text3} />
               </TouchableOpacity>
-              {uploadingImage && <ActivityIndicator size="small" color="#163172" />}
+              {uploadingImage && <ActivityIndicator size="small" color={C.navy} />}
             </View>
           )}
-          <View className="flex-row items-end gap-2">
-            <TouchableOpacity className="p-2.5 rounded-full bg-[#F6F6F6]" onPress={handlePickImage}>
-              <Ionicons name="image-outline" size={20} color="#65676B" />
+          <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
+            <TouchableOpacity style={{ padding: 10, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border }} onPress={handlePickImage}>
+              <Ionicons name="image-outline" size={19} color={C.navy} />
             </TouchableOpacity>
-            <View className="flex-1 bg-[#F6F6F6] rounded-2xl px-4 py-2.5 min-h-[40px] justify-center">
+            <View style={{ flex: 1, backgroundColor: C.white, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10, minHeight: 40, justifyContent: 'center', borderWidth: 1, borderColor: C.border }}>
               <TextInput
                 placeholder="Aa"
-                placeholderTextColor="#65676B"
+                placeholderTextColor={C.text3}
                 value={replyText}
                 onChangeText={setReplyText}
                 multiline
                 maxLength={2000}
-                style={{ color: '#1C1E21', fontSize: 14, maxHeight: 100, padding: 0 }}
+                style={{ color: C.text, fontSize: 14, maxHeight: 100, padding: 0 }}
                 onSubmitEditing={handleSend}
               />
             </View>
             <TouchableOpacity
-              className={`p-2.5 rounded-full ${replyText.trim().length > 0 || pendingImage ? 'bg-navy' : 'bg-[#F6F6F6]'}`}
+              style={{
+                padding: 10, borderRadius: 12,
+                backgroundColor: canSend ? C.navy : C.light,
+                borderWidth: 1,
+                borderColor: canSend ? C.navy : C.border,
+              }}
               onPress={handleSend}
-              disabled={(replyText.trim().length === 0 && !pendingImage) || sending || uploadingImage}
+              disabled={!canSend || sending || uploadingImage}
             >
               {sending || uploadingImage ? (
-                <ActivityIndicator size="small" color="#D6E4F0" />
+                <ActivityIndicator size="small" color={C.white} />
               ) : (
-                <Ionicons
-                  name="send"
-                  size={18}
-                  color={replyText.trim().length > 0 || pendingImage ? '#D6E4F0' : '#65676B'}
-                />
+                <Ionicons name="send" size={17} color={canSend ? C.white : C.text3} />
               )}
             </TouchableOpacity>
           </View>

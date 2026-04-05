@@ -1,20 +1,16 @@
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  RefreshControl,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { Ionicons } from "@expo/vector-icons";
-import { useState, useEffect, useCallback } from "react";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { MoreStackParamList } from "../navigation";
-import { pagesApi, triggersApi } from "../lib/api";
-import PageSwitcherPill from "../components/PageSwitcherPill";
+  View, Text, TouchableOpacity, ScrollView,
+  ActivityIndicator, RefreshControl,
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import { useState, useEffect, useCallback } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { MoreStackParamList } from '../navigation';
+import { pagesApi, triggersApi } from '../lib/api';
+import PageSwitcherPill from '../components/PageSwitcherPill';
 
-type Props = NativeStackScreenProps<MoreStackParamList, "Analytics">;
+type Props = NativeStackScreenProps<MoreStackParamList, 'Analytics'>;
 
 type Analytics = {
   messages_this_week: number;
@@ -28,14 +24,49 @@ type Analytics = {
 };
 
 const DATE_RANGES = [
-  { key: 7, label: "7 days" },
-  { key: 14, label: "14 days" },
-  { key: 30, label: "30 days" },
+  { key: 7,  label: '7 days'  },
+  { key: 14, label: '14 days' },
+  { key: 30, label: '30 days' },
 ] as const;
+
+const C = {
+  bg:       '#F6F6F6',
+  white:    '#FFFFFF',
+  light:    '#D6E4F0',
+  blue:     '#1E56A0',
+  navy:     '#163172',
+  navyFade: 'rgba(22,49,114,0.08)',
+  navyMid:  'rgba(22,49,114,0.18)',
+  text:     '#163172',
+  text2:    '#1E56A0',
+  text3:    'rgba(22,49,114,0.40)',
+  border:   'rgba(22,49,114,0.10)',
+  green:    '#16A34A',
+  greenBg:  'rgba(22,163,74,0.10)',
+  red:      '#DC2626',
+  redBg:    'rgba(220,38,38,0.09)',
+};
 
 function pctChange(current: number, previous: number) {
   if (previous === 0) return current > 0 ? 100 : 0;
   return Math.round(((current - previous) / previous) * 100);
+}
+
+function StatCard({ icon, label, value, color, change }: { icon: any; label: string; value: number; color: string; change?: number }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: C.white, borderRadius: 18, padding: 14, borderWidth: 1, borderColor: C.border }}>
+      <View style={{ width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: C.light }}>
+        <Ionicons name={icon} size={16} color={color} />
+      </View>
+      <Text style={{ color: C.text, fontSize: 22, fontWeight: '800' }}>{value}</Text>
+      <Text style={{ color: C.text3, fontSize: 11, marginTop: 2 }}>{label}</Text>
+      {change !== undefined && (
+        <Text style={{ fontSize: 11, fontWeight: '700', marginTop: 4, color: change >= 0 ? C.green : C.red }}>
+          {change >= 0 ? '+' : ''}{change}% vs prev
+        </Text>
+      )}
+    </View>
+  );
 }
 
 export default function AnalyticsScreen({ route, navigation }: Props) {
@@ -43,53 +74,34 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [days, setDays] = useState(7);
-  const [topTriggers, setTopTriggers] = useState<
-    { id: string; keywords: string[]; fire_count: number }[]
-  >([]);
+  const [topTriggers, setTopTriggers] = useState<{ id: string; keywords: string[]; fire_count: number }[]>([]);
 
   const loadAnalytics = useCallback(async () => {
     try {
-      setLoading(true);
-      setError("");
-      const [result, triggers] = await Promise.all([
-        pagesApi.getAnalytics(pageId, days),
-        triggersApi.getTop(pageId),
-      ]);
-      setData(result);
-      setTopTriggers(triggers);
-    } catch {
-      setError("Failed to load analytics");
-    } finally {
-      setLoading(false);
-    }
+      setLoading(true); setError('');
+      const [result, triggers] = await Promise.all([pagesApi.getAnalytics(pageId, days), triggersApi.getTop(pageId)]);
+      setData(result); setTopTriggers(triggers);
+    } catch { setError('Failed to load analytics'); }
+    finally { setLoading(false); }
   }, [pageId, days]);
 
-  async function onRefresh() {
-    setRefreshing(true);
-    await loadAnalytics();
-    setRefreshing(false);
-  }
+  async function onRefresh() { setRefreshing(true); await loadAnalytics(); setRefreshing(false); }
+  useEffect(() => { loadAnalytics(); }, [loadAnalytics]);
 
-  useEffect(() => {
-    loadAnalytics();
-  }, [loadAnalytics]);
-
-  const maxDaily = data
-    ? Math.max(...data.daily_messages.map((d) => d.count), 1)
-    : 1;
+  const maxDaily = data ? Math.max(...data.daily_messages.map((d) => d.count), 1) : 1;
 
   return (
-    <View className="flex-1 bg-[#F6F6F6]">
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="bg-white pt-14 pb-4 px-4 flex-row items-center border-b border-[#E4E6EB]">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-3 p-1">
-          <Ionicons name="arrow-back" size={24} color="#1C1E21" />
+      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: C.border }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 12, padding: 4 }}>
+          <Ionicons name="arrow-back" size={22} color={C.navy} />
         </TouchableOpacity>
-        <Text className="flex-1 text-[#1C1E21] text-xl font-bold">Analytics</Text>
+        <Text style={{ flex: 1, color: C.text, fontSize: 20, fontWeight: '800' }}>Analytics</Text>
         <PageSwitcherPill
           currentPageId={pageId}
           currentPageName={pageName}
@@ -98,344 +110,173 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
       </View>
 
       {/* Date range selector */}
-      <View className="flex-row gap-2 px-4 pt-3 pb-1">
+      <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingTop: 14, paddingBottom: 6 }}>
         {DATE_RANGES.map((range) => {
           const active = days === range.key;
           return (
             <TouchableOpacity
               key={range.key}
-              className={`rounded-xl px-3 py-1.5 ${active ? "bg-navy" : "bg-slate-200"}`}
-              onPress={() => {
-                if (!active) {
-                  setDays(range.key);
-                }
-              }}
+              onPress={() => { if (!active) setDays(range.key); }}
+              style={{ borderRadius: 12, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: active ? C.navy : C.light, borderWidth: 1, borderColor: active ? C.navy : C.border }}
             >
-              <Text
-                className={`text-xs font-semibold ${active ? "text-cyan" : "text-slate-500"}`}
-              >
-                {range.label}
-              </Text>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: active ? '#FFFFFF' : C.navy }}>{range.label}</Text>
             </TouchableOpacity>
           );
         })}
       </View>
 
       {loading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#163172" />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={C.blue} />
         </View>
       ) : error ? (
-        <View className="flex-1 items-center justify-center px-8">
-          <Ionicons name="cloud-offline" size={48} color="#cbd5e1" />
-          <Text className="text-slate-400 text-base mt-3 text-center">
-            {error}
-          </Text>
-          <TouchableOpacity
-            className="mt-4 bg-navy rounded-xl px-6 py-3"
-            onPress={loadAnalytics}
-          >
-            <Text className="text-white font-semibold">Try Again</Text>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
+          <Ionicons name="cloud-offline" size={48} color={C.text3} />
+          <Text style={{ color: C.text2, fontSize: 15, marginTop: 12, textAlign: 'center' }}>{error}</Text>
+          <TouchableOpacity style={{ marginTop: 16, backgroundColor: C.navy, borderRadius: 14, paddingHorizontal: 24, paddingVertical: 12 }} onPress={loadAnalytics}>
+            <Text style={{ color: '#fff', fontWeight: '700' }}>Try Again</Text>
           </TouchableOpacity>
         </View>
       ) : data ? (
-        <ScrollView
-          contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="#163172"
-            />
-          }
-        >
+        <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 40 }} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.blue} />}>
+
           {/* Top stat cards */}
-          <View className="flex-row gap-3 mb-3">
-            <StatCard
-              icon="chatbubbles"
-              label="Messages"
-              value={data.messages_this_week}
-              accent="#163172"
-              change={pctChange(
-                data.messages_this_week,
-                data.messages_last_week,
-              )}
-            />
-            <StatCard
-              icon="flash"
-              label="Bot Handled"
-              value={data.bot_handled_this_week}
-              accent="#D6E4F0"
-            />
+          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 10 }}>
+            <StatCard icon="chatbubbles" label="Messages"    value={data.messages_this_week}          color={C.navy}  change={pctChange(data.messages_this_week, data.messages_last_week)} />
+            <StatCard icon="flash"       label="Bot Handled" value={data.bot_handled_this_week}       color={C.blue} />
           </View>
-          <View className="flex-row gap-3 mb-4">
-            <StatCard
-              icon="people"
-              label="New Chats"
-              value={data.new_conversations_this_week}
-              accent="#1E56A0"
-            />
-            <StatCard
-              icon="person"
-              label="Your Replies"
-              value={data.owner_replies_this_week}
-              accent="#1E56A0"
-            />
+          <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16 }}>
+            <StatCard icon="people"      label="New Chats"   value={data.new_conversations_this_week} color={C.green} />
+            <StatCard icon="person"      label="Your Replies" value={data.owner_replies_this_week}    color={C.text2} />
           </View>
+
+          {/* Avg response time */}
           {data.avg_response_time_minutes !== null && (
-            <View
-              className="bg-white rounded-2xl p-4 mb-4"
-              style={{
-                shadowColor: "#163172",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.06,
-                shadowRadius: 8,
-                elevation: 2,
-              }}
-            >
-              <View className="flex-row items-center gap-2 mb-1">
-                <View className="bg-cyan-light rounded-lg p-1.5">
-                  <Ionicons name="timer-outline" size={16} color="#163172" />
+            <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name="timer-outline" size={15} color={C.navy} />
                 </View>
-                <Text className="text-navy font-semibold text-base">
-                  Avg Response Time
+                <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>Avg Response Time</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6, marginTop: 4 }}>
+                <Text style={{ color: C.text, fontSize: 36, fontWeight: '800' }}>
+                  {data.avg_response_time_minutes < 60 ? data.avg_response_time_minutes : Math.round(data.avg_response_time_minutes / 60)}
+                </Text>
+                <Text style={{ color: C.text3, fontSize: 14, marginBottom: 4 }}>
+                  {data.avg_response_time_minutes < 60 ? 'min' : 'hrs'}
                 </Text>
               </View>
-              <View className="flex-row items-end gap-2 mt-2">
-                <Text className="text-navy text-4xl font-bold">
-                  {data.avg_response_time_minutes < 60
-                    ? data.avg_response_time_minutes
-                    : Math.round(data.avg_response_time_minutes / 60)}
-                </Text>
-                <Text className="text-slate-400 text-base mb-1">
-                  {data.avg_response_time_minutes < 60 ? "min" : "hrs"}
-                </Text>
-              </View>
-              <Text className="text-slate-400 text-xs mt-1">
-                Average time from customer message to first reply (bot or
-                manual)
-              </Text>
+              <Text style={{ color: C.text3, fontSize: 11, marginTop: 4 }}>Average time from message to first reply</Text>
             </View>
           )}
 
           {/* Bot Efficiency */}
-          <View
-            className="bg-white rounded-2xl p-4 mb-4"
-            style={{
-              shadowColor: "#163172",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <View className="flex-row items-center gap-2 mb-3">
-              <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="flash" size={16} color="#163172" />
+          <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="flash" size={15} color={C.navy} />
               </View>
-              <Text className="text-navy font-semibold text-base">
-                Bot Efficiency
-              </Text>
+              <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>Bot Efficiency</Text>
             </View>
-            <View className="flex-row items-end gap-3 mb-2">
-              <Text className="text-navy text-4xl font-bold">
-                {data.bot_efficiency}%
-              </Text>
-              <Text className="text-slate-400 text-sm mb-1">
-                of replies handled by Reili Bot
-              </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8, marginBottom: 10 }}>
+              <Text style={{ color: C.text, fontSize: 36, fontWeight: '800' }}>{data.bot_efficiency}%</Text>
+              <Text style={{ color: C.text3, fontSize: 13, marginBottom: 4 }}>of replies handled by Reili</Text>
             </View>
             {/* Progress bar */}
-            <View className="bg-slate-100 rounded-full h-3 overflow-hidden">
-              <View
-                className="bg-cyan h-3 rounded-full"
-                style={{ width: `${data.bot_efficiency}%` }}
-              />
+            <View style={{ backgroundColor: C.light, borderRadius: 99, height: 8, overflow: 'hidden' }}>
+              <View style={{ backgroundColor: C.blue, height: 8, borderRadius: 99, width: `${data.bot_efficiency}%` }} />
             </View>
-            <View className="flex-row justify-between mt-2">
-              <Text className="text-slate-400 text-xs">
-                {data.bot_handled_this_week} bot replies
-              </Text>
-              <Text className="text-slate-400 text-xs">
-                {data.owner_replies_this_week} manual replies
-              </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
+              <Text style={{ color: C.text3, fontSize: 11 }}>{data.bot_handled_this_week} bot replies</Text>
+              <Text style={{ color: C.text3, fontSize: 11 }}>{data.owner_replies_this_week} manual</Text>
             </View>
           </View>
 
-          {/* 7-day chart */}
-          <View
-            className="bg-white rounded-2xl p-4 mb-4"
-            style={{
-              shadowColor: "#163172",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <View className="flex-row items-center gap-2 mb-4">
-              <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="bar-chart" size={16} color="#163172" />
+          {/* Daily chart */}
+          <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="bar-chart" size={15} color={C.navy} />
               </View>
-              <Text className="text-navy font-semibold text-base">
-                Messages per Day
-              </Text>
+              <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>Messages per Day</Text>
             </View>
-            <View
-              className="flex-row items-end justify-between"
-              style={{ height: 100 }}
-            >
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', height: 100 }}>
               {data.daily_messages.map((day, i) => {
-                const barHeight =
-                  maxDaily > 0
-                    ? Math.max(
-                        (day.count / maxDaily) * 80,
-                        day.count > 0 ? 6 : 0,
-                      )
-                    : 0;
+                const barHeight = maxDaily > 0 ? Math.max((day.count / maxDaily) * 80, day.count > 0 ? 6 : 0) : 0;
                 const isToday = i === data.daily_messages.length - 1;
                 return (
-                  <View key={day.label} className="flex-1 items-center gap-1">
-                    {day.count > 0 && (
-                      <Text className="text-slate-400 text-xs">
-                        {day.count}
-                      </Text>
-                    )}
-                    <View className="w-full px-1">
-                      <View
-                        className={`rounded-t-lg ${isToday ? "bg-cyan" : "bg-navy-light"}`}
-                        style={{
-                          height: barHeight || 3,
-                          opacity: isToday ? 1 : 0.5,
-                        }}
-                      />
+                  <View key={day.label} style={{ flex: 1, alignItems: 'center', gap: 4 }}>
+                    {day.count > 0 && <Text style={{ color: C.text3, fontSize: 10 }}>{day.count}</Text>}
+                    <View style={{ width: '100%', paddingHorizontal: 3 }}>
+                      <View style={{ height: barHeight || 3, borderRadius: 4, backgroundColor: isToday ? C.blue : C.light }} />
                     </View>
-                    <Text
-                      className={`text-xs ${isToday ? "text-navy font-bold" : "text-slate-400"}`}
-                    >
-                      {day.label}
-                    </Text>
+                    <Text style={{ fontSize: 10, fontWeight: isToday ? '800' : '400', color: isToday ? C.blue : C.text3 }}>{day.label}</Text>
                   </View>
                 );
               })}
             </View>
           </View>
 
-          {/* Week comparison */}
-          <View
-            className="bg-white rounded-2xl p-4 mb-4"
-            style={{
-              shadowColor: "#163172",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <View className="flex-row items-center gap-2 mb-3">
-              <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="trending-up" size={16} color="#163172" />
+          {/* Period comparison */}
+          <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+              <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="trending-up" size={15} color={C.navy} />
               </View>
-              <Text className="text-navy font-semibold text-base">
-                Period Comparison
-              </Text>
+              <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>Period Comparison</Text>
             </View>
-            <View className="flex-row gap-3">
-              <View className="flex-1 bg-slate-50 rounded-xl p-3">
-                <Text className="text-slate-400 text-xs mb-1">This period</Text>
-                <Text className="text-navy font-bold text-2xl">
-                  {data.messages_this_week}
-                </Text>
-                <Text className="text-slate-400 text-xs">messages</Text>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <View style={{ flex: 1, backgroundColor: C.bg, borderRadius: 14, padding: 12, borderWidth: 1, borderColor: C.border }}>
+                <Text style={{ color: C.text3, fontSize: 11, marginBottom: 4 }}>This period</Text>
+                <Text style={{ color: C.text, fontWeight: '800', fontSize: 22 }}>{data.messages_this_week}</Text>
+                <Text style={{ color: C.text3, fontSize: 11 }}>messages</Text>
               </View>
-              <View className="items-center justify-center px-2">
-                {(() => {
-                  const change = pctChange(
-                    data.messages_this_week,
-                    data.messages_last_week,
-                  );
-                  const up = change >= 0;
-                  return (
-                    <View
-                      className={`rounded-xl px-3 py-2 items-center ${up ? "bg-emerald-50" : "bg-red-50"}`}
-                    >
-                      <Ionicons
-                        name={up ? "trending-up" : "trending-down"}
-                        size={18}
-                        color={up ? "#10b981" : "#ef4444"}
-                      />
-                      <Text
-                        className={`text-xs font-bold mt-0.5 ${up ? "text-emerald-600" : "text-red-500"}`}
-                      >
-                        {up ? "+" : ""}
-                        {change}%
-                      </Text>
+              {(() => {
+                const change = pctChange(data.messages_this_week, data.messages_last_week);
+                const up = change >= 0;
+                return (
+                  <View style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8 }}>
+                    <View style={{ borderRadius: 12, paddingHorizontal: 10, paddingVertical: 8, alignItems: 'center', backgroundColor: up ? C.greenBg : C.redBg, borderWidth: 1, borderColor: up ? 'rgba(22,163,74,0.25)' : 'rgba(220,38,38,0.18)' }}>
+                      <Ionicons name={up ? 'trending-up' : 'trending-down'} size={17} color={up ? C.green : C.red} />
+                      <Text style={{ fontSize: 11, fontWeight: '800', marginTop: 2, color: up ? C.green : C.red }}>{up ? '+' : ''}{change}%</Text>
                     </View>
-                  );
-                })()}
-              </View>
-              <View className="flex-1 bg-slate-50 rounded-xl p-3">
-                <Text className="text-slate-400 text-xs mb-1">Prev period</Text>
-                <Text className="text-navy font-bold text-2xl">
-                  {data.messages_last_week}
-                </Text>
-                <Text className="text-slate-400 text-xs">messages</Text>
+                  </View>
+                );
+              })()}
+              <View style={{ flex: 1, backgroundColor: C.bg, borderRadius: 14, padding: 12, borderWidth: 1, borderColor: C.border }}>
+                <Text style={{ color: C.text3, fontSize: 11, marginBottom: 4 }}>Prev period</Text>
+                <Text style={{ color: C.text, fontWeight: '800', fontSize: 22 }}>{data.messages_last_week}</Text>
+                <Text style={{ color: C.text3, fontSize: 11 }}>messages</Text>
               </View>
             </View>
           </View>
 
-          {/* Top Triggers Leaderboard */}
+          {/* Top triggers */}
           {topTriggers.length > 0 && (
-            <View
-              className="bg-white rounded-2xl p-4 mb-4"
-              style={{
-                shadowColor: "#163172",
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.06,
-                shadowRadius: 8,
-                elevation: 2,
-              }}
-            >
-              <View className="flex-row items-center gap-2 mb-3">
-                <View className="bg-cyan-light rounded-lg p-1.5">
-                  <Ionicons name="trophy" size={16} color="#163172" />
+            <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name="trophy" size={15} color={C.navy} />
                 </View>
-                <Text className="text-navy font-semibold text-base">
-                  Most Asked
-                </Text>
+                <Text style={{ color: C.text, fontWeight: '700', fontSize: 15 }}>Most Asked</Text>
               </View>
               {topTriggers.map((trigger, index) => {
                 const maxFires = topTriggers[0]?.fire_count ?? 1;
-                const barWidth = Math.max(
-                  (trigger.fire_count / maxFires) * 100,
-                  8,
-                );
+                const barWidth = Math.max((trigger.fire_count / maxFires) * 100, 8);
                 return (
-                  <View key={trigger.id} className="mb-2.5">
-                    <View className="flex-row items-center justify-between mb-1">
-                      <View className="flex-row items-center gap-2 flex-1 mr-2">
-                        <Text className="text-slate-400 text-xs font-bold w-5">
-                          {index + 1}
-                        </Text>
-                        <Text
-                          className="text-navy text-sm font-medium flex-1"
-                          numberOfLines={1}
-                        >
-                          {trigger.keywords.join(", ")}
+                  <View key={trigger.id} style={{ marginBottom: 12 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1, marginRight: 8 }}>
+                        <Text style={{ color: C.text3, fontSize: 11, fontWeight: '800', width: 18 }}>{index + 1}</Text>
+                        <Text style={{ color: C.text, fontSize: 13, fontWeight: '600', flex: 1 }} numberOfLines={1}>
+                          {trigger.keywords.join(', ')}
                         </Text>
                       </View>
-                      <Text className="text-slate-500 text-xs font-semibold">
-                        {trigger.fire_count}×
-                      </Text>
+                      <Text style={{ color: C.text2, fontSize: 12, fontWeight: '700' }}>{trigger.fire_count}×</Text>
                     </View>
-                    <View className="ml-7 bg-slate-100 rounded-full h-2 overflow-hidden">
-                      <View
-                        className={`h-2 rounded-full ${index === 0 ? "bg-cyan" : "bg-navy-light"}`}
-                        style={{
-                          width: `${barWidth}%`,
-                          opacity: index === 0 ? 1 : 0.5,
-                        }}
-                      />
+                    <View style={{ marginLeft: 26, backgroundColor: C.light, borderRadius: 99, height: 6, overflow: 'hidden' }}>
+                      <View style={{ height: 6, borderRadius: 99, width: `${barWidth}%`, backgroundColor: C.blue }} />
                     </View>
                   </View>
                 );
@@ -444,50 +285,6 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           )}
         </ScrollView>
       ) : null}
-    </View>
-  );
-}
-
-function StatCard({
-  icon,
-  label,
-  value,
-  accent,
-  change,
-}: {
-  icon: any;
-  label: string;
-  value: number;
-  accent: string;
-  change?: number;
-}) {
-  return (
-    <View
-      className="flex-1 bg-white rounded-2xl p-4"
-      style={{
-        shadowColor: "#163172",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 6,
-        elevation: 1,
-      }}
-    >
-      <View
-        className="w-8 h-8 rounded-lg items-center justify-center mb-2"
-        style={{ backgroundColor: accent + "18" }}
-      >
-        <Ionicons name={icon} size={18} color={accent} />
-      </View>
-      <Text className="text-navy text-2xl font-bold">{value}</Text>
-      <Text className="text-slate-400 text-xs mt-0.5">{label}</Text>
-      {change !== undefined && (
-        <Text
-          className={`text-xs font-semibold mt-1 ${change >= 0 ? "text-emerald-500" : "text-red-400"}`}
-        >
-          {change >= 0 ? "+" : ""}
-          {change}% vs prev period
-        </Text>
-      )}
     </View>
   );
 }
