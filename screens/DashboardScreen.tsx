@@ -92,25 +92,24 @@ export default function DashboardScreen() {
       await pagesApi.toggleActive(page.id);
     } catch {
       setPages((prev) => prev.map((p) => p.id === page.id ? { ...p, is_active: page.is_active } : p));
-      Alert.alert('Error', 'Failed to update bot status. Please try again.');
+      Alert.alert('Error', 'Failed to update bot status.');
     }
   }
 
   function handleDisconnect(page: Page) {
     Alert.alert(
       'Disconnect Page?',
-      `Remove "${page.page_name}" from Reili? The bot will stop replying to its Messenger messages.`,
+      `Remove "${page.page_name}" from Reili? The bot will stop replying.`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Disconnect',
-          style: 'destructive',
+          text: 'Disconnect', style: 'destructive',
           onPress: async () => {
             try {
               await pagesApi.disconnect(page.id);
               setPages((prev) => prev.filter((p) => p.id !== page.id));
             } catch {
-              Alert.alert('Error', 'Failed to disconnect page. Please try again.');
+              Alert.alert('Error', 'Failed to disconnect page.');
             }
           },
         },
@@ -120,42 +119,23 @@ export default function DashboardScreen() {
 
   function navigateToChats(page: Page) {
     setActivePage({ id: page.id, name: page.page_name });
-    navigation.navigate('ChatsTab', {
-      screen: 'Conversations',
-      params: { pageId: page.id, pageName: page.page_name },
-    } as any);
+    navigation.navigate('ChatsTab', { screen: 'Conversations', params: { pageId: page.id, pageName: page.page_name } } as any);
   }
-
   function navigateToOrders(page: Page) {
     setActivePage({ id: page.id, name: page.page_name });
-    navigation.navigate('OrdersTab', {
-      screen: 'Orders',
-      params: { pageId: page.id, pageName: page.page_name },
-    } as any);
+    navigation.navigate('OrdersTab', { screen: 'Orders', params: { pageId: page.id, pageName: page.page_name } } as any);
   }
-
   function navigateToTriggers(page: Page) {
     setActivePage({ id: page.id, name: page.page_name });
-    navigation.navigate('MoreTab', {
-      screen: 'Triggers',
-      params: { pageId: page.id, pageName: page.page_name },
-    } as any);
+    navigation.navigate('MoreTab', { screen: 'Triggers', params: { pageId: page.id, pageName: page.page_name } } as any);
   }
-
   function navigateToAnalytics(page: Page) {
     setActivePage({ id: page.id, name: page.page_name });
-    navigation.navigate('MoreTab', {
-      screen: 'Analytics',
-      params: { pageId: page.id, pageName: page.page_name },
-    } as any);
+    navigation.navigate('MoreTab', { screen: 'Analytics', params: { pageId: page.id, pageName: page.page_name } } as any);
   }
-
   function navigateToSettings(page: Page) {
     setActivePage({ id: page.id, name: page.page_name });
-    navigation.navigate('MoreTab', {
-      screen: 'PageSettings',
-      params: { pageId: page.id, pageName: page.page_name },
-    } as any);
+    navigation.navigate('MoreTab', { screen: 'PageSettings', params: { pageId: page.id, pageName: page.page_name } } as any);
   }
 
   useEffect(() => {
@@ -168,9 +148,7 @@ export default function DashboardScreen() {
     if (pages.length === 0) return;
     registerForPushNotifications().then((token) => {
       if (!token) return;
-      pages.forEach((page) => {
-        pagesApi.savePushToken(page.id, token).catch(() => {});
-      });
+      pages.forEach((page) => pagesApi.savePushToken(page.id, token).catch(() => {}));
     });
   }, [pages]);
 
@@ -180,35 +158,60 @@ export default function DashboardScreen() {
   const totalOrders     = allStats.reduce((s, p) => s + (p.orders_today ?? 0), 0);
   const totalRevenue    = allStats.reduce((s, p) => s + (p.revenue_today ?? 0), 0);
 
-  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const activeCount = pages.filter((p) => p.is_active).length;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F6F6F6' }}>
+    <View style={{ flex: 1, backgroundColor: '#F0F2F7' }}>
       <StatusBar style="light" />
 
       {/* ── Header ── */}
       <View style={{
         backgroundColor: '#163172',
-        paddingTop: insets.top + 14,
-        paddingBottom: 18,
-        paddingHorizontal: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        paddingTop: insets.top + 16,
+        paddingBottom: 28,
+        paddingHorizontal: 22,
+        borderBottomLeftRadius: 36,
+        borderBottomRightRadius: 36,
       }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <Image source={require('../assets/reili.png')} style={{ width: 30, height: 30 }} resizeMode="contain" />
-          <View>
-            <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.3 }}>Reili</Text>
-            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: '500' }}>Bot Dashboard</Text>
+        {/* Top row */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
+            <Image source={require('../assets/reili.png')} style={{ width: 28, height: 28 }} resizeMode="contain" />
+            <Text style={{ color: '#fff', fontSize: 18, fontWeight: '800', letterSpacing: -0.3 }}>Reili</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowLogout(true)}
+            style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Ionicons name="person-outline" size={17} color="#D6E4F0" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Greeting */}
+        <Text style={{ color: 'rgba(255,255,255,0.55)', fontSize: 13, fontWeight: '500', marginBottom: 4 }}>
+          {greeting} 👋
+        </Text>
+        <Text style={{ color: '#fff', fontSize: 24, fontWeight: '800', letterSpacing: -0.6, marginBottom: 14 }}>
+          Your Bot Dashboard
+        </Text>
+
+        {/* Inline summary chips */}
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 99, paddingHorizontal: 12, paddingVertical: 6 }}>
+            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#10B981' }} />
+            <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: '600' }}>
+              {activeCount} bot{activeCount !== 1 ? 's' : ''} active
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 99, paddingHorizontal: 12, paddingVertical: 6 }}>
+            <Ionicons name="chatbubble-outline" size={11} color="rgba(255,255,255,0.7)" />
+            <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: 12, fontWeight: '600' }}>
+              {totalMessages} messages today
+            </Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => setShowLogout(true)}
-          style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.1)', alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Ionicons name="person" size={17} color="#D6E4F0" />
-        </TouchableOpacity>
       </View>
 
       {/* ── States ── */}
@@ -227,78 +230,55 @@ export default function DashboardScreen() {
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 28 }}
+          contentContainerStyle={{ paddingBottom: 32 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
         >
-          {/* ── Today's Activity card ── */}
-          <View style={{
-            backgroundColor: '#163172',
-            marginHorizontal: 16,
-            marginTop: 16,
-            borderRadius: 22,
-            paddingHorizontal: 20,
-            paddingTop: 18,
-            paddingBottom: 22,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-              <Text style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' }}>
-                Today's Activity
-              </Text>
-              <Text style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11 }}>{today}</Text>
+          {/* ── Stats section ── */}
+          <View style={{ paddingHorizontal: 16, paddingTop: 18, paddingBottom: 4 }}>
+            <Text style={{ color: '#1C1E21', fontSize: 14, fontWeight: '800', letterSpacing: -0.2 }}>Today's Overview</Text>
+            <Text style={{ color: '#9CA3AF', fontSize: 11, marginTop: 1 }}>Live stats across all pages</Text>
+          </View>
+          <View style={{ paddingHorizontal: 16, paddingTop: 10, gap: 10 }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <StatCard icon="chatbubble-ellipses-outline" value={totalMessages}                        label="Messages Today"  color="#3B82F6" />
+              <StatCard icon="flash-outline"               value={totalBotHandled}                      label="Bot Replies"     color="#8B5CF6" />
             </View>
-
-            <View style={{ flexDirection: 'row' }}>
-              <TodayStat icon="chatbubbles"  value={totalMessages}                    label="Messages"   accent="#D6E4F0" />
-              <Divider />
-              <TodayStat icon="flash"        value={totalBotHandled}                  label="Bot Replies" accent="#A78BFA" />
-              <Divider />
-              <TodayStat icon="bag"          value={totalOrders}                      label="Orders"     accent="#34D399" />
-              <Divider />
-              <TodayStat icon="cash"         value={`₱${totalRevenue.toLocaleString()}`} label="Revenue" accent="#FBB040" />
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <StatCard icon="bag-handle-outline"          value={totalOrders}                          label="Orders Today"    color="#10B981" />
+              <StatCard icon="cash-outline"                value={`₱${totalRevenue.toLocaleString()}`}  label="Revenue Today"   color="#F59E0B" />
             </View>
           </View>
 
-          {/* ── Connected Pages header ── */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 26, marginBottom: 12 }}>
-            <Text style={{ color: '#65676B', fontSize: 11, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' }}>
-              Connected Pages
-            </Text>
+          {/* ── Pages header ── */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, marginTop: 20, marginBottom: 10 }}>
+            <View>
+              <Text style={{ color: '#1C1E21', fontSize: 14, fontWeight: '800', letterSpacing: -0.2 }}>Your Pages</Text>
+              <Text style={{ color: '#9CA3AF', fontSize: 11, marginTop: 1 }}>{pages.length} page{pages.length !== 1 ? 's' : ''} connected</Text>
+            </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('ConnectPage')}
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#163172', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7 }}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#163172', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 8 }}
             >
-              <Ionicons name="add" size={13} color="#D6E4F0" />
+              <Ionicons name="add" size={15} color="#D6E4F0" />
               <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>Add Page</Text>
             </TouchableOpacity>
           </View>
 
           {/* ── Empty state ── */}
           {pages.length === 0 ? (
-            <View style={{
-              backgroundColor: '#fff',
-              marginHorizontal: 16,
-              borderRadius: 22,
-              alignItems: 'center',
-              paddingVertical: 48,
-              paddingHorizontal: 32,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.07,
-              shadowRadius: 8,
-              elevation: 2,
-            }}>
-              <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                <Ionicons name="logo-facebook" size={36} color="#D6E4F0" />
+            <View style={{ backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 24, alignItems: 'center', paddingVertical: 52, paddingHorizontal: 32, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 12, elevation: 2 }}>
+              <View style={{ width: 76, height: 76, borderRadius: 24, backgroundColor: '#EEF3FF', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                <Ionicons name="logo-facebook" size={38} color="#163172" />
               </View>
-              <Text style={{ color: '#1C1E21', fontWeight: '800', fontSize: 16 }}>No pages connected</Text>
-              <Text style={{ color: '#65676B', fontSize: 13, marginTop: 6, textAlign: 'center', lineHeight: 19 }}>
-                Connect your Facebook Page to start automating Messenger replies.
+              <Text style={{ color: '#1C1E21', fontWeight: '800', fontSize: 17 }}>No pages yet</Text>
+              <Text style={{ color: '#9CA3AF', fontSize: 13, marginTop: 7, textAlign: 'center', lineHeight: 20 }}>
+                Connect your Facebook Page to start automating Messenger replies for your business.
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ConnectPage')}
-                style={{ marginTop: 20, backgroundColor: '#163172', borderRadius: 14, paddingHorizontal: 28, paddingVertical: 13, flexDirection: 'row', alignItems: 'center', gap: 8 }}
+                style={{ marginTop: 24, backgroundColor: '#163172', borderRadius: 16, paddingHorizontal: 28, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}
               >
-                <Ionicons name="add" size={16} color="#D6E4F0" />
+                <Ionicons name="add-circle-outline" size={18} color="#D6E4F0" />
                 <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Connect a Page</Text>
               </TouchableOpacity>
             </View>
@@ -306,102 +286,96 @@ export default function DashboardScreen() {
             pages.map((page) => {
               const stats  = pageStats[page.id];
               const unread = stats?.unread_count ?? 0;
+              const triggers = triggerCounts[page.id] ?? 0;
               return (
                 <View
                   key={page.id}
                   style={{
                     backgroundColor: '#FFFFFF',
                     marginHorizontal: 16,
-                    marginBottom: 12,
-                    borderRadius: 22,
+                    marginBottom: 14,
+                    borderRadius: 24,
                     shadowColor: '#163172',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.07,
-                    shadowRadius: 10,
-                    elevation: 3,
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 12,
+                    elevation: 4,
                     overflow: 'hidden',
                   }}
                 >
-                  {/* ── Card top: identity + toggle ── */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 14 }}>
-                    <View style={{ width: 46, height: 46, borderRadius: 14, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
-                      <Ionicons name="logo-facebook" size={22} color="#D6E4F0" />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 15 }} numberOfLines={1}>
-                        {page.page_name}
-                      </Text>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                        <View style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          gap: 4,
-                          backgroundColor: page.is_active ? '#ECFDF5' : '#F1F5F9',
-                          borderRadius: 99,
-                          paddingHorizontal: 8,
-                          paddingVertical: 3,
-                        }}>
-                          <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: page.is_active ? '#10B981' : '#94A3B8' }} />
-                          <Text style={{ color: page.is_active ? '#059669' : '#64748B', fontSize: 10, fontWeight: '600' }}>
-                            {page.is_active ? 'Bot Active' : 'Bot Paused'}
-                          </Text>
+                  {/* Active accent bar */}
+                  <View style={{ height: 4, backgroundColor: page.is_active ? '#10B981' : '#E4E6EB' }} />
+
+                  <View style={{ padding: 16 }}>
+                    {/* Identity row */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 14 }}>
+                      <View style={{ width: 52, height: 52, borderRadius: 16, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center', marginRight: 13 }}>
+                        <Ionicons name="logo-facebook" size={26} color="#D6E4F0" />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ color: '#1C1E21', fontWeight: '800', fontSize: 16, letterSpacing: -0.3 }} numberOfLines={1}>
+                          {page.page_name}
+                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 5 }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: page.is_active ? '#ECFDF5' : '#F1F5F9', borderRadius: 99, paddingHorizontal: 9, paddingVertical: 4 }}>
+                            <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: page.is_active ? '#10B981' : '#94A3B8' }} />
+                            <Text style={{ color: page.is_active ? '#059669' : '#64748B', fontSize: 11, fontWeight: '700' }}>
+                              {page.is_active ? 'Bot Active' : 'Bot Paused'}
+                            </Text>
+                          </View>
+                          {unread > 0 && (
+                            <View style={{ backgroundColor: '#EEF3FF', borderRadius: 99, paddingHorizontal: 9, paddingVertical: 4 }}>
+                              <Text style={{ color: '#163172', fontSize: 11, fontWeight: '800' }}>{unread} unread</Text>
+                            </View>
+                          )}
                         </View>
+                      </View>
+                      <Switch
+                        value={page.is_active}
+                        onValueChange={() => handleToggle(page)}
+                        trackColor={{ false: '#E4E6EB', true: '#D6E4F0' }}
+                        thumbColor={page.is_active ? '#163172' : '#94A3B8'}
+                      />
+                    </View>
+
+                    {/* Mini stats row */}
+                    <View style={{ flexDirection: 'row', gap: 6, marginBottom: 14 }}>
+                      <MiniStat icon="flash-outline"       value={triggers}                         label="Triggers" color="#8B5CF6" />
+                      <MiniStat icon="chatbubbles-outline" value={stats?.conversation_count ?? 0}   label="Chats"    color="#3B82F6" />
+                      <MiniStat icon="trending-up-outline" value={stats?.messages_today ?? 0}       label="Today"    color="#10B981" />
+                    </View>
+
+                    {/* Action buttons */}
+                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                      <TouchableOpacity
+                        onPress={() => navigateToChats(page)}
+                        activeOpacity={0.8}
+                        style={{ flex: 1, backgroundColor: '#163172', borderRadius: 14, paddingVertical: 11, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+                      >
+                        <Ionicons name="chatbubbles" size={14} color="#D6E4F0" />
+                        <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>Chats</Text>
                         {unread > 0 && (
-                          <View style={{ backgroundColor: '#D6E4F0', borderRadius: 99, paddingHorizontal: 7, paddingVertical: 3 }}>
-                            <Text style={{ color: '#163172', fontSize: 10, fontWeight: '800' }}>{unread} new</Text>
+                          <View style={{ backgroundColor: '#D6E4F0', borderRadius: 99, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 }}>
+                            <Text style={{ color: '#163172', fontSize: 10, fontWeight: '800' }}>{unread}</Text>
                           </View>
                         )}
-                      </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => navigateToOrders(page)}
+                        activeOpacity={0.8}
+                        style={{ flex: 1, backgroundColor: '#EEF3FF', borderRadius: 14, paddingVertical: 11, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+                      >
+                        <Ionicons name="bag-outline" size={14} color="#163172" />
+                        <Text style={{ color: '#163172', fontSize: 13, fontWeight: '700' }}>Orders</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => setMenuPage(page)}
+                        activeOpacity={0.8}
+                        style={{ backgroundColor: '#F0F2F7', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 11, alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <Ionicons name="ellipsis-horizontal" size={17} color="#65676B" />
+                      </TouchableOpacity>
                     </View>
-                    <Switch
-                      value={page.is_active}
-                      onValueChange={() => handleToggle(page)}
-                      trackColor={{ false: '#E4E6EB', true: '#D6E4F0' }}
-                      thumbColor={page.is_active ? '#163172' : '#94A3B8'}
-                    />
-                  </View>
-
-                  {/* ── Stats strip ── */}
-                  <View style={{
-                    flexDirection: 'row',
-                    backgroundColor: '#F8F9FA',
-                    marginHorizontal: 16,
-                    borderRadius: 14,
-                    paddingVertical: 12,
-                    marginBottom: 14,
-                  }}>
-                    <CardStat value={triggerCounts[page.id] ?? 0} label="Triggers" />
-                    <View style={{ width: 1, backgroundColor: '#E4E6EB' }} />
-                    <CardStat value={stats?.conversation_count ?? 0} label="Chats" />
-                    <View style={{ width: 1, backgroundColor: '#E4E6EB' }} />
-                    <CardStat value={stats?.messages_today ?? 0} label="Today" />
-                  </View>
-
-                  {/* ── Action row ── */}
-                  <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingBottom: 16 }}>
-                    <TouchableOpacity
-                      onPress={() => navigateToChats(page)}
-                      activeOpacity={0.8}
-                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#163172', borderRadius: 12, paddingVertical: 11 }}
-                    >
-                      <Ionicons name="chatbubbles" size={14} color="#D6E4F0" />
-                      <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>Chats</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => navigateToOrders(page)}
-                      activeOpacity={0.8}
-                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#F6F6F6', borderRadius: 12, paddingVertical: 11 }}
-                    >
-                      <Ionicons name="bag-outline" size={14} color="#1C1E21" />
-                      <Text style={{ color: '#1C1E21', fontSize: 12, fontWeight: '700' }}>Orders</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => setMenuPage(page)}
-                      activeOpacity={0.8}
-                      style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6F6F6', borderRadius: 12, paddingHorizontal: 15, paddingVertical: 11 }}
-                    >
-                      <Ionicons name="ellipsis-horizontal" size={17} color="#65676B" />
-                    </TouchableOpacity>
                   </View>
                 </View>
               );
@@ -412,14 +386,11 @@ export default function DashboardScreen() {
 
       {/* ── Logout modal ── */}
       <Modal visible={showLogout} transparent animationType="fade" onRequestClose={() => setShowLogout(false)}>
-        <Pressable
-          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: 32 }}
-          onPress={() => !loggingOut && setShowLogout(false)}
-        >
+        <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: 32 }} onPress={() => !loggingOut && setShowLogout(false)}>
           <Pressable onPress={() => {}} style={{ width: '100%' }}>
             <View style={{ backgroundColor: '#fff', borderRadius: 28, overflow: 'hidden', shadowColor: '#000', shadowOffset: { width: 0, height: 20 }, shadowOpacity: 0.25, shadowRadius: 40, elevation: 24 }}>
               <View style={{ backgroundColor: '#163172', alignItems: 'center', paddingTop: 32, paddingBottom: 24 }}>
-                <View style={{ width: 68, height: 68, borderRadius: 34, backgroundColor: 'rgba(255,255,255,0.1)', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+                <View style={{ width: 68, height: 68, borderRadius: 34, backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
                   <Ionicons name="log-out-outline" size={32} color="#D6E4F0" />
                 </View>
                 <Text style={{ color: '#fff', fontSize: 20, fontWeight: '800' }}>Log out?</Text>
@@ -429,13 +400,7 @@ export default function DashboardScreen() {
               </View>
               <View style={{ padding: 20, gap: 10 }}>
                 <TouchableOpacity
-                  onPress={async () => {
-                    setLoggingOut(true);
-                    await supabase.auth.signOut();
-                    setActivePage(null);
-                    setLoggingOut(false);
-                    setShowLogout(false);
-                  }}
+                  onPress={async () => { setLoggingOut(true); await supabase.auth.signOut(); setActivePage(null); setLoggingOut(false); setShowLogout(false); }}
                   disabled={loggingOut}
                   activeOpacity={0.85}
                   style={{ backgroundColor: '#EF4444', borderRadius: 16, paddingVertical: 15, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
@@ -445,12 +410,7 @@ export default function DashboardScreen() {
                     : <><Ionicons name="log-out-outline" size={18} color="#fff" /><Text style={{ color: '#fff', fontWeight: '800', fontSize: 15 }}>Log Out</Text></>
                   }
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => setShowLogout(false)}
-                  disabled={loggingOut}
-                  activeOpacity={0.7}
-                  style={{ backgroundColor: '#F6F6F6', borderRadius: 16, paddingVertical: 15, alignItems: 'center' }}
-                >
+                <TouchableOpacity onPress={() => setShowLogout(false)} disabled={loggingOut} activeOpacity={0.7} style={{ backgroundColor: '#F6F6F6', borderRadius: 16, paddingVertical: 15, alignItems: 'center' }}>
                   <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 15 }}>Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -462,15 +422,15 @@ export default function DashboardScreen() {
       {/* ── Page actions bottom sheet ── */}
       <Modal visible={menuPage !== null} transparent animationType="slide" onRequestClose={() => setMenuPage(null)}>
         <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.45)' }} onPress={() => setMenuPage(null)} />
-        <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 20) + 4, paddingTop: 8 }}>
+        <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 20) + 4, paddingTop: 8 }}>
           <View style={{ width: 40, height: 4, backgroundColor: '#E4E6EB', borderRadius: 2, alignSelf: 'center', marginBottom: 20 }} />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F6F6F6' }}>
-            <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: 46, height: 46, borderRadius: 14, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="logo-facebook" size={22} color="#D6E4F0" />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 16 }} numberOfLines={1}>{menuPage?.page_name}</Text>
-              <Text style={{ color: '#65676B', fontSize: 12, marginTop: 1 }}>Facebook Page</Text>
+              <Text style={{ color: '#1C1E21', fontWeight: '800', fontSize: 16 }} numberOfLines={1}>{menuPage?.page_name}</Text>
+              <Text style={{ color: '#9CA3AF', fontSize: 12, marginTop: 2 }}>Facebook Page</Text>
             </View>
           </View>
           <SheetRow icon="flash-outline"     label="Triggers"     onPress={() => { setMenuPage(null); navigateToTriggers(menuPage!); }} />
@@ -478,11 +438,7 @@ export default function DashboardScreen() {
           <SheetRow icon="settings-outline"  label="Bot Settings" onPress={() => { setMenuPage(null); navigateToSettings(menuPage!); }} />
           <View style={{ height: 1, backgroundColor: '#F6F6F6', marginVertical: 8 }} />
           <SheetRow icon="trash-outline" label="Disconnect Page" danger onPress={() => { setMenuPage(null); handleDisconnect(menuPage!); }} />
-          <TouchableOpacity
-            style={{ marginTop: 12, backgroundColor: '#F6F6F6', borderRadius: 14, paddingVertical: 14, alignItems: 'center' }}
-            onPress={() => setMenuPage(null)}
-            activeOpacity={0.7}
-          >
+          <TouchableOpacity style={{ marginTop: 12, backgroundColor: '#F6F6F6', borderRadius: 14, paddingVertical: 14, alignItems: 'center' }} onPress={() => setMenuPage(null)} activeOpacity={0.7}>
             <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 15 }}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -491,34 +447,33 @@ export default function DashboardScreen() {
   );
 }
 
-function TodayStat({ icon, value, label, accent }: { icon: any; value: string | number; label: string; accent: string }) {
+function StatCard({ icon, value, label, color }: { icon: any; value: string | number; label: string; color: string }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
-      <View style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: `${accent}22`, alignItems: 'center', justifyContent: 'center', marginBottom: 8 }}>
-        <Ionicons name={icon} size={16} color={accent} />
+    <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 20, padding: 16, shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 }}>
+      <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: `${color}18`, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+        <Ionicons name={icon} size={19} color={color} />
       </View>
-      <Text style={{ color: '#FFFFFF', fontSize: 18, fontWeight: '800', letterSpacing: -0.5 }}>{value}</Text>
-      <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: '500', marginTop: 3, textAlign: 'center' }}>{label}</Text>
+      <Text style={{ color: '#1C1E21', fontSize: 24, fontWeight: '800', letterSpacing: -0.8 }}>{value}</Text>
+      <Text style={{ color: '#9CA3AF', fontSize: 11, fontWeight: '500', marginTop: 3 }}>{label}</Text>
     </View>
   );
 }
 
-function Divider() {
-  return <View style={{ width: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginHorizontal: 2 }} />;
-}
-
-function CardStat({ value, label }: { value: number; label: string }) {
+function MiniStat({ icon, value, label, color }: { icon: any; value: number; label: string; color: string }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center' }}>
-      <Text style={{ color: '#1C1E21', fontSize: 17, fontWeight: '800' }}>{value}</Text>
-      <Text style={{ color: '#9CA3AF', fontSize: 10, fontWeight: '500', marginTop: 2 }}>{label}</Text>
+    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#F0F2F7', borderRadius: 12, paddingHorizontal: 10, paddingVertical: 9 }}>
+      <Ionicons name={icon} size={13} color={color} />
+      <View>
+        <Text style={{ color: '#1C1E21', fontSize: 13, fontWeight: '800' }}>{value}</Text>
+        <Text style={{ color: '#9CA3AF', fontSize: 10, fontWeight: '500' }}>{label}</Text>
+      </View>
     </View>
   );
 }
 
 function SheetRow({ icon, label, onPress, danger }: { icon: any; label: string; onPress: () => void; danger?: boolean }) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 4, gap: 14 }}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 13, paddingHorizontal: 4, gap: 14 }}>
       <View style={{ width: 38, height: 38, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: danger ? '#FEF2F2' : '#F6F6F6' }}>
         <Ionicons name={icon} size={18} color={danger ? '#EF4444' : '#1C1E21'} />
       </View>

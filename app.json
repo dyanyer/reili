@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/reili.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/reili.png",
       "resizeMode": "contain",
@@ -22,8 +22,7 @@
         "foregroundImage": "./assets/reili.png",
         "backgroundColor": "#0E1C40"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "edgeToEdgeEnabled": false
     },
     "web": {
       "favicon": "./assets/favicon.png",

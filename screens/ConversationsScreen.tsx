@@ -65,6 +65,14 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   const [pageId, setPageId] = useState(route.params?.pageId ?? activePage?.id ?? '');
   const [pageName, setPageName] = useState(route.params?.pageName ?? activePage?.name ?? '');
 
+  // Sync when active page changes from MoreScreen switcher
+  useEffect(() => {
+    if (activePage && activePage.id !== pageId) {
+      setPageId(activePage.id);
+      setPageName(activePage.name);
+    }
+  }, [activePage]);
+
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

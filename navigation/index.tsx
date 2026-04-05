@@ -120,6 +120,14 @@ const TAB_CONFIG: Record<string, { label: string; icon: string; activeIcon: stri
 function CustomTabBar({ state, navigation }: any) {
   const insets = useSafeAreaInsets();
 
+  // Hide tab bar when inside ConversationThread, but keep safe area space
+  const activeTab = state.routes[state.index];
+  const nestedState = activeTab?.state;
+  const nestedRouteName = nestedState?.routes?.[nestedState?.index ?? 0]?.name;
+  if (nestedRouteName === 'ConversationThread') {
+    return <View style={{ height: insets.bottom, backgroundColor: '#fff' }} />;
+  }
+
   return (
     // Outer shell — matches screen background to create "floating" illusion
     <View style={{
