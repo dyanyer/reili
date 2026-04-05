@@ -78,7 +78,7 @@ export default function PageSwitcherPill({
             paddingTop: 22,
             paddingBottom: 16,
             borderBottomWidth: 1,
-            borderBottomColor: '#F0F2F5',
+            borderBottomColor: '#F6F6F6',
           }}>
             <View>
               <Text style={{ fontSize: 17, fontWeight: '800', color: '#1C1E21' }}>
@@ -94,7 +94,7 @@ export default function PageSwitcherPill({
               style={{
                 width: 32, height: 32,
                 borderRadius: 16,
-                backgroundColor: '#F0F2F5',
+                backgroundColor: '#F6F6F6',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -106,7 +106,7 @@ export default function PageSwitcherPill({
           {/* Page list */}
           <View style={{ paddingHorizontal: 16, paddingTop: 14 }}>
             {loading ? (
-              <ActivityIndicator color="#0E1C40" style={{ marginVertical: 36 }} />
+              <ActivityIndicator color="#163172" style={{ marginVertical: 36 }} />
             ) : pages.length === 0 ? (
               <Text style={{ color: '#65676B', textAlign: 'center', paddingVertical: 32 }}>
                 No pages found
@@ -127,21 +127,21 @@ export default function PageSwitcherPill({
                       borderRadius: 16,
                       backgroundColor: isSelected ? '#EEF3FF' : '#F8F9FA',
                       borderWidth: 1.5,
-                      borderColor: isSelected ? '#0E1C40' : 'transparent',
+                      borderColor: isSelected ? '#163172' : 'transparent',
                       gap: 12,
                     }}
                   >
                     <View style={{
                       width: 46, height: 46,
                       borderRadius: 14,
-                      backgroundColor: isSelected ? '#0E1C40' : '#E8F0FF',
+                      backgroundColor: isSelected ? '#163172' : '#E8F0FF',
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
                       <Ionicons
                         name="logo-facebook"
                         size={22}
-                        color={isSelected ? '#00C5FF' : '#0E1C40'}
+                        color={isSelected ? '#D6E4F0' : '#163172'}
                       />
                     </View>
 
@@ -168,11 +168,11 @@ export default function PageSwitcherPill({
                       <View style={{
                         width: 28, height: 28,
                         borderRadius: 14,
-                        backgroundColor: '#0E1C40',
+                        backgroundColor: '#163172',
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                        <Ionicons name="checkmark" size={15} color="#00C5FF" />
+                        <Ionicons name="checkmark" size={15} color="#D6E4F0" />
                       </View>
                     ) : (
                       <Ionicons name="chevron-forward" size={16} color="#C4C4C4" />

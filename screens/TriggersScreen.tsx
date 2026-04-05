@@ -179,7 +179,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -198,7 +198,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
             className="bg-navy rounded-xl px-4 py-2 flex-row items-center gap-1"
             onPress={() => navigation.navigate("CreateTrigger", { pageId })}
           >
-            <Ionicons name="add" size={16} color="#00C5FF" />
+            <Ionicons name="add" size={16} color="#D6E4F0" />
             <Text className="text-white text-sm font-bold">Add</Text>
           </TouchableOpacity>
         </View>
@@ -206,7 +206,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-8">
@@ -228,13 +228,13 @@ export default function TriggersScreen({ route, navigation }: Props) {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#0E1C40"
+              tintColor="#163172"
             />
           }
         >
           {/* Info banner */}
           <View className="bg-cyan-light rounded-2xl p-4 flex-row items-start gap-3 mb-4">
-            <Ionicons name="information-circle" size={18} color="#0E1C40" />
+            <Ionicons name="information-circle" size={18} color="#163172" />
             <Text className="text-navy text-sm flex-1 leading-5">
               When a customer's message contains your keyword, the bot replies
               automatically.
@@ -248,7 +248,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                   <Ionicons
                     name="chatbubble-outline"
                     size={32}
-                    color="#0E1C40"
+                    color="#163172"
                   />
                 </View>
                 <Text className="text-navy font-semibold text-base">
@@ -268,7 +268,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                   key={t.label}
                   className="bg-white rounded-2xl p-4 mb-3"
                   style={{
-                    shadowColor: "#0E1C40",
+                    shadowColor: "#163172",
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.06,
                     shadowRadius: 8,
@@ -324,7 +324,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                 className="mt-2 bg-cyan-light rounded-2xl py-3 flex-row items-center justify-center gap-2"
                 onPress={() => navigation.navigate("CreateTrigger", { pageId })}
               >
-                <Ionicons name="add" size={16} color="#0E1C40" />
+                <Ionicons name="add" size={16} color="#163172" />
                 <Text className="text-navy text-sm font-semibold">
                   Create Custom Trigger
                 </Text>
@@ -336,7 +336,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                 key={trigger.id}
                 className="bg-white rounded-2xl p-4 mb-3"
                 style={{
-                  shadowColor: "#0E1C40",
+                  shadowColor: "#163172",
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.06,
                   shadowRadius: 8,
@@ -355,7 +355,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                         <Ionicons
                           name="chevron-up"
                           size={16}
-                          color={triggerIndex === 0 ? "#e2e8f0" : "#0E1C40"}
+                          color={triggerIndex === 0 ? "#e2e8f0" : "#163172"}
                         />
                       </TouchableOpacity>
                       <Text className="text-slate-300 text-xs font-bold">
@@ -372,7 +372,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                           color={
                             triggerIndex === triggers.length - 1
                               ? "#e2e8f0"
-                              : "#0E1C40"
+                              : "#163172"
                           }
                         />
                       </TouchableOpacity>
@@ -429,7 +429,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                 {/* Fire count */}
                 {(trigger.fire_count ?? 0) > 0 && (
                   <View className="flex-row items-center gap-1 mb-3">
-                    <Ionicons name="flash" size={12} color="#00C5FF" />
+                    <Ionicons name="flash" size={12} color="#D6E4F0" />
                     <Text className="text-slate-400 text-xs">
                       Fired {trigger.fire_count}×
                       {trigger.last_fired_at
@@ -445,8 +445,8 @@ export default function TriggersScreen({ route, navigation }: Props) {
                     <Switch
                       value={trigger.is_active}
                       onValueChange={() => handleToggle(trigger)}
-                      trackColor={{ false: "#e2e8f0", true: "#00C5FF" }}
-                      thumbColor={trigger.is_active ? "#0E1C40" : "#94a3b8"}
+                      trackColor={{ false: "#e2e8f0", true: "#D6E4F0" }}
+                      thumbColor={trigger.is_active ? "#163172" : "#94a3b8"}
                     />
                     <Text
                       className={`text-sm font-medium ${trigger.is_active ? "text-navy" : "text-slate-400"}`}
@@ -463,7 +463,7 @@ export default function TriggersScreen({ route, navigation }: Props) {
                         })
                       }
                     >
-                      <Ionicons name="pencil" size={18} color="#1B3A6B" />
+                      <Ionicons name="pencil" size={18} color="#1E56A0" />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleDelete(trigger)}>
                       <Ionicons name="trash" size={18} color="#ef4444" />

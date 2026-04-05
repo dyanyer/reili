@@ -69,7 +69,7 @@ export default function PageSwitcher({ currentPageId, currentPageName, onSwitch 
               {/* Page list */}
               {loading ? (
                 <View className="py-8 items-center">
-                  <ActivityIndicator size="small" color="#0E1C40" />
+                  <ActivityIndicator size="small" color="#163172" />
                 </View>
               ) : pages.length === 0 ? (
                 <View className="py-8 items-center">
@@ -85,13 +85,13 @@ export default function PageSwitcher({ currentPageId, currentPageName, onSwitch 
                       onPress={() => handleSelect(page)}
                     >
                       <View className={`rounded-xl p-2 mr-3 ${isActive ? 'bg-cyan' : 'bg-slate-100'}`}>
-                        <Ionicons name="logo-facebook" size={16} color={isActive ? '#0E1C40' : '#64748b'} />
+                        <Ionicons name="logo-facebook" size={16} color={isActive ? '#163172' : '#64748b'} />
                       </View>
                       <Text className={`flex-1 text-sm font-medium ${isActive ? 'text-navy' : 'text-slate-700'}`}>
                         {page.page_name}
                       </Text>
                       {isActive && (
-                        <Ionicons name="checkmark-circle" size={18} color="#0E1C40" />
+                        <Ionicons name="checkmark-circle" size={18} color="#163172" />
                       )}
                     </TouchableOpacity>
                   );

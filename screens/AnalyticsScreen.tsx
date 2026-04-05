@@ -81,7 +81,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
     : 1;
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -123,7 +123,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-8">
@@ -145,7 +145,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#0E1C40"
+              tintColor="#163172"
             />
           }
         >
@@ -155,7 +155,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
               icon="chatbubbles"
               label="Messages"
               value={data.messages_this_week}
-              accent="#0E1C40"
+              accent="#163172"
               change={pctChange(
                 data.messages_this_week,
                 data.messages_last_week,
@@ -165,7 +165,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
               icon="flash"
               label="Bot Handled"
               value={data.bot_handled_this_week}
-              accent="#00C5FF"
+              accent="#D6E4F0"
             />
           </View>
           <View className="flex-row gap-3 mb-4">
@@ -173,20 +173,20 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
               icon="people"
               label="New Chats"
               value={data.new_conversations_this_week}
-              accent="#1B3A6B"
+              accent="#1E56A0"
             />
             <StatCard
               icon="person"
               label="Your Replies"
               value={data.owner_replies_this_week}
-              accent="#0099CC"
+              accent="#1E56A0"
             />
           </View>
           {data.avg_response_time_minutes !== null && (
             <View
               className="bg-white rounded-2xl p-4 mb-4"
               style={{
-                shadowColor: "#0E1C40",
+                shadowColor: "#163172",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 8,
@@ -195,7 +195,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
             >
               <View className="flex-row items-center gap-2 mb-1">
                 <View className="bg-cyan-light rounded-lg p-1.5">
-                  <Ionicons name="timer-outline" size={16} color="#0E1C40" />
+                  <Ionicons name="timer-outline" size={16} color="#163172" />
                 </View>
                 <Text className="text-navy font-semibold text-base">
                   Avg Response Time
@@ -222,7 +222,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           <View
             className="bg-white rounded-2xl p-4 mb-4"
             style={{
-              shadowColor: "#0E1C40",
+              shadowColor: "#163172",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -231,7 +231,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           >
             <View className="flex-row items-center gap-2 mb-3">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="flash" size={16} color="#0E1C40" />
+                <Ionicons name="flash" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">
                 Bot Efficiency
@@ -266,7 +266,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           <View
             className="bg-white rounded-2xl p-4 mb-4"
             style={{
-              shadowColor: "#0E1C40",
+              shadowColor: "#163172",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -275,7 +275,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           >
             <View className="flex-row items-center gap-2 mb-4">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="bar-chart" size={16} color="#0E1C40" />
+                <Ionicons name="bar-chart" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">
                 Messages per Day
@@ -325,7 +325,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           <View
             className="bg-white rounded-2xl p-4 mb-4"
             style={{
-              shadowColor: "#0E1C40",
+              shadowColor: "#163172",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -334,7 +334,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
           >
             <View className="flex-row items-center gap-2 mb-3">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="trending-up" size={16} color="#0E1C40" />
+                <Ionicons name="trending-up" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">
                 Period Comparison
@@ -389,7 +389,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
             <View
               className="bg-white rounded-2xl p-4 mb-4"
               style={{
-                shadowColor: "#0E1C40",
+                shadowColor: "#163172",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.06,
                 shadowRadius: 8,
@@ -398,7 +398,7 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
             >
               <View className="flex-row items-center gap-2 mb-3">
                 <View className="bg-cyan-light rounded-lg p-1.5">
-                  <Ionicons name="trophy" size={16} color="#0E1C40" />
+                  <Ionicons name="trophy" size={16} color="#163172" />
                 </View>
                 <Text className="text-navy font-semibold text-base">
                   Most Asked
@@ -465,7 +465,7 @@ function StatCard({
     <View
       className="flex-1 bg-white rounded-2xl p-4"
       style={{
-        shadowColor: "#0E1C40",
+        shadowColor: "#163172",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.05,
         shadowRadius: 6,

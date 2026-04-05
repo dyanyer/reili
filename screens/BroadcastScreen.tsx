@@ -254,7 +254,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
       className="flex-1"
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View className="flex-1 bg-[#F0F2F5]">
+      <View className="flex-1 bg-[#F6F6F6]">
         <StatusBar style="dark" />
 
         {/* Header */}
@@ -283,7 +283,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#0E1C40"
+              tintColor="#163172"
             />
           }
         >
@@ -291,7 +291,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           <View
             className="bg-white rounded-2xl p-4 mb-4"
             style={{
-              shadowColor: "#0E1C40",
+              shadowColor: "#163172",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -300,7 +300,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="megaphone" size={16} color="#0E1C40" />
+                <Ionicons name="megaphone" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">
                 New Broadcast
@@ -341,7 +341,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                   }
                 }}
               >
-                <Ionicons name="image-outline" size={14} color="#0E1C40" />
+                <Ionicons name="image-outline" size={14} color="#163172" />
                 <Text className="text-navy text-xs font-medium">Add Image</Text>
               </TouchableOpacity>
             </View>
@@ -359,7 +359,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                   <Ionicons name="close-circle" size={22} color="#ef4444" />
                 </TouchableOpacity>
                 {uploadingImage && (
-                  <ActivityIndicator size="small" color="#0E1C40" />
+                  <ActivityIndicator size="small" color="#163172" />
                 )}
               </View>
             )}
@@ -367,7 +367,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
             {/* Segment selector */}
             <View className="border-t border-slate-100 pt-4 mb-4">
               <View className="flex-row items-center gap-2 mb-2">
-                <Ionicons name="filter" size={14} color="#0E1C40" />
+                <Ionicons name="filter" size={14} color="#163172" />
                 <Text className="text-navy font-semibold text-sm">Send to</Text>
               </View>
               <View className="flex-row flex-wrap gap-2">
@@ -383,7 +383,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                       <Ionicons
                         name={seg.icon as any}
                         size={13}
-                        color={active ? "#00C5FF" : "#64748b"}
+                        color={active ? "#D6E4F0" : "#64748b"}
                       />
                       <Text
                         className={`text-xs font-semibold ${active ? "text-white" : "text-slate-600"}`}
@@ -416,7 +416,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
             <View className="border-t border-slate-100 pt-4 mb-4">
               <View className="flex-row items-center justify-between mb-1">
                 <View className="flex-row items-center gap-2">
-                  <Ionicons name="calendar-outline" size={16} color="#0E1C40" />
+                  <Ionicons name="calendar-outline" size={16} color="#163172" />
                   <Text className="text-navy font-semibold text-sm">
                     Schedule for later
                   </Text>
@@ -424,8 +424,8 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                 <Switch
                   value={scheduleEnabled}
                   onValueChange={setScheduleEnabled}
-                  trackColor={{ false: "#e2e8f0", true: "#0E1C40" }}
-                  thumbColor={scheduleEnabled ? "#00C5FF" : "#94a3b8"}
+                  trackColor={{ false: "#e2e8f0", true: "#163172" }}
+                  thumbColor={scheduleEnabled ? "#D6E4F0" : "#94a3b8"}
                 />
               </View>
               <Text className="text-slate-400 text-xs leading-4 mb-3">
@@ -444,7 +444,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                       setShowDatePicker(true);
                     }}
                   >
-                    <Ionicons name="calendar" size={14} color="#0E1C40" />
+                    <Ionicons name="calendar" size={14} color="#163172" />
                     <Text className="text-navy text-sm font-medium">
                       {scheduledAt.toLocaleDateString([], {
                         month: "short",
@@ -462,7 +462,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                       setShowTimePicker(true);
                     }}
                   >
-                    <Ionicons name="time-outline" size={14} color="#0E1C40" />
+                    <Ionicons name="time-outline" size={14} color="#163172" />
                     <Text className="text-navy text-sm font-medium">
                       {scheduledAt.toLocaleTimeString([], {
                         hour: "2-digit",
@@ -523,7 +523,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
               disabled={(!messageText.trim() && !pendingImage) || sending}
             >
               {sending ? (
-                <ActivityIndicator size="small" color="#00C5FF" />
+                <ActivityIndicator size="small" color="#D6E4F0" />
               ) : (
                 <>
                   <Ionicons
@@ -531,7 +531,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                     size={18}
                     color={
                       messageText.trim().length > 0 || pendingImage
-                        ? "#00C5FF"
+                        ? "#D6E4F0"
                         : "#94a3b8"
                     }
                   />
@@ -549,7 +549,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
 
           {/* Info banner */}
           <View className="bg-cyan-light rounded-2xl p-4 flex-row gap-3 mb-5">
-            <Ionicons name="information-circle" size={20} color="#0E1C40" />
+            <Ionicons name="information-circle" size={20} color="#163172" />
             <Text className="text-navy text-xs flex-1 leading-5">
               Messages are sent one by one with a short delay to stay within
               Facebook's limits and keep your page safe.
@@ -562,7 +562,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           </Text>
 
           {loadingHistory ? (
-            <ActivityIndicator size="small" color="#0E1C40" />
+            <ActivityIndicator size="small" color="#163172" />
           ) : historyError ? (
             <View className="items-center py-8">
               <Ionicons name="cloud-offline" size={36} color="#cbd5e1" />
@@ -581,7 +581,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           ) : broadcasts.length === 0 ? (
             <View className="items-center py-10">
               <View className="bg-cyan-light rounded-full p-5 mb-3">
-                <Ionicons name="megaphone-outline" size={32} color="#0E1C40" />
+                <Ionicons name="megaphone-outline" size={32} color="#163172" />
               </View>
               <Text className="text-slate-400 text-sm text-center">
                 No broadcasts sent yet.
@@ -595,7 +595,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                   key={b.id}
                   className="bg-white rounded-2xl p-4 mb-3"
                   style={{
-                    shadowColor: "#0E1C40",
+                    shadowColor: "#163172",
                     shadowOffset: { width: 0, height: 1 },
                     shadowOpacity: 0.05,
                     shadowRadius: 6,
@@ -623,7 +623,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                   </Text>
                   {b.image_url && (
                     <View className="flex-row items-center gap-1 mb-2">
-                      <Ionicons name="image" size={12} color="#00C5FF" />
+                      <Ionicons name="image" size={12} color="#D6E4F0" />
                       <Text className="text-cyan text-xs font-medium">
                         Image attached
                       </Text>

@@ -192,7 +192,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
       className="flex-1"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View className="flex-1 bg-[#F0F2F5]">
+      <View className="flex-1 bg-[#F6F6F6]">
         <StatusBar style="dark" />
 
         {/* Header */}
@@ -201,7 +201,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
             <Ionicons name="arrow-back" size={24} color="#1C1E21" />
           </TouchableOpacity>
           {/* Avatar */}
-          <View className="w-10 h-10 rounded-full bg-[#E8F8FF] items-center justify-center">
+          <View className="w-10 h-10 rounded-full bg-[#D6E4F0] items-center justify-center">
             <Text className="text-navy text-sm font-bold">{initials}</Text>
           </View>
           <View className="flex-1">
@@ -218,7 +218,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
 
         {loading ? (
           <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#0E1C40" />
+            <ActivityIndicator size="large" color="#163172" />
           </View>
         ) : error ? (
           <View className="flex-1 items-center justify-center px-8">
@@ -233,7 +233,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
             {/* Search bar */}
             {searchVisible && (
               <View className="bg-white border-b border-[#E4E6EB] px-4 py-2">
-                <View className="flex-row items-center bg-[#F0F2F5] rounded-xl px-3 gap-2">
+                <View className="flex-row items-center bg-[#F6F6F6] rounded-xl px-3 gap-2">
                   <Ionicons name="search" size={15} color="#65676B" />
                   <TextInput
                     className="flex-1 py-2.5 text-[#1C1E21] text-sm"
@@ -313,12 +313,12 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                 isAtBottomRef.current = contentOffset.y + layoutMeasurement.height >= contentSize.height - 80;
               }}
               scrollEventThrottle={200}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0E1C40" />}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
             >
               {messages.length === 0 && (
                 <View className="items-center pt-16">
-                  <View className="bg-[#E8F8FF] rounded-full p-6 mb-4">
-                    <Ionicons name="chatbubbles-outline" size={40} color="#0E1C40" />
+                  <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
+                    <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
                   </View>
                   <Text className="text-[#1C1E21] font-semibold">No messages yet</Text>
                 </View>
@@ -347,7 +347,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                         {/* Bot label */}
                         {!isInbound && isBot && (
                           <View className="flex-row items-center gap-1 mb-1 mr-1">
-                            <Ionicons name="flash" size={10} color="#00C5FF" />
+                            <Ionicons name="flash" size={10} color="#D6E4F0" />
                             <Text className="text-[#65676B] text-xs">Reili Bot</Text>
                           </View>
                         )}
@@ -357,7 +357,7 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                           {isInbound && (
                             <View className="w-7 h-7 flex-shrink-0">
                               {showAvatar && (
-                                <View className="w-7 h-7 rounded-full bg-[#E8F8FF] items-center justify-center">
+                                <View className="w-7 h-7 rounded-full bg-[#D6E4F0] items-center justify-center">
                                   <Text className="text-navy text-xs font-bold">{initials}</Text>
                                 </View>
                               )}
@@ -426,14 +426,14 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
               <TouchableOpacity onPress={() => setPendingImage(null)}>
                 <Ionicons name="close-circle" size={20} color="#ef4444" />
               </TouchableOpacity>
-              {uploadingImage && <ActivityIndicator size="small" color="#0E1C40" />}
+              {uploadingImage && <ActivityIndicator size="small" color="#163172" />}
             </View>
           )}
           <View className="flex-row items-end gap-2">
-            <TouchableOpacity className="p-2.5 rounded-full bg-[#F0F2F5]" onPress={handlePickImage}>
+            <TouchableOpacity className="p-2.5 rounded-full bg-[#F6F6F6]" onPress={handlePickImage}>
               <Ionicons name="image-outline" size={20} color="#65676B" />
             </TouchableOpacity>
-            <View className="flex-1 bg-[#F0F2F5] rounded-2xl px-4 py-2.5 min-h-[40px] justify-center">
+            <View className="flex-1 bg-[#F6F6F6] rounded-2xl px-4 py-2.5 min-h-[40px] justify-center">
               <TextInput
                 placeholder="Aa"
                 placeholderTextColor="#65676B"
@@ -446,17 +446,17 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
               />
             </View>
             <TouchableOpacity
-              className={`p-2.5 rounded-full ${replyText.trim().length > 0 || pendingImage ? 'bg-navy' : 'bg-[#F0F2F5]'}`}
+              className={`p-2.5 rounded-full ${replyText.trim().length > 0 || pendingImage ? 'bg-navy' : 'bg-[#F6F6F6]'}`}
               onPress={handleSend}
               disabled={(replyText.trim().length === 0 && !pendingImage) || sending || uploadingImage}
             >
               {sending || uploadingImage ? (
-                <ActivityIndicator size="small" color="#00C5FF" />
+                <ActivityIndicator size="small" color="#D6E4F0" />
               ) : (
                 <Ionicons
                   name="send"
                   size={18}
-                  color={replyText.trim().length > 0 || pendingImage ? '#00C5FF' : '#65676B'}
+                  color={replyText.trim().length > 0 || pendingImage ? '#D6E4F0' : '#65676B'}
                 />
               )}
             </TouchableOpacity>

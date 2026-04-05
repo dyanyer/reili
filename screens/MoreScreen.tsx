@@ -72,7 +72,7 @@ export default function MoreScreen({ navigation }: Props) {
   const noPage = !activePage;
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -95,8 +95,8 @@ export default function MoreScreen({ navigation }: Props) {
         <View className="mx-4 mt-4 bg-white rounded-2xl p-4" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
           {activePage ? (
             <View className="flex-row items-center">
-              <View className="w-10 h-10 rounded-xl bg-[#E8F8FF] items-center justify-center mr-3">
-                <Ionicons name="logo-facebook" size={20} color="#0E1C40" />
+              <View className="w-10 h-10 rounded-xl bg-[#D6E4F0] items-center justify-center mr-3">
+                <Ionicons name="logo-facebook" size={20} color="#163172" />
               </View>
               <View className="flex-1">
                 <Text className="text-xs text-[#65676B] font-medium">Active Page</Text>
@@ -112,7 +112,7 @@ export default function MoreScreen({ navigation }: Props) {
             </View>
           ) : (
             <View className="flex-row items-center">
-              <View className="w-10 h-10 rounded-xl bg-[#F0F2F5] items-center justify-center mr-3">
+              <View className="w-10 h-10 rounded-xl bg-[#F6F6F6] items-center justify-center mr-3">
                 <Ionicons name="alert-circle-outline" size={20} color="#65676B" />
               </View>
               <View className="flex-1">
@@ -128,8 +128,8 @@ export default function MoreScreen({ navigation }: Props) {
         <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
           <MenuItem
             icon="flash"
-            iconBg="#E8F8FF"
-            iconColor="#0E1C40"
+            iconBg="#D6E4F0"
+            iconColor="#163172"
             label="Triggers"
             subtitle="Manage keyword auto-replies"
             onPress={() => {
@@ -188,8 +188,8 @@ export default function MoreScreen({ navigation }: Props) {
         <View className="bg-white rounded-2xl mx-4 overflow-hidden" style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}>
           <MenuItem
             icon="add-circle-outline"
-            iconBg="#E8F8FF"
-            iconColor="#0099CC"
+            iconBg="#D6E4F0"
+            iconColor="#1E56A0"
             label="Connect a Page"
             subtitle="Add another Facebook Page"
             onPress={() => navigation.navigate('ConnectPage')}

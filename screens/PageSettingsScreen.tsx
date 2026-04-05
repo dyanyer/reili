@@ -89,7 +89,7 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -109,7 +109,7 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           disabled={saving}
         >
           {saving ? (
-            <ActivityIndicator size="small" color="#00C5FF" />
+            <ActivityIndicator size="small" color="#D6E4F0" />
           ) : (
             <Text className="text-white font-bold text-sm">Save</Text>
           )}
@@ -118,7 +118,7 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
@@ -126,11 +126,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Default Reply */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="chatbubble-ellipses" size={16} color="#0E1C40" />
+                <Ionicons name="chatbubble-ellipses" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">Default Reply</Text>
             </View>
@@ -154,11 +154,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Welcome Message */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="hand-left" size={16} color="#0E1C40" />
+                <Ionicons name="hand-left" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">Welcome Message</Text>
               <View className="bg-navy rounded-full px-2 py-0.5 ml-1">
@@ -185,11 +185,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Payment Info */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="card" size={16} color="#0E1C40" />
+                <Ionicons name="card" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">Payment Details</Text>
             </View>
@@ -213,11 +213,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Order Confirmation Template */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="receipt" size={16} color="#0E1C40" />
+                <Ionicons name="receipt" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">Order Confirmation</Text>
             </View>
@@ -248,11 +248,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Order Flow Steps */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-1">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="list" size={16} color="#0E1C40" />
+                <Ionicons name="list" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base">Order Flow Steps</Text>
             </View>
@@ -294,18 +294,18 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
           {/* Away Mode */}
           <View
             className="bg-white rounded-2xl p-4 mb-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-3">
               <View className="bg-cyan-light rounded-lg p-1.5">
-                <Ionicons name="moon" size={16} color="#0E1C40" />
+                <Ionicons name="moon" size={16} color="#163172" />
               </View>
               <Text className="text-navy font-semibold text-base flex-1">Away Mode</Text>
               <Switch
                 value={awayEnabled}
                 onValueChange={setAwayEnabled}
-                trackColor={{ false: '#e2e8f0', true: '#0E1C40' }}
-                thumbColor={awayEnabled ? '#00C5FF' : '#94a3b8'}
+                trackColor={{ false: '#e2e8f0', true: '#163172' }}
+                thumbColor={awayEnabled ? '#D6E4F0' : '#94a3b8'}
               />
             </View>
 
@@ -334,8 +334,8 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
                 <Switch
                   value={scheduleEnabled}
                   onValueChange={setScheduleEnabled}
-                  trackColor={{ false: '#e2e8f0', true: '#0E1C40' }}
-                  thumbColor={scheduleEnabled ? '#00C5FF' : '#94a3b8'}
+                  trackColor={{ false: '#e2e8f0', true: '#163172' }}
+                  thumbColor={scheduleEnabled ? '#D6E4F0' : '#94a3b8'}
                 />
               </View>
               {scheduleEnabled && (
@@ -358,11 +358,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
                           <Text className="text-slate-400 text-xs mb-1">From</Text>
                           <View className="flex-row items-center gap-3">
                             <TouchableOpacity onPress={() => setAwaySchedules((prev) => prev.map((s, i) => i === idx ? { ...s, start: (s.start + 23) % 24 } : s))}>
-                              <Ionicons name="chevron-back" size={18} color="#0E1C40" />
+                              <Ionicons name="chevron-back" size={18} color="#163172" />
                             </TouchableOpacity>
                             <Text className="text-navy font-bold text-sm w-16 text-center">{formatHour(sched.start)}</Text>
                             <TouchableOpacity onPress={() => setAwaySchedules((prev) => prev.map((s, i) => i === idx ? { ...s, start: (s.start + 1) % 24 } : s))}>
-                              <Ionicons name="chevron-forward" size={18} color="#0E1C40" />
+                              <Ionicons name="chevron-forward" size={18} color="#163172" />
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -370,11 +370,11 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
                           <Text className="text-slate-400 text-xs mb-1">To</Text>
                           <View className="flex-row items-center gap-3">
                             <TouchableOpacity onPress={() => setAwaySchedules((prev) => prev.map((s, i) => i === idx ? { ...s, end: (s.end + 23) % 24 } : s))}>
-                              <Ionicons name="chevron-back" size={18} color="#0E1C40" />
+                              <Ionicons name="chevron-back" size={18} color="#163172" />
                             </TouchableOpacity>
                             <Text className="text-navy font-bold text-sm w-16 text-center">{formatHour(sched.end)}</Text>
                             <TouchableOpacity onPress={() => setAwaySchedules((prev) => prev.map((s, i) => i === idx ? { ...s, end: (s.end + 1) % 24 } : s))}>
-                              <Ionicons name="chevron-forward" size={18} color="#0E1C40" />
+                              <Ionicons name="chevron-forward" size={18} color="#163172" />
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -395,7 +395,7 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
 
           {/* Info banner */}
           <View className="bg-cyan-light rounded-2xl p-4 flex-row gap-3 mb-6">
-            <Ionicons name="information-circle" size={20} color="#0E1C40" />
+            <Ionicons name="information-circle" size={20} color="#163172" />
             <Text className="text-navy text-xs flex-1 leading-5">
               Keyword triggers take priority. The default reply is only used when no trigger matches.
             </Text>
@@ -408,10 +408,10 @@ export default function PageSettingsScreen({ route, navigation }: Props) {
             disabled={saving}
           >
             {saving ? (
-              <ActivityIndicator size="small" color="#00C5FF" />
+              <ActivityIndicator size="small" color="#D6E4F0" />
             ) : (
               <>
-                <Ionicons name="checkmark-circle" size={18} color="#00C5FF" />
+                <Ionicons name="checkmark-circle" size={18} color="#D6E4F0" />
                 <Text className="text-white font-bold text-base">Save Settings</Text>
               </>
             )}

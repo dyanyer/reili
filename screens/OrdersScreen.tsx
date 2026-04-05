@@ -31,9 +31,9 @@ const STATUSES = ['All', 'Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; icon: string }> = {
   pending:   { label: 'Pending',   color: '#D97706', bg: '#FEF3C7', icon: 'time-outline' },
-  confirmed: { label: 'Confirmed', color: '#0E1C40', bg: '#E8F8FF', icon: 'checkmark-circle-outline' },
+  confirmed: { label: 'Confirmed', color: '#163172', bg: '#D6E4F0', icon: 'checkmark-circle-outline' },
   packed:    { label: 'Packed',    color: '#7C3AED', bg: '#F3E8FF', icon: 'cube-outline' },
-  shipped:   { label: 'Shipped',   color: '#0099CC', bg: '#DBEAFE', icon: 'bicycle-outline' },
+  shipped:   { label: 'Shipped',   color: '#1E56A0', bg: '#DBEAFE', icon: 'bicycle-outline' },
   delivered: { label: 'Delivered', color: '#059669', bg: '#D1FAE5', icon: 'checkmark-done-circle-outline' },
   cancelled: { label: 'Cancelled', color: '#DC2626', bg: '#FEE2E2', icon: 'close-circle-outline' },
 };
@@ -175,14 +175,14 @@ export default function OrdersScreen({ route }: Props) {
 
   if (!pageId) {
     return (
-      <View className="flex-1 bg-[#F0F2F5]">
+      <View className="flex-1 bg-[#F6F6F6]">
         <StatusBar style="dark" />
         <View className="bg-white pt-14 pb-4 px-4 border-b border-[#E4E6EB]">
           <Text className="text-[#1C1E21] text-xl font-bold">Orders</Text>
         </View>
         <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#E8F8FF] rounded-full p-6 mb-4">
-            <Ionicons name="bag-outline" size={40} color="#0E1C40" />
+          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
+            <Ionicons name="bag-outline" size={40} color="#163172" />
           </View>
           <Text className="text-[#1C1E21] font-bold text-base">No page selected</Text>
           <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
@@ -194,7 +194,7 @@ export default function OrdersScreen({ route }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -236,7 +236,7 @@ export default function OrdersScreen({ route }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-8">
@@ -248,8 +248,8 @@ export default function OrdersScreen({ route }: Props) {
         </View>
       ) : filtered.length === 0 ? (
         <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#E8F8FF] rounded-full p-6 mb-4">
-            <Ionicons name="bag-outline" size={40} color="#0E1C40" />
+          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
+            <Ionicons name="bag-outline" size={40} color="#163172" />
           </View>
           <Text className="text-[#1C1E21] font-bold text-base">No orders yet</Text>
           <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
@@ -259,7 +259,7 @@ export default function OrdersScreen({ route }: Props) {
       ) : (
         <ScrollView
           contentContainerStyle={{ padding: 12, paddingBottom: 24 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0E1C40" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
           showsVerticalScrollIndicator={false}
         >
           {filtered.map((order) => {
@@ -274,12 +274,12 @@ export default function OrdersScreen({ route }: Props) {
                 style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 }}
               >
                 {/* Card header */}
-                <View className="flex-row items-center justify-between px-4 pt-3.5 pb-3 border-b border-[#F0F2F5]">
+                <View className="flex-row items-center justify-between px-4 pt-3.5 pb-3 border-b border-[#F6F6F6]">
                   <View className="flex-1 mr-3">
                     <Text className="text-[#1C1E21] font-bold text-sm" numberOfLines={1}>{order.item}</Text>
                     <View className="flex-row items-center gap-2 mt-0.5 flex-wrap">
                       {order.order_number && (
-                        <Text className="text-[#0E1C40] text-xs font-bold">{order.order_number}</Text>
+                        <Text className="text-[#163172] text-xs font-bold">{order.order_number}</Text>
                       )}
                       <Text className="text-[#65676B] text-xs">·</Text>
                       <Text className="text-[#65676B] text-xs">{customerName}</Text>
@@ -304,13 +304,13 @@ export default function OrdersScreen({ route }: Props) {
                   </View>
 
                   {/* Price row */}
-                  <View className="flex-row items-center gap-2 pt-2 border-t border-[#F0F2F5]">
+                  <View className="flex-row items-center gap-2 pt-2 border-t border-[#F6F6F6]">
                     <Ionicons name="cash-outline" size={13} color="#65676B" />
                     {editingPriceId === order.id ? (
                       <View className="flex-1 flex-row items-center gap-2">
                         <Text className="text-[#65676B] text-sm">₱</Text>
                         <TextInput
-                          className="flex-1 bg-[#F0F2F5] rounded-lg px-3 py-1.5 text-[#1C1E21] text-sm"
+                          className="flex-1 bg-[#F6F6F6] rounded-lg px-3 py-1.5 text-[#1C1E21] text-sm"
                           value={priceInput}
                           onChangeText={setPriceInput}
                           placeholder="0.00"
@@ -331,9 +331,9 @@ export default function OrdersScreen({ route }: Props) {
                         onPress={() => { setEditingPriceId(order.id); setPriceInput(order.total_price != null ? String(order.total_price) : ''); }}
                       >
                         {order.total_price != null ? (
-                          <Text className="text-[#0E1C40] text-sm font-bold">₱{Number(order.total_price).toLocaleString()}</Text>
+                          <Text className="text-[#163172] text-sm font-bold">₱{Number(order.total_price).toLocaleString()}</Text>
                         ) : (
-                          <Text className="text-[#00C5FF] text-xs font-semibold">+ Set Price</Text>
+                          <Text className="text-[#D6E4F0] text-xs font-semibold">+ Set Price</Text>
                         )}
                         <Ionicons name="pencil-outline" size={11} color="#65676B" />
                       </TouchableOpacity>
@@ -342,7 +342,7 @@ export default function OrdersScreen({ route }: Props) {
                 </View>
 
                 {/* Actions */}
-                <View className="flex-row border-t border-[#F0F2F5]">
+                <View className="flex-row border-t border-[#F6F6F6]">
                   <TouchableOpacity
                     className="flex-row flex-1 items-center justify-center gap-1.5 py-3"
                     onPress={() => openConversation(order.conversation_id, customerName)}
@@ -352,13 +352,13 @@ export default function OrdersScreen({ route }: Props) {
                   </TouchableOpacity>
                   {canUpdate && (
                     <>
-                      <View className="w-px bg-[#F0F2F5]" />
+                      <View className="w-px bg-[#F6F6F6]" />
                       <TouchableOpacity
                         className="flex-row flex-1 items-center justify-center gap-1.5 py-3"
                         onPress={() => handleUpdateStatus(order)}
                       >
-                        <Ionicons name="arrow-forward-circle-outline" size={15} color="#0E1C40" />
-                        <Text className="text-[#0E1C40] text-xs font-semibold">Update Status</Text>
+                        <Ionicons name="arrow-forward-circle-outline" size={15} color="#163172" />
+                        <Text className="text-[#163172] text-xs font-semibold">Update Status</Text>
                       </TouchableOpacity>
                     </>
                   )}

@@ -12,15 +12,16 @@ module.exports = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#0E1C40',
-          mid: '#1B3A6B',
-          light: '#2A4F8A',
+          DEFAULT: '#163172',  // dark navy — headers, primary buttons
+          mid: '#1E56A0',      // medium blue — active states, links
+          light: '#3A72B8',    // light navy — subtle accents
         },
         cyan: {
-          DEFAULT: '#00C5FF',
-          light: '#E8F8FF',
-          dark: '#0099CC',
+          DEFAULT: '#D6E4F0',  // light blue — accent on dark backgrounds
+          light: '#EBF2F9',    // softer light blue — chip backgrounds
+          dark: '#1E56A0',     // medium blue — darker accent
         },
+        'app-bg': '#F6F6F6',   // screen background
       },
     },
   },

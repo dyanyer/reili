@@ -35,7 +35,7 @@ type Filter = typeof FILTERS[number];
 
 // Color palette for avatars based on name initial
 const AVATAR_COLORS = [
-  { bg: '#E8F8FF', text: '#0E1C40' },
+  { bg: '#D6E4F0', text: '#163172' },
   { bg: '#D1FAE5', text: '#065F46' },
   { bg: '#FEF3C7', text: '#92400E' },
   { bg: '#F3E8FF', text: '#5B21B6' },
@@ -141,14 +141,14 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   // No page selected state
   if (!pageId) {
     return (
-      <View className="flex-1 bg-[#F0F2F5]">
+      <View className="flex-1 bg-[#F6F6F6]">
         <StatusBar style="dark" />
         <View className="bg-white pt-14 pb-4 px-4 border-b border-[#E4E6EB]">
           <Text className="text-[#1C1E21] text-xl font-bold">Chats</Text>
         </View>
         <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#E8F8FF] rounded-full p-6 mb-4">
-            <Ionicons name="chatbubbles-outline" size={40} color="#0E1C40" />
+          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
+            <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
           </View>
           <Text className="text-[#1C1E21] font-bold text-base">No page selected</Text>
           <Text className="text-[#65676B] text-sm mt-2 text-center leading-5">
@@ -160,7 +160,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -180,7 +180,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
         </View>
 
         {/* Search */}
-        <View className="flex-row items-center bg-[#F0F2F5] rounded-xl px-3 gap-2 mb-3">
+        <View className="flex-row items-center bg-[#F6F6F6] rounded-xl px-3 gap-2 mb-3">
           <Ionicons name="search" size={15} color="#65676B" />
           <TextInput
             className="flex-1 py-2.5 text-[#1C1E21] text-sm"
@@ -209,8 +209,8 @@ export default function ConversationsScreen({ route, navigation }: Props) {
               >
                 <Text className={`text-xs font-semibold ${isActive ? 'text-white' : 'text-[#65676B]'}`}>{f}</Text>
                 {badge > 0 && (
-                  <View className="bg-[#00C5FF] rounded-full w-4 h-4 items-center justify-center">
-                    <Text className="text-[#0E1C40] text-xs font-bold" style={{ fontSize: 9 }}>{badge}</Text>
+                  <View className="bg-[#D6E4F0] rounded-full w-4 h-4 items-center justify-center">
+                    <Text className="text-[#163172] text-xs font-bold" style={{ fontSize: 9 }}>{badge}</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -221,7 +221,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-8">
@@ -233,8 +233,8 @@ export default function ConversationsScreen({ route, navigation }: Props) {
         </View>
       ) : filtered.length === 0 ? (
         <View className="flex-1 items-center justify-center px-8">
-          <View className="bg-[#E8F8FF] rounded-full p-6 mb-4">
-            <Ionicons name="chatbubbles-outline" size={40} color="#0E1C40" />
+          <View className="bg-[#D6E4F0] rounded-full p-6 mb-4">
+            <Ionicons name="chatbubbles-outline" size={40} color="#163172" />
           </View>
           <Text className="text-[#1C1E21] font-bold text-base">
             {search ? 'No results found' : 'No conversations yet'}
@@ -247,7 +247,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
         <FlatList
           data={filtered}
           keyExtractor={(c) => c.id}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0E1C40" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
           contentContainerStyle={{ paddingBottom: 24 }}
           ItemSeparatorComponent={() => <View className="h-px bg-[#E4E6EB] ml-20" />}
           renderItem={({ item: c }) => {
@@ -284,7 +284,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
                 <View className="flex-1 min-w-0">
                   <View className="flex-row items-center justify-between mb-0.5">
                     <View className="flex-row items-center gap-1 flex-1 mr-2">
-                      {c.is_pinned && <Ionicons name="pin" size={11} color="#00C5FF" />}
+                      {c.is_pinned && <Ionicons name="pin" size={11} color="#D6E4F0" />}
                       <Text
                         className="text-sm flex-1"
                         style={{ color: '#1C1E21', fontWeight: hasUnread ? '700' : '500' }}
@@ -307,7 +307,7 @@ export default function ConversationsScreen({ route, navigation }: Props) {
                 {/* Unread dot */}
                 <View className="ml-2 flex-shrink-0 w-5 items-center">
                   {hasUnread && (
-                    <View className="w-3 h-3 rounded-full bg-[#00C5FF]" />
+                    <View className="w-3 h-3 rounded-full bg-[#D6E4F0]" />
                   )}
                 </View>
               </TouchableOpacity>

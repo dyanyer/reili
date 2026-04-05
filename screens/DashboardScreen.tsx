@@ -183,12 +183,12 @@ export default function DashboardScreen() {
   const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F0F2F5' }}>
+    <View style={{ flex: 1, backgroundColor: '#F6F6F6' }}>
       <StatusBar style="light" />
 
       {/* ── Header ── */}
       <View style={{
-        backgroundColor: '#0E1C40',
+        backgroundColor: '#163172',
         paddingTop: insets.top + 14,
         paddingBottom: 18,
         paddingHorizontal: 20,
@@ -207,20 +207,20 @@ export default function DashboardScreen() {
           onPress={() => setShowLogout(true)}
           style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: 'rgba(255,255,255,0.1)', alignItems: 'center', justifyContent: 'center' }}
         >
-          <Ionicons name="person" size={17} color="#00C5FF" />
+          <Ionicons name="person" size={17} color="#D6E4F0" />
         </TouchableOpacity>
       </View>
 
       {/* ── States ── */}
       {loading ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
         </View>
       ) : error ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
           <Ionicons name="cloud-offline" size={48} color="#CBD5E1" />
           <Text style={{ color: '#65676B', fontSize: 15, marginTop: 12, textAlign: 'center' }}>{error}</Text>
-          <TouchableOpacity onPress={load} style={{ marginTop: 16, backgroundColor: '#0E1C40', borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 }}>
+          <TouchableOpacity onPress={load} style={{ marginTop: 16, backgroundColor: '#163172', borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 }}>
             <Text style={{ color: '#fff', fontWeight: '700' }}>Try Again</Text>
           </TouchableOpacity>
         </View>
@@ -228,11 +228,11 @@ export default function DashboardScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 28 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0E1C40" />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#163172" />}
         >
           {/* ── Today's Activity card ── */}
           <View style={{
-            backgroundColor: '#0E1C40',
+            backgroundColor: '#163172',
             marginHorizontal: 16,
             marginTop: 16,
             borderRadius: 22,
@@ -248,7 +248,7 @@ export default function DashboardScreen() {
             </View>
 
             <View style={{ flexDirection: 'row' }}>
-              <TodayStat icon="chatbubbles"  value={totalMessages}                    label="Messages"   accent="#00C5FF" />
+              <TodayStat icon="chatbubbles"  value={totalMessages}                    label="Messages"   accent="#D6E4F0" />
               <Divider />
               <TodayStat icon="flash"        value={totalBotHandled}                  label="Bot Replies" accent="#A78BFA" />
               <Divider />
@@ -265,9 +265,9 @@ export default function DashboardScreen() {
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('ConnectPage')}
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#0E1C40', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7 }}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#163172', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 7 }}
             >
-              <Ionicons name="add" size={13} color="#00C5FF" />
+              <Ionicons name="add" size={13} color="#D6E4F0" />
               <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>Add Page</Text>
             </TouchableOpacity>
           </View>
@@ -287,8 +287,8 @@ export default function DashboardScreen() {
               shadowRadius: 8,
               elevation: 2,
             }}>
-              <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: '#0E1C40', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                <Ionicons name="logo-facebook" size={36} color="#00C5FF" />
+              <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                <Ionicons name="logo-facebook" size={36} color="#D6E4F0" />
               </View>
               <Text style={{ color: '#1C1E21', fontWeight: '800', fontSize: 16 }}>No pages connected</Text>
               <Text style={{ color: '#65676B', fontSize: 13, marginTop: 6, textAlign: 'center', lineHeight: 19 }}>
@@ -296,9 +296,9 @@ export default function DashboardScreen() {
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ConnectPage')}
-                style={{ marginTop: 20, backgroundColor: '#0E1C40', borderRadius: 14, paddingHorizontal: 28, paddingVertical: 13, flexDirection: 'row', alignItems: 'center', gap: 8 }}
+                style={{ marginTop: 20, backgroundColor: '#163172', borderRadius: 14, paddingHorizontal: 28, paddingVertical: 13, flexDirection: 'row', alignItems: 'center', gap: 8 }}
               >
-                <Ionicons name="add" size={16} color="#00C5FF" />
+                <Ionicons name="add" size={16} color="#D6E4F0" />
                 <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Connect a Page</Text>
               </TouchableOpacity>
             </View>
@@ -314,7 +314,7 @@ export default function DashboardScreen() {
                     marginHorizontal: 16,
                     marginBottom: 12,
                     borderRadius: 22,
-                    shadowColor: '#0E1C40',
+                    shadowColor: '#163172',
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.07,
                     shadowRadius: 10,
@@ -324,8 +324,8 @@ export default function DashboardScreen() {
                 >
                   {/* ── Card top: identity + toggle ── */}
                   <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingTop: 16, paddingBottom: 14 }}>
-                    <View style={{ width: 46, height: 46, borderRadius: 14, backgroundColor: '#0E1C40', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
-                      <Ionicons name="logo-facebook" size={22} color="#00C5FF" />
+                    <View style={{ width: 46, height: 46, borderRadius: 14, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                      <Ionicons name="logo-facebook" size={22} color="#D6E4F0" />
                     </View>
                     <View style={{ flex: 1 }}>
                       <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 15 }} numberOfLines={1}>
@@ -347,8 +347,8 @@ export default function DashboardScreen() {
                           </Text>
                         </View>
                         {unread > 0 && (
-                          <View style={{ backgroundColor: '#00C5FF', borderRadius: 99, paddingHorizontal: 7, paddingVertical: 3 }}>
-                            <Text style={{ color: '#0E1C40', fontSize: 10, fontWeight: '800' }}>{unread} new</Text>
+                          <View style={{ backgroundColor: '#D6E4F0', borderRadius: 99, paddingHorizontal: 7, paddingVertical: 3 }}>
+                            <Text style={{ color: '#163172', fontSize: 10, fontWeight: '800' }}>{unread} new</Text>
                           </View>
                         )}
                       </View>
@@ -356,8 +356,8 @@ export default function DashboardScreen() {
                     <Switch
                       value={page.is_active}
                       onValueChange={() => handleToggle(page)}
-                      trackColor={{ false: '#E4E6EB', true: '#00C5FF' }}
-                      thumbColor={page.is_active ? '#0E1C40' : '#94A3B8'}
+                      trackColor={{ false: '#E4E6EB', true: '#D6E4F0' }}
+                      thumbColor={page.is_active ? '#163172' : '#94A3B8'}
                     />
                   </View>
 
@@ -382,15 +382,15 @@ export default function DashboardScreen() {
                     <TouchableOpacity
                       onPress={() => navigateToChats(page)}
                       activeOpacity={0.8}
-                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#0E1C40', borderRadius: 12, paddingVertical: 11 }}
+                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#163172', borderRadius: 12, paddingVertical: 11 }}
                     >
-                      <Ionicons name="chatbubbles" size={14} color="#00C5FF" />
+                      <Ionicons name="chatbubbles" size={14} color="#D6E4F0" />
                       <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>Chats</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => navigateToOrders(page)}
                       activeOpacity={0.8}
-                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#F0F2F5', borderRadius: 12, paddingVertical: 11 }}
+                      style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: '#F6F6F6', borderRadius: 12, paddingVertical: 11 }}
                     >
                       <Ionicons name="bag-outline" size={14} color="#1C1E21" />
                       <Text style={{ color: '#1C1E21', fontSize: 12, fontWeight: '700' }}>Orders</Text>
@@ -398,7 +398,7 @@ export default function DashboardScreen() {
                     <TouchableOpacity
                       onPress={() => setMenuPage(page)}
                       activeOpacity={0.8}
-                      style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#F0F2F5', borderRadius: 12, paddingHorizontal: 15, paddingVertical: 11 }}
+                      style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: '#F6F6F6', borderRadius: 12, paddingHorizontal: 15, paddingVertical: 11 }}
                     >
                       <Ionicons name="ellipsis-horizontal" size={17} color="#65676B" />
                     </TouchableOpacity>
@@ -418,9 +418,9 @@ export default function DashboardScreen() {
         >
           <Pressable onPress={() => {}} style={{ width: '100%' }}>
             <View style={{ backgroundColor: '#fff', borderRadius: 28, overflow: 'hidden', shadowColor: '#000', shadowOffset: { width: 0, height: 20 }, shadowOpacity: 0.25, shadowRadius: 40, elevation: 24 }}>
-              <View style={{ backgroundColor: '#0E1C40', alignItems: 'center', paddingTop: 32, paddingBottom: 24 }}>
+              <View style={{ backgroundColor: '#163172', alignItems: 'center', paddingTop: 32, paddingBottom: 24 }}>
                 <View style={{ width: 68, height: 68, borderRadius: 34, backgroundColor: 'rgba(255,255,255,0.1)', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                  <Ionicons name="log-out-outline" size={32} color="#00C5FF" />
+                  <Ionicons name="log-out-outline" size={32} color="#D6E4F0" />
                 </View>
                 <Text style={{ color: '#fff', fontSize: 20, fontWeight: '800' }}>Log out?</Text>
                 <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginTop: 6, textAlign: 'center', paddingHorizontal: 24 }}>
@@ -449,7 +449,7 @@ export default function DashboardScreen() {
                   onPress={() => setShowLogout(false)}
                   disabled={loggingOut}
                   activeOpacity={0.7}
-                  style={{ backgroundColor: '#F0F2F5', borderRadius: 16, paddingVertical: 15, alignItems: 'center' }}
+                  style={{ backgroundColor: '#F6F6F6', borderRadius: 16, paddingVertical: 15, alignItems: 'center' }}
                 >
                   <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 15 }}>Cancel</Text>
                 </TouchableOpacity>
@@ -464,9 +464,9 @@ export default function DashboardScreen() {
         <Pressable style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.45)' }} onPress={() => setMenuPage(null)} />
         <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 20) + 4, paddingTop: 8 }}>
           <View style={{ width: 40, height: 4, backgroundColor: '#E4E6EB', borderRadius: 2, alignSelf: 'center', marginBottom: 20 }} />
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F0F2F5' }}>
-            <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: '#0E1C40', alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="logo-facebook" size={22} color="#00C5FF" />
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: '#F6F6F6' }}>
+            <View style={{ width: 44, height: 44, borderRadius: 13, backgroundColor: '#163172', alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="logo-facebook" size={22} color="#D6E4F0" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={{ color: '#1C1E21', fontWeight: '700', fontSize: 16 }} numberOfLines={1}>{menuPage?.page_name}</Text>
@@ -476,10 +476,10 @@ export default function DashboardScreen() {
           <SheetRow icon="flash-outline"     label="Triggers"     onPress={() => { setMenuPage(null); navigateToTriggers(menuPage!); }} />
           <SheetRow icon="bar-chart-outline" label="Analytics"    onPress={() => { setMenuPage(null); navigateToAnalytics(menuPage!); }} />
           <SheetRow icon="settings-outline"  label="Bot Settings" onPress={() => { setMenuPage(null); navigateToSettings(menuPage!); }} />
-          <View style={{ height: 1, backgroundColor: '#F0F2F5', marginVertical: 8 }} />
+          <View style={{ height: 1, backgroundColor: '#F6F6F6', marginVertical: 8 }} />
           <SheetRow icon="trash-outline" label="Disconnect Page" danger onPress={() => { setMenuPage(null); handleDisconnect(menuPage!); }} />
           <TouchableOpacity
-            style={{ marginTop: 12, backgroundColor: '#F0F2F5', borderRadius: 14, paddingVertical: 14, alignItems: 'center' }}
+            style={{ marginTop: 12, backgroundColor: '#F6F6F6', borderRadius: 14, paddingVertical: 14, alignItems: 'center' }}
             onPress={() => setMenuPage(null)}
             activeOpacity={0.7}
           >
@@ -519,7 +519,7 @@ function CardStat({ value, label }: { value: number; label: string }) {
 function SheetRow({ icon, label, onPress, danger }: { icon: any; label: string; onPress: () => void; danger?: boolean }) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 4, gap: 14 }}>
-      <View style={{ width: 38, height: 38, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: danger ? '#FEF2F2' : '#F0F2F5' }}>
+      <View style={{ width: 38, height: 38, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: danger ? '#FEF2F2' : '#F6F6F6' }}>
         <Ionicons name={icon} size={18} color={danger ? '#EF4444' : '#1C1E21'} />
       </View>
       <Text style={{ flex: 1, fontSize: 15, fontWeight: '600', color: danger ? '#EF4444' : '#1C1E21' }}>{label}</Text>

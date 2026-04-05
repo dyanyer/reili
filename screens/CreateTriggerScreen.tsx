@@ -173,14 +173,14 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#F0F2F5]">
-        <ActivityIndicator size="large" color="#0E1C40" />
+      <View className="flex-1 items-center justify-center bg-[#F6F6F6]">
+        <ActivityIndicator size="large" color="#163172" />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -197,7 +197,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
           disabled={saving}
         >
           {saving ? (
-            <ActivityIndicator size="small" color="#00C5FF" />
+            <ActivityIndicator size="small" color="#D6E4F0" />
           ) : (
             <Text className="text-white text-sm font-bold">Save</Text>
           )}
@@ -209,10 +209,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {/* Keywords */}
         <View
           className="bg-white rounded-2xl p-4 mb-3"
-          style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+          style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
         >
           <View className="flex-row items-center gap-2 mb-1">
-            <Ionicons name="key" size={16} color="#0E1C40" />
+            <Ionicons name="key" size={16} color="#163172" />
             <Text className="text-navy font-semibold text-base">Keywords</Text>
           </View>
           <Text className="text-slate-400 text-xs mb-3 leading-4">
@@ -228,7 +228,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
                   onPress={() => setKeywords(keywords.filter((k) => k !== kw))}
                 >
                   <Text className="text-navy text-sm font-medium">{kw}</Text>
-                  <Ionicons name="close-circle" size={14} color="#0E1C40" />
+                  <Ionicons name="close-circle" size={14} color="#163172" />
                 </TouchableOpacity>
               ))}
             </View>
@@ -249,7 +249,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
               className="bg-navy rounded-xl px-4 items-center justify-center"
               onPress={addKeyword}
             >
-              <Ionicons name="add" size={22} color="#00C5FF" />
+              <Ionicons name="add" size={22} color="#D6E4F0" />
             </TouchableOpacity>
           </View>
           <Text className="text-slate-400 text-xs mt-2 leading-4">
@@ -260,10 +260,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {/* Match Mode */}
         <View
           className="bg-white rounded-2xl p-4 mb-3"
-          style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+          style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
         >
           <View className="flex-row items-center gap-2 mb-1">
-            <Ionicons name="options" size={16} color="#0E1C40" />
+            <Ionicons name="options" size={16} color="#163172" />
             <Text className="text-navy font-semibold text-base">Match Mode</Text>
           </View>
           <Text className="text-slate-400 text-xs mb-3 leading-4">
@@ -296,10 +296,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {/* Bot Reply */}
         <View
           className="bg-white rounded-2xl p-4 mb-3"
-          style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+          style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
         >
           <View className="flex-row items-center gap-2 mb-1">
-            <Ionicons name="chatbubble-ellipses" size={16} color="#0E1C40" />
+            <Ionicons name="chatbubble-ellipses" size={16} color="#163172" />
             <Text className="text-navy font-semibold text-base">Bot Reply</Text>
           </View>
           <Text className="text-slate-400 text-xs mb-3 leading-4">
@@ -322,10 +322,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {/* Quick Reply Buttons */}
         <View
           className="bg-white rounded-2xl p-4 mb-3"
-          style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+          style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
         >
           <View className="flex-row items-center gap-2 mb-1">
-            <Ionicons name="apps" size={16} color="#0E1C40" />
+            <Ionicons name="apps" size={16} color="#163172" />
             <Text className="text-navy font-semibold text-base">Quick Reply Buttons</Text>
             <View className="bg-cyan-light rounded-lg px-2 py-0.5 ml-1">
               <Text className="text-navy text-xs font-medium">Optional</Text>
@@ -344,7 +344,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
                   onPress={() => setQuickReplies(quickReplies.filter((b) => b !== btn))}
                 >
                   <Text className="text-white text-xs font-medium">{btn}</Text>
-                  <Ionicons name="close-circle" size={13} color="#00C5FF" />
+                  <Ionicons name="close-circle" size={13} color="#D6E4F0" />
                 </TouchableOpacity>
               ))}
             </View>
@@ -377,7 +377,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
                   setQrInput('');
                 }}
               >
-                <Ionicons name="add" size={22} color="#00C5FF" />
+                <Ionicons name="add" size={22} color="#D6E4F0" />
               </TouchableOpacity>
             </View>
           )}
@@ -389,10 +389,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {/* Attach image */}
         <View
           className="bg-white rounded-2xl p-4 mb-3"
-          style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+          style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
         >
           <View className="flex-row items-center gap-2 mb-1">
-            <Ionicons name="image" size={16} color="#0E1C40" />
+            <Ionicons name="image" size={16} color="#163172" />
             <Text className="text-navy font-semibold text-base">Product Image</Text>
             <View className="bg-cyan-light rounded-lg px-2 py-0.5 ml-1">
               <Text className="text-navy text-xs font-medium">Optional</Text>
@@ -413,7 +413,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
               <View className="flex-row items-center gap-2">
                 {uploadingImage ? (
                   <View className="flex-1 flex-row items-center gap-2 bg-slate-50 rounded-xl px-3 py-2">
-                    <ActivityIndicator size="small" color="#0E1C40" />
+                    <ActivityIndicator size="small" color="#163172" />
                     <Text className="text-slate-500 text-xs">Uploading...</Text>
                   </View>
                 ) : imageUrl ? (
@@ -437,7 +437,7 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
               onPress={handlePickImage}
             >
               <View className="bg-cyan-light rounded-full p-3">
-                <Ionicons name="cloud-upload-outline" size={22} color="#0E1C40" />
+                <Ionicons name="cloud-upload-outline" size={22} color="#163172" />
               </View>
               <Text className="text-navy text-sm font-medium">Tap to pick a photo</Text>
               <Text className="text-slate-400 text-xs">JPG, PNG — max 10MB</Text>
@@ -449,10 +449,10 @@ export default function CreateTriggerScreen({ route, navigation }: Props) {
         {(keywords.length > 0 || reply.length > 0) && (
           <View
             className="bg-white rounded-2xl p-4"
-            style={{ shadowColor: '#0E1C40', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
+            style={{ shadowColor: '#163172', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
           >
             <View className="flex-row items-center gap-2 mb-3">
-              <Ionicons name="eye" size={16} color="#0E1C40" />
+              <Ionicons name="eye" size={16} color="#163172" />
               <Text className="text-navy font-semibold text-base">Preview</Text>
             </View>
             {keywords.length > 0 && (

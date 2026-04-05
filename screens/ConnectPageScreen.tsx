@@ -69,7 +69,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
   }
 
   return (
-    <View className="flex-1 bg-[#F0F2F5]">
+    <View className="flex-1 bg-[#F6F6F6]">
       <StatusBar style="dark" />
 
       {/* Header */}
@@ -85,7 +85,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
 
       {loading ? (
         <View className="flex-1 items-center justify-center gap-3">
-          <ActivityIndicator size="large" color="#0E1C40" />
+          <ActivityIndicator size="large" color="#163172" />
           <Text className="text-slate-500 text-sm">Fetching your Facebook Pages...</Text>
         </View>
       ) : error ? (
@@ -108,7 +108,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
         <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 40 }}>
           {/* Info banner */}
           <View className="bg-cyan-light rounded-2xl p-4 mb-4 flex-row items-start gap-3">
-            <Ionicons name="information-circle" size={20} color="#0E1C40" />
+            <Ionicons name="information-circle" size={20} color="#163172" />
             <Text className="text-navy text-xs flex-1 leading-5">
               Select the Page you want Reili to manage. The bot will automatically reply to Messenger
               messages on this Page.
@@ -120,7 +120,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
               key={page.id}
               className="bg-white rounded-2xl p-4 mb-3 flex-row items-center justify-between"
               style={{
-                shadowColor: '#0E1C40',
+                shadowColor: '#163172',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.07,
                 shadowRadius: 8,
@@ -129,7 +129,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
             >
               <View className="flex-row items-center gap-3 flex-1">
                 <View className="bg-cyan-light rounded-xl p-2.5">
-                  <Ionicons name="logo-facebook" size={22} color="#0E1C40" />
+                  <Ionicons name="logo-facebook" size={22} color="#163172" />
                 </View>
                 <View className="flex-1">
                   <Text className="text-navy font-bold text-base">{page.name}</Text>
@@ -149,7 +149,7 @@ export default function ConnectPageScreen({ navigation }: Props) {
                   disabled={connecting === page.id}
                 >
                   {connecting === page.id ? (
-                    <ActivityIndicator size="small" color="#0E1C40" />
+                    <ActivityIndicator size="small" color="#163172" />
                   ) : (
                     <Text className="text-navy text-sm font-bold">Connect</Text>
                   )}

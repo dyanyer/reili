@@ -123,7 +123,7 @@ function CustomTabBar({ state, navigation }: any) {
   return (
     // Outer shell — matches screen background to create "floating" illusion
     <View style={{
-      backgroundColor: '#F0F2F5',
+      backgroundColor: '#F6F6F6',
       paddingHorizontal: 16,
       paddingTop: 10,
       paddingBottom: Math.max(insets.bottom, 12),
@@ -135,7 +135,7 @@ function CustomTabBar({ state, navigation }: any) {
         borderRadius: 28,
         paddingVertical: 6,
         paddingHorizontal: 6,
-        shadowColor: '#0E1C40',
+        shadowColor: '#163172',
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.12,
         shadowRadius: 20,
@@ -154,7 +154,7 @@ function CustomTabBar({ state, navigation }: any) {
               {focused ? (
                 // Active: navy rounded rect with cyan icon + white label
                 <View style={{
-                  backgroundColor: '#0E1C40',
+                  backgroundColor: '#163172',
                   borderRadius: 22,
                   paddingHorizontal: 12,
                   paddingVertical: 10,
@@ -162,7 +162,7 @@ function CustomTabBar({ state, navigation }: any) {
                   gap: 3,
                   minWidth: 64,
                 }}>
-                  <Ionicons name={cfg.activeIcon as any} size={20} color="#00C5FF" />
+                  <Ionicons name={cfg.activeIcon as any} size={20} color="#D6E4F0" />
                   <Text style={{ color: '#FFFFFF', fontSize: 10, fontWeight: '700', letterSpacing: 0.2 }}>
                     {cfg.label}
                   </Text>
