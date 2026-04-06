@@ -185,14 +185,7 @@ export default function WelcomeScreen({ navigation }: Props) {
         </Text>
 
         {/* Feature chips */}
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 8,
-            marginTop: 28,
-            flexWrap: "wrap",
-          }}
-        >
+        <View style={{ flexDirection: "row", gap: 8, marginTop: 32, flexWrap: "wrap" }}>
           {CHIPS.map((c) => (
             <View
               key={c.label}
@@ -200,16 +193,16 @@ export default function WelcomeScreen({ navigation }: Props) {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 6,
-                backgroundColor: C.light,
+                backgroundColor: "rgba(214,228,240,0.18)",
                 borderRadius: 99,
-                paddingHorizontal: 13,
-                paddingVertical: 8,
+                paddingHorizontal: 14,
+                paddingVertical: 9,
                 borderWidth: 1,
-                borderColor: C.border,
+                borderColor: "rgba(214,228,240,0.28)",
               }}
             >
-              <Ionicons name={c.icon as any} size={12} color={C.navy} />
-              <Text style={{ color: C.navy, fontSize: 12, fontWeight: "600" }}>
+              <Ionicons name={c.icon as any} size={12} color={C.light} />
+              <Text style={{ color: C.light, fontSize: 12, fontWeight: "700" }}>
                 {c.label}
               </Text>
             </View>
@@ -221,35 +214,24 @@ export default function WelcomeScreen({ navigation }: Props) {
       <View
         style={{
           backgroundColor: C.white,
-          borderTopLeftRadius: 34,
-          borderTopRightRadius: 34,
+          borderTopLeftRadius: 36,
+          borderTopRightRadius: 36,
           paddingHorizontal: 24,
-          paddingTop: 28,
+          paddingTop: 32,
           paddingBottom: Math.max(insets.bottom, 24) + 12,
           borderTopWidth: 1,
-          borderColor: C.border,
+          borderColor: "rgba(22,49,114,0.08)",
+          shadowColor: C.navy,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.08,
+          shadowRadius: 16,
         }}
       >
-        <Text
-          style={{
-            color: C.text,
-            fontSize: 19,
-            fontWeight: "800",
-            marginBottom: 4,
-          }}
-        >
+        <Text style={{ color: C.text, fontSize: 20, fontWeight: "800", letterSpacing: -0.4, marginBottom: 4 }}>
           Get started free
         </Text>
-        <Text
-          style={{
-            color: C.text2,
-            fontSize: 13,
-            marginBottom: 24,
-            lineHeight: 19,
-          }}
-        >
-          Sign in with your Facebook account to connect your Pages and start
-          automating.
+        <Text style={{ color: C.text2, fontSize: 13, marginBottom: 26, lineHeight: 20 }}>
+          Sign in with Facebook to connect your Pages{"\n"}and start automating Messenger replies.
         </Text>
 
         {/* Facebook button */}
@@ -259,12 +241,17 @@ export default function WelcomeScreen({ navigation }: Props) {
           activeOpacity={0.85}
           style={{
             backgroundColor: C.navy,
-            borderRadius: 14,
-            paddingVertical: 15,
+            borderRadius: 16,
+            paddingVertical: 16,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
             gap: 10,
+            shadowColor: C.navy,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.25,
+            shadowRadius: 10,
+            elevation: 4,
           }}
         >
           {loading ? (
@@ -272,9 +259,7 @@ export default function WelcomeScreen({ navigation }: Props) {
           ) : (
             <>
               <Ionicons name="logo-facebook" size={20} color="#fff" />
-              <Text
-                style={{ color: "#FFFFFF", fontSize: 15, fontWeight: "700" }}
-              >
+              <Text style={{ color: "#FFFFFF", fontSize: 15, fontWeight: "700", letterSpacing: 0.1 }}>
                 Continue with Facebook
               </Text>
             </>
@@ -295,15 +280,7 @@ export default function WelcomeScreen({ navigation }: Props) {
         )}
 
         {!IS_EXPO_GO && (
-          <Text
-            style={{
-              color: C.text3,
-              fontSize: 11,
-              textAlign: "center",
-              marginTop: 18,
-              lineHeight: 17,
-            }}
-          >
+          <Text style={{ color: C.text3, fontSize: 11, textAlign: "center", marginTop: 20, lineHeight: 17 }}>
             By continuing, you agree to our Terms of Service.{"\n"}
             Your data is never shared without permission.
           </Text>

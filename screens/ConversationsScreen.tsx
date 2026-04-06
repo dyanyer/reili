@@ -148,15 +148,15 @@ export default function ConversationsScreen({ route, navigation }: Props) {
   if (!pageId) {
     return (
       <View style={{ flex: 1, backgroundColor: C.bg }}>
-        <StatusBar style="dark" />
-        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
-          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Chats</Text>
+        <StatusBar style="light" />
+        <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 20, paddingHorizontal: 20 }}>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Chats</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
-          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-            <Ionicons name="chatbubbles-outline" size={36} color={C.navy} />
+          <View style={{ width: 76, height: 76, borderRadius: 24, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Ionicons name="chatbubbles-outline" size={36} color={C.blue} />
           </View>
-          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No page selected</Text>
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 16, letterSpacing: -0.3 }}>No page selected</Text>
           <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
             Go to Home and tap a page to start viewing conversations.
           </Text>
@@ -167,43 +167,43 @@ export default function ConversationsScreen({ route, navigation }: Props) {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Chats</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+      {/* Header — navy */}
+      <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Chats</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <PageSwitcherPill
               currentPageId={pageId}
               currentPageName={pageName}
               onSwitch={(id, name) => { setPageId(id); setPageName(name); }}
             />
-            <TouchableOpacity onPress={loadConversations} style={{ padding: 8 }}>
-              <Ionicons name="refresh-outline" size={19} color={C.text2} />
+            <TouchableOpacity onPress={loadConversations} activeOpacity={0.75} style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="refresh-outline" size={16} color="rgba(255,255,255,0.85)" />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Search */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: C.white, borderRadius: 12, paddingHorizontal: 12, gap: 8, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
-          <Ionicons name="search" size={14} color={C.text3} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 12, paddingHorizontal: 12, gap: 8, marginBottom: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)' }}>
+          <Ionicons name="search" size={14} color="rgba(255,255,255,0.55)" />
           <TextInput
-            style={{ flex: 1, paddingVertical: 10, color: C.text, fontSize: 14 }}
+            style={{ flex: 1, paddingVertical: 10, color: '#FFFFFF', fontSize: 14 }}
             placeholder="Search conversations..."
-            placeholderTextColor={C.text3}
+            placeholderTextColor="rgba(255,255,255,0.45)"
             value={search}
             onChangeText={setSearch}
           />
           {search.length > 0 && (
             <TouchableOpacity onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={16} color={C.text3} />
+              <Ionicons name="close-circle" size={16} color="rgba(255,255,255,0.55)" />
             </TouchableOpacity>
           )}
         </View>
 
         {/* Filter pills */}
-        <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={{ flexDirection: 'row', gap: 7 }}>
           {FILTERS.map((f) => {
             const isActive = activeFilter === f;
             const badge = f === 'Unread' ? unreadCount : 0;
@@ -211,17 +211,18 @@ export default function ConversationsScreen({ route, navigation }: Props) {
               <TouchableOpacity
                 key={f}
                 onPress={() => setActiveFilter(f)}
+                activeOpacity={0.8}
                 style={{
                   flexDirection: 'row', alignItems: 'center', gap: 5,
-                  paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99,
-                  backgroundColor: isActive ? C.navy : C.light,
+                  paddingHorizontal: 13, paddingVertical: 7, borderRadius: 99,
+                  backgroundColor: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.10)',
                   borderWidth: 1,
-                  borderColor: isActive ? C.navy : C.border,
+                  borderColor: isActive ? '#FFFFFF' : 'rgba(255,255,255,0.18)',
                 }}
               >
-                <Text style={{ fontSize: 12, fontWeight: '700', color: isActive ? C.white : C.navy }}>{f}</Text>
+                <Text style={{ fontSize: 12, fontWeight: '700', color: isActive ? C.navy : 'rgba(255,255,255,0.85)' }}>{f}</Text>
                 {badge > 0 && (
-                  <View style={{ backgroundColor: C.blue, borderRadius: 99, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }}>
+                  <View style={{ backgroundColor: C.blue, borderRadius: 99, minWidth: 16, height: 16, paddingHorizontal: 3, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: '#fff', fontSize: 9, fontWeight: '800' }}>{badge}</Text>
                   </View>
                 )}
@@ -262,13 +263,13 @@ export default function ConversationsScreen({ route, navigation }: Props) {
           ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: C.border, marginLeft: 80 }} />}
           renderItem={({ item: c }) => {
             const displayName = c.customer_name ?? `User ${c.customer_facebook_id.slice(-4)}`;
-            const initials = displayName.slice(0, 2).toUpperCase();
+            const initials = displayName.split(' ').slice(0, 2).map((w: string) => w[0]).join('').toUpperCase() || displayName.slice(0, 2).toUpperCase();
             const avatarColor = getAvatarColor(displayName);
             const hasUnread = c.unread_count > 0;
 
             return (
               <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: C.white }}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 13, backgroundColor: C.white }}
                 onPress={() => navigation.navigate('ConversationThread', { conversationId: c.id, customerName: displayName })}
                 onLongPress={() =>
                   Alert.alert(displayName, 'Choose an action', [
@@ -280,32 +281,39 @@ export default function ConversationsScreen({ route, navigation }: Props) {
                 activeOpacity={0.7}
               >
                 {/* Avatar */}
-                <View style={{ width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', marginRight: 12, flexShrink: 0, backgroundColor: avatarColor.bg, borderWidth: 1, borderColor: C.border }}>
-                  <Text style={{ fontSize: 14, fontWeight: '800', color: avatarColor.text }}>{initials}</Text>
+                <View style={{ position: 'relative', marginRight: 13, flexShrink: 0 }}>
+                  <View style={{ width: 50, height: 50, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: avatarColor.bg, borderWidth: 1.5, borderColor: hasUnread ? C.blue : C.border }}>
+                    <Text style={{ fontSize: 15, fontWeight: '800', color: avatarColor.text, letterSpacing: -0.3 }}>{initials}</Text>
+                  </View>
+                  {hasUnread && (
+                    <View style={{ position: 'absolute', bottom: -2, right: -2, width: 14, height: 14, borderRadius: 7, backgroundColor: C.blue, borderWidth: 2, borderColor: C.white, alignItems: 'center', justifyContent: 'center' }}>
+                      <Text style={{ color: '#fff', fontSize: 7, fontWeight: '800' }}>{c.unread_count > 9 ? '9+' : c.unread_count}</Text>
+                    </View>
+                  )}
                 </View>
 
                 {/* Content */}
                 <View style={{ flex: 1, minWidth: 0 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, flex: 1, marginRight: 8 }}>
                       {c.is_pinned && <Ionicons name="pin" size={10} color={C.blue} />}
-                      <Text style={{ fontSize: 14, flex: 1, color: C.text, fontWeight: hasUnread ? '800' : '600' }} numberOfLines={1}>
+                      <Text style={{ fontSize: 14, flex: 1, color: C.text, fontWeight: hasUnread ? '800' : '600', letterSpacing: -0.2 }} numberOfLines={1}>
                         {displayName}
                       </Text>
                     </View>
-                    <Text style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{timeAgo(c.last_message_at)}</Text>
+                    <Text style={{ fontSize: 11, color: hasUnread ? C.blue : C.text3, flexShrink: 0, fontWeight: hasUnread ? '700' : '400' }}>{timeAgo(c.last_message_at)}</Text>
                   </View>
                   <Text
-                    style={{ fontSize: 13, lineHeight: 18, color: hasUnread ? C.text2 : C.text3, fontWeight: hasUnread ? '500' : '400' }}
+                    style={{ fontSize: 13, lineHeight: 18, color: hasUnread ? C.text : C.text3, fontWeight: hasUnread ? '500' : '400' }}
                     numberOfLines={1}
                   >
                     {c.last_message}
                   </Text>
                 </View>
 
-                {/* Unread dot */}
-                <View style={{ marginLeft: 8, flexShrink: 0, width: 20, alignItems: 'center' }}>
-                  {hasUnread && <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: C.blue }} />}
+                {/* Chevron */}
+                <View style={{ marginLeft: 8, flexShrink: 0 }}>
+                  <Ionicons name="chevron-forward" size={14} color={C.text3} />
                 </View>
               </TouchableOpacity>
             );

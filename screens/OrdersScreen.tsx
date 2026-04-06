@@ -165,16 +165,16 @@ export default function OrdersScreen({ route }: Props) {
   if (!pageId) {
     return (
       <View style={{ flex: 1, backgroundColor: C.bg }}>
-        <StatusBar style="dark" />
-        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
-          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Orders</Text>
+        <StatusBar style="light" />
+        <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 20, paddingHorizontal: 20 }}>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Orders</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 }}>
-          <View style={{ width: 72, height: 72, borderRadius: 22, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+          <View style={{ width: 76, height: 76, borderRadius: 24, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
             <Ionicons name="bag-outline" size={36} color={C.blue} />
           </View>
-          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No page selected</Text>
-          <Text style={{ color: C.text2, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
+          <Text style={{ color: C.text, fontWeight: '800', fontSize: 16, letterSpacing: -0.3 }}>No page selected</Text>
+          <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
             Go to Home and tap a page to view its orders.
           </Text>
         </View>
@@ -184,40 +184,41 @@ export default function OrdersScreen({ route }: Props) {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+      {/* Header — navy */}
+      <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
           <View style={{ flex: 1, marginRight: 12, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>Orders</Text>
+            <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Orders</Text>
             {pendingCount > 0 && (
-              <View style={{ backgroundColor: 'rgba(217,119,6,0.10)', borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3, borderWidth: 1, borderColor: 'rgba(217,119,6,0.30)' }}>
-                <Text style={{ color: '#D97706', fontSize: 11, fontWeight: '800' }}>{pendingCount} pending</Text>
+              <View style={{ backgroundColor: 'rgba(217,119,6,0.25)', borderRadius: 99, paddingHorizontal: 8, paddingVertical: 4, borderWidth: 1, borderColor: 'rgba(217,119,6,0.40)' }}>
+                <Text style={{ color: '#FDBA74', fontSize: 11, fontWeight: '800' }}>{pendingCount} pending</Text>
               </View>
             )}
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <PageSwitcherPill
               currentPageId={pageId}
               currentPageName={pageName}
               onSwitch={(id, name) => { setPageId(id); setPageName(name); }}
             />
-            <TouchableOpacity onPress={exportCSV} style={{ padding: 8 }}>
-              <Ionicons name="download-outline" size={19} color={C.text2} />
+            <TouchableOpacity onPress={exportCSV} activeOpacity={0.75} style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="download-outline" size={17} color="rgba(255,255,255,0.85)" />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Filter pills */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 7 }}>
           {STATUSES.map((f) => (
             <TouchableOpacity
               key={f}
               onPress={() => setActiveFilter(f)}
-              style={{ paddingHorizontal: 12, paddingVertical: 6, borderRadius: 99, backgroundColor: activeFilter === f ? C.navy : C.white, borderWidth: 1, borderColor: activeFilter === f ? C.navy : C.border }}
+              activeOpacity={0.8}
+              style={{ paddingHorizontal: 13, paddingVertical: 7, borderRadius: 99, backgroundColor: activeFilter === f ? '#FFFFFF' : 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: activeFilter === f ? '#FFFFFF' : 'rgba(255,255,255,0.18)' }}
             >
-              <Text style={{ fontSize: 12, fontWeight: '700', color: activeFilter === f ? C.white : C.text2 }}>{f}</Text>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: activeFilter === f ? C.navy : 'rgba(255,255,255,0.85)' }}>{f}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -259,49 +260,56 @@ export default function OrdersScreen({ route }: Props) {
             return (
               <View
                 key={order.id}
-                style={{ backgroundColor: C.white, borderRadius: 20, marginBottom: 12, overflow: 'hidden', borderWidth: 1, borderColor: C.border }}
+                style={{ backgroundColor: C.white, borderRadius: 20, marginBottom: 10, overflow: 'hidden', borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 1 }}
               >
-                {/* Status accent line */}
-                <View style={{ height: 3, backgroundColor: cfg.color, opacity: 0.8 }} />
+                {/* Status accent top bar */}
+                <View style={{ height: 3, backgroundColor: cfg.color }} />
 
                 {/* Card header */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingTop: 12, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: C.border }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingTop: 14, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
                   <View style={{ flex: 1, marginRight: 12 }}>
-                    <Text style={{ color: C.text, fontWeight: '800', fontSize: 14 }} numberOfLines={1}>{order.item}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 3, flexWrap: 'wrap' }}>
+                    <Text style={{ color: C.text, fontWeight: '800', fontSize: 15, letterSpacing: -0.3 }} numberOfLines={1}>{order.item}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 4, flexWrap: 'wrap' }}>
                       {order.order_number && (
                         <Text style={{ color: C.blue, fontSize: 11, fontWeight: '800' }}>{order.order_number}</Text>
                       )}
-                      <Text style={{ color: C.text3, fontSize: 11 }}>·</Text>
-                      <Text style={{ color: C.text3, fontSize: 11 }}>{customerName}</Text>
+                      {order.order_number && <Text style={{ color: C.text3, fontSize: 11 }}>·</Text>}
+                      <Text style={{ color: C.text3, fontSize: 11, fontWeight: '600' }}>{customerName}</Text>
                       <Text style={{ color: C.text3, fontSize: 11 }}>·</Text>
                       <Text style={{ color: C.text3, fontSize: 11 }}>{timeAgo(order.created_at)}</Text>
                     </View>
                   </View>
-                  <View style={{ borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5, backgroundColor: cfg.bg, borderWidth: 1, borderColor: `${cfg.color}40` }}>
+                  <View style={{ borderRadius: 99, paddingHorizontal: 10, paddingVertical: 5, backgroundColor: cfg.bg, borderWidth: 1, borderColor: `${cfg.color}40`, flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <Ionicons name={cfg.icon as any} size={10} color={cfg.color} />
                     <Text style={{ fontSize: 11, fontWeight: '800', color: cfg.color }}>{cfg.label}</Text>
                   </View>
                 </View>
 
                 {/* Details */}
-                <View style={{ paddingHorizontal: 14, paddingVertical: 12, gap: 8 }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <Ionicons name="cube-outline" size={13} color={C.text3} />
-                    <Text style={{ color: C.text2, fontSize: 13 }}>Qty: <Text style={{ color: C.text, fontWeight: '600' }}>{order.quantity}</Text></Text>
+                <View style={{ paddingHorizontal: 14, paddingVertical: 13, gap: 9 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
+                    <View style={{ width: 22, height: 22, borderRadius: 7, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center' }}>
+                      <Ionicons name="cube-outline" size={12} color={C.navy} />
+                    </View>
+                    <Text style={{ color: C.text2, fontSize: 13 }}>Qty: <Text style={{ color: C.text, fontWeight: '700' }}>{order.quantity}</Text></Text>
                   </View>
-                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-                    <Ionicons name="location-outline" size={13} color={C.text3} style={{ marginTop: 1 }} />
+                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 9 }}>
+                    <View style={{ width: 22, height: 22, borderRadius: 7, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center', marginTop: 1 }}>
+                      <Ionicons name="location-outline" size={12} color={C.navy} />
+                    </View>
                     <Text style={{ color: C.text2, fontSize: 13, flex: 1, lineHeight: 18 }}>{order.address}</Text>
                   </View>
 
                   {/* Price row */}
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: C.border }}>
-                    <Ionicons name="cash-outline" size={13} color={C.text3} />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9, paddingTop: 10, borderTopWidth: 1, borderTopColor: C.border }}>
+                    <View style={{ width: 22, height: 22, borderRadius: 7, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center' }}>
+                      <Ionicons name="cash-outline" size={12} color={C.navy} />
+                    </View>
                     {editingPriceId === order.id ? (
                       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <Text style={{ color: C.text2, fontSize: 13 }}>₱</Text>
+                        <Text style={{ color: C.text2, fontSize: 13, fontWeight: '700' }}>₱</Text>
                         <TextInput
-                          style={{ flex: 1, backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6, color: C.navy, fontSize: 13 }}
+                          style={{ flex: 1, backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 7, color: C.navy, fontSize: 13 }}
                           value={priceInput}
                           onChangeText={setPriceInput}
                           placeholder="0.00"
@@ -309,20 +317,21 @@ export default function OrdersScreen({ route }: Props) {
                           keyboardType="decimal-pad"
                           autoFocus
                         />
-                        <TouchableOpacity style={{ backgroundColor: C.navy, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 7 }} onPress={() => handleSavePrice(order.id)}>
+                        <TouchableOpacity activeOpacity={0.85} style={{ backgroundColor: C.navy, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 8 }} onPress={() => handleSavePrice(order.id)}>
                           <Text style={{ color: C.white, fontSize: 12, fontWeight: '700' }}>Save</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { setEditingPriceId(null); setPriceInput(''); }}>
+                        <TouchableOpacity onPress={() => { setEditingPriceId(null); setPriceInput(''); }} style={{ padding: 4 }}>
                           <Ionicons name="close" size={16} color={C.text3} />
                         </TouchableOpacity>
                       </View>
                     ) : (
                       <TouchableOpacity
-                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 }}
+                        activeOpacity={0.7}
+                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7 }}
                         onPress={() => { setEditingPriceId(order.id); setPriceInput(order.total_price != null ? String(order.total_price) : ''); }}
                       >
                         {order.total_price != null ? (
-                          <Text style={{ color: C.blue, fontSize: 14, fontWeight: '800' }}>₱{Number(order.total_price).toLocaleString()}</Text>
+                          <Text style={{ color: C.navy, fontSize: 15, fontWeight: '800', letterSpacing: -0.3 }}>₱{Number(order.total_price).toLocaleString()}</Text>
                         ) : (
                           <Text style={{ color: C.text3, fontSize: 12, fontWeight: '600' }}>+ Set Price</Text>
                         )}
@@ -332,20 +341,22 @@ export default function OrdersScreen({ route }: Props) {
                   </View>
                 </View>
 
-                {/* Actions */}
-                <View style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: C.border }}>
+                {/* Action buttons */}
+                <View style={{ flexDirection: 'row', borderTopWidth: 1, borderTopColor: C.border, backgroundColor: C.bg }}>
                   <TouchableOpacity
-                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12 }}
+                    activeOpacity={0.7}
+                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 13 }}
                     onPress={() => openConversation(order.conversation_id, customerName)}
                   >
                     <Ionicons name="chatbubble-outline" size={14} color={C.text2} />
-                    <Text style={{ color: C.text2, fontSize: 12, fontWeight: '600' }}>Message</Text>
+                    <Text style={{ color: C.text2, fontSize: 12, fontWeight: '700' }}>Message</Text>
                   </TouchableOpacity>
                   {canUpdate && (
                     <>
                       <View style={{ width: 1, backgroundColor: C.border }} />
                       <TouchableOpacity
-                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12 }}
+                        activeOpacity={0.7}
+                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 13 }}
                         onPress={() => handleUpdateStatus(order)}
                       >
                         <Ionicons name="arrow-forward-circle-outline" size={14} color={C.navy} />

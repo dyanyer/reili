@@ -133,7 +133,9 @@ const TAB_CONFIG: Record<
 const C = {
   white:  '#FFFFFF',
   navy:   '#163172',
-  text3:  'rgba(22,49,114,0.40)',
+  light:  '#D6E4F0',
+  blue:   '#1E56A0',
+  text3:  'rgba(22,49,114,0.38)',
   border: 'rgba(22,49,114,0.10)',
   bg:     '#F6F6F6',
 };
@@ -155,26 +157,28 @@ function CustomTabBar({ state, navigation }: any) {
     <View
       style={{
         backgroundColor: C.white,
-        paddingHorizontal: 16,
-        paddingTop: 10,
-        paddingBottom: Math.max(insets.bottom, 12),
+        paddingHorizontal: 12,
+        paddingTop: 8,
+        paddingBottom: Math.max(insets.bottom, 10),
         borderTopWidth: 1,
         borderTopColor: C.border,
         shadowColor: C.navy,
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        elevation: 8,
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.07,
+        shadowRadius: 12,
+        elevation: 10,
       }}
     >
-      {/* Pill container */}
+      {/* Inner track — subtle tinted background */}
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: C.white,
-          borderRadius: 28,
-          paddingVertical: 6,
-          paddingHorizontal: 6,
+          backgroundColor: C.bg,
+          borderRadius: 26,
+          paddingVertical: 4,
+          paddingHorizontal: 4,
+          borderWidth: 1,
+          borderColor: C.border,
         }}
       >
         {state.routes.map((route: any, index: number) => {
@@ -184,7 +188,7 @@ function CustomTabBar({ state, navigation }: any) {
             <TouchableOpacity
               key={route.key}
               onPress={() => navigation.navigate(route.name)}
-              activeOpacity={0.7}
+              activeOpacity={0.75}
               style={{
                 flex: 1,
                 alignItems: "center",
@@ -192,21 +196,26 @@ function CustomTabBar({ state, navigation }: any) {
               }}
             >
               {focused ? (
-                // Active: navy solid pill, white icon + text
+                // Active: navy solid pill with shadow
                 <View
                   style={{
                     backgroundColor: C.navy,
                     borderRadius: 22,
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
+                    paddingHorizontal: 10,
+                    paddingVertical: 9,
                     alignItems: "center",
                     gap: 3,
-                    minWidth: 64,
+                    minWidth: 60,
+                    shadowColor: C.navy,
+                    shadowOpacity: 0.28,
+                    shadowRadius: 8,
+                    shadowOffset: { width: 0, height: 3 },
+                    elevation: 5,
                   }}
                 >
                   <Ionicons
                     name={cfg.activeIcon as any}
-                    size={20}
+                    size={19}
                     color={C.white}
                   />
                   <Text
@@ -221,13 +230,13 @@ function CustomTabBar({ state, navigation }: any) {
                   </Text>
                 </View>
               ) : (
-                // Inactive: no bg, muted navy
+                // Inactive: transparent, muted navy icon + label
                 <View
-                  style={{ alignItems: "center", gap: 3, paddingVertical: 10 }}
+                  style={{ alignItems: "center", gap: 3, paddingVertical: 9 }}
                 >
                   <Ionicons
                     name={cfg.icon as any}
-                    size={20}
+                    size={19}
                     color={C.text3}
                   />
                   <Text
@@ -235,6 +244,7 @@ function CustomTabBar({ state, navigation }: any) {
                       color: C.text3,
                       fontSize: 10,
                       fontWeight: "500",
+                      letterSpacing: 0.1,
                     }}
                   >
                     {cfg.label}

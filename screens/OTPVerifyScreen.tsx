@@ -76,30 +76,33 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={{
-              flexDirection: 'row',
+              width: 38, height: 38,
+              borderRadius: 19,
+              backgroundColor: 'rgba(255,255,255,0.10)',
+              borderWidth: 1,
+              borderColor: 'rgba(255,255,255,0.14)',
               alignItems: 'center',
-              gap: 6,
+              justifyContent: 'center',
               alignSelf: 'flex-start',
-              marginBottom: 48,
+              marginBottom: 44,
             }}
             activeOpacity={0.7}
           >
-            <Ionicons name="arrow-back" size={18} color="rgba(255,255,255,0.5)" />
-            <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, fontWeight: '500' }}>Back</Text>
+            <Ionicons name="arrow-back" size={18} color="rgba(255,255,255,0.80)" />
           </TouchableOpacity>
 
           {/* Icon */}
           <View style={{
-            width: 60, height: 60,
-            borderRadius: 18,
-            backgroundColor: 'rgba(0,197,255,0.12)',
+            width: 64, height: 64,
+            borderRadius: 20,
+            backgroundColor: 'rgba(214,228,240,0.14)',
             alignItems: 'center',
             justifyContent: 'center',
             marginBottom: 22,
             borderWidth: 1,
-            borderColor: 'rgba(0,197,255,0.2)',
+            borderColor: 'rgba(214,228,240,0.22)',
           }}>
-            <Ionicons name="mail-open-outline" size={28} color="#D6E4F0" />
+            <Ionicons name="mail-open-outline" size={30} color="#D6E4F0" />
           </View>
 
           <Text style={{
@@ -112,25 +115,33 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
           }}>
             Check your{'\n'}inbox
           </Text>
-          <Text style={{ color: 'rgba(255,255,255,0.45)', fontSize: 14, lineHeight: 21 }}>
+          <Text style={{ color: 'rgba(255,255,255,0.50)', fontSize: 14, lineHeight: 22 }}>
             We sent a 6-digit code to{'\n'}
-            <Text style={{ color: '#D6E4F0', fontWeight: '600' }}>{maskedEmail}</Text>
+            <Text style={{ color: '#D6E4F0', fontWeight: '700' }}>{maskedEmail}</Text>
           </Text>
         </View>
 
         {/* ── Bottom card: code entry ── */}
         <View style={{
           backgroundColor: '#FFFFFF',
-          borderTopLeftRadius: 34,
-          borderTopRightRadius: 34,
+          borderTopLeftRadius: 36,
+          borderTopRightRadius: 36,
           paddingHorizontal: 24,
           paddingTop: 28,
           paddingBottom: Math.max(insets.bottom, 24) + 12,
+          shadowColor: '#163172',
+          shadowOpacity: 0.12,
+          shadowRadius: 20,
+          shadowOffset: { width: 0, height: -6 },
+          elevation: 12,
         }}>
-          <Text style={{ color: '#1C1E21', fontSize: 19, fontWeight: '800', marginBottom: 4 }}>
+          {/* drag pill */}
+          <View style={{ width: 36, height: 4, borderRadius: 2, backgroundColor: 'rgba(22,49,114,0.10)', alignSelf: 'center', marginBottom: 22 }} />
+
+          <Text style={{ color: '#163172', fontSize: 20, fontWeight: '800', marginBottom: 4, letterSpacing: -0.3 }}>
             Enter your code
           </Text>
-          <Text style={{ color: '#65676B', fontSize: 13, marginBottom: 22 }}>
+          <Text style={{ color: 'rgba(22,49,114,0.45)', fontSize: 13, marginBottom: 24, lineHeight: 19 }}>
             The code expires in 10 minutes.
           </Text>
 
@@ -139,20 +150,24 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
             activeOpacity={1}
             onPress={() => inputRef.current?.focus()}
             style={{
-              backgroundColor: '#F8F9FA',
-              borderRadius: 14,
+              backgroundColor: '#F6F6F6',
+              borderRadius: 16,
               borderWidth: 1.5,
-              borderColor: code.length > 0 ? '#163172' : '#E4E6EB',
+              borderColor: code.length > 0 ? '#163172' : 'rgba(22,49,114,0.12)',
               paddingHorizontal: 20,
-              paddingVertical: 16,
+              paddingVertical: 18,
               alignItems: 'center',
-              marginBottom: 14,
+              marginBottom: 8,
+              shadowColor: code.length > 0 ? '#163172' : 'transparent',
+              shadowOpacity: 0.10,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 2 },
             }}
           >
             <TextInput
               ref={inputRef}
               style={{
-                fontSize: 32,
+                fontSize: 34,
                 fontWeight: '800',
                 color: '#163172',
                 letterSpacing: 14,
@@ -160,7 +175,7 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
                 width: '100%',
               }}
               placeholder="──────"
-              placeholderTextColor="#D1D5DB"
+              placeholderTextColor="rgba(22,49,114,0.18)"
               value={code}
               onChangeText={(t) => setCode(t.replace(/[^0-9]/g, ''))}
               keyboardType="number-pad"
@@ -171,20 +186,32 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
             />
           </TouchableOpacity>
 
+          {/* Progress dots */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginBottom: 20 }}>
+            {[0,1,2,3,4,5].map((i) => (
+              <View key={i} style={{ width: i < code.length ? 10 : 8, height: i < code.length ? 10 : 8, borderRadius: 5, backgroundColor: i < code.length ? '#163172' : 'rgba(22,49,114,0.15)' }} />
+            ))}
+          </View>
+
           {/* Verify */}
           <TouchableOpacity
             onPress={verify}
             disabled={loading || code.length < 6}
             activeOpacity={0.85}
             style={{
-              backgroundColor: code.length === 6 ? '#163172' : '#E4E6EB',
-              borderRadius: 14,
-              paddingVertical: 15,
+              backgroundColor: code.length === 6 ? '#163172' : 'rgba(22,49,114,0.08)',
+              borderRadius: 16,
+              paddingVertical: 16,
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
               gap: 8,
               marginBottom: 16,
+              shadowColor: code.length === 6 ? '#163172' : 'transparent',
+              shadowOpacity: 0.25,
+              shadowRadius: 10,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: code.length === 6 ? 4 : 0,
             }}
           >
             {loading ? (
@@ -192,16 +219,16 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
             ) : (
               <>
                 <Text style={{
-                  color: code.length === 6 ? '#FFFFFF' : '#9CA3AF',
+                  color: code.length === 6 ? '#FFFFFF' : 'rgba(22,49,114,0.30)',
                   fontSize: 15,
-                  fontWeight: '700',
+                  fontWeight: '800',
                 }}>
-                  Verify & Sign In
+                  Verify &amp; Sign In
                 </Text>
                 <Ionicons
                   name="checkmark-circle"
                   size={17}
-                  color={code.length === 6 ? '#D6E4F0' : '#9CA3AF'}
+                  color={code.length === 6 ? '#D6E4F0' : 'rgba(22,49,114,0.25)'}
                 />
               </>
             )}
@@ -215,11 +242,12 @@ export default function OTPVerifyScreen({ navigation, route }: Props) {
             style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}
           >
             {resending
-              ? <ActivityIndicator size="small" color="#65676B" />
+              ? <ActivityIndicator size="small" color="rgba(22,49,114,0.40)" />
               : <>
-                  <Ionicons name="refresh-outline" size={14} color="#65676B" />
-                  <Text style={{ color: '#65676B', fontSize: 13 }}>
-                    Didn't get it? <Text style={{ color: '#163172', fontWeight: '700' }}>Resend code</Text>
+                  <Ionicons name="refresh-outline" size={14} color="rgba(22,49,114,0.40)" />
+                  <Text style={{ color: 'rgba(22,49,114,0.45)', fontSize: 13 }}>
+                    Didn't get it?{'  '}
+                    <Text style={{ color: '#163172', fontWeight: '700' }}>Resend code</Text>
                   </Text>
                 </>
             }

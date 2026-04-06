@@ -107,14 +107,14 @@ export default function TriggersScreen({ route, navigation }: Props) {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: C.border }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 12, padding: 4 }}>
-          <Ionicons name="arrow-back" size={22} color={C.navy} />
+      {/* Header — navy */}
+      <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.75} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+          <Ionicons name="arrow-back" size={18} color="#FFFFFF" />
         </TouchableOpacity>
-        <Text style={{ flex: 1, color: C.text, fontSize: 20, fontWeight: '800' }}>Triggers</Text>
+        <Text style={{ flex: 1, color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Triggers</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <PageSwitcherPill
             currentPageId={pageId}
@@ -122,7 +122,8 @@ export default function TriggersScreen({ route, navigation }: Props) {
             onSwitch={(id, name) => navigation.replace('Triggers', { pageId: id, pageName: name })}
           />
           <TouchableOpacity
-            style={{ backgroundColor: C.navy, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 5 }}
+            activeOpacity={0.85}
+            style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1, borderColor: 'rgba(255,255,255,0.18)' }}
             onPress={() => navigation.navigate('CreateTrigger', { pageId })}
           >
             <Ionicons name="add" size={15} color="#fff" />
@@ -158,34 +159,37 @@ export default function TriggersScreen({ route, navigation }: Props) {
 
           {triggers.length === 0 ? (
             <View>
-              <View style={{ alignItems: 'center', paddingTop: 24, paddingBottom: 20 }}>
-                <View style={{ width: 68, height: 68, borderRadius: 22, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                  <Ionicons name="chatbubble-outline" size={32} color={C.navy} />
+              <View style={{ alignItems: 'center', paddingTop: 28, paddingBottom: 24 }}>
+                <View style={{ width: 76, height: 76, borderRadius: 24, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <Ionicons name="flash-outline" size={36} color={C.navy} />
                 </View>
-                <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }}>No triggers yet</Text>
-                <Text style={{ color: C.text2, fontSize: 13, marginTop: 6, textAlign: 'center', lineHeight: 19, paddingHorizontal: 24 }}>
-                  Start from scratch or use one of these templates 👇
+                <Text style={{ color: C.text, fontWeight: '800', fontSize: 17, letterSpacing: -0.3 }}>No triggers yet</Text>
+                <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20, paddingHorizontal: 24 }}>
+                  Start from a template or create your own keyword auto-reply.
                 </Text>
               </View>
 
-              <Text style={{ color: C.text, fontSize: 13, fontWeight: '800', marginBottom: 12 }}>Starter Templates</Text>
+              <Text style={{ color: C.text, fontSize: 12, fontWeight: '800', letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 12 }}>Starter Templates</Text>
 
               {TRIGGER_TEMPLATES.map((t) => (
-                <View key={t.label} style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                    <Text style={{ fontSize: 18 }}>{t.emoji}</Text>
-                    <Text style={{ color: C.text, fontWeight: '700', fontSize: 14, flex: 1 }}>{t.label}</Text>
+                <View key={t.label} style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 10, borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                    <View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center' }}>
+                      <Ionicons name="flash" size={16} color={C.navy} />
+                    </View>
+                    <Text style={{ color: C.text, fontWeight: '800', fontSize: 14, letterSpacing: -0.2, flex: 1 }}>{t.label}</Text>
                   </View>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
                     {t.keywords.map((kw) => (
-                      <View key={kw} style={{ backgroundColor: C.light, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: C.border }}>
-                        <Text style={{ color: C.navy, fontSize: 11, fontWeight: '600' }}>{kw}</Text>
+                      <View key={kw} style={{ backgroundColor: C.light, borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: C.border }}>
+                        <Text style={{ color: C.navy, fontSize: 11, fontWeight: '700' }}>{kw}</Text>
                       </View>
                     ))}
                   </View>
-                  <Text style={{ color: C.text3, fontSize: 12, lineHeight: 17, marginBottom: 12 }} numberOfLines={2}>{t.response_text}</Text>
+                  <Text style={{ color: C.text3, fontSize: 12, lineHeight: 18, marginBottom: 12 }} numberOfLines={2}>{t.response_text}</Text>
                   <TouchableOpacity
-                    style={{ backgroundColor: C.navy, borderRadius: 12, paddingVertical: 10, alignItems: 'center' }}
+                    activeOpacity={0.85}
+                    style={{ backgroundColor: C.navy, borderRadius: 12, paddingVertical: 11, alignItems: 'center' }}
                     onPress={async () => {
                       try {
                         const created = await triggersApi.create(pageId, { keywords: t.keywords, response_text: t.response_text });
@@ -199,89 +203,100 @@ export default function TriggersScreen({ route, navigation }: Props) {
               ))}
 
               <TouchableOpacity
-                style={{ backgroundColor: C.white, borderRadius: 18, paddingVertical: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderWidth: 1, borderColor: C.border, marginTop: 4 }}
+                activeOpacity={0.8}
+                style={{ backgroundColor: C.white, borderRadius: 18, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderWidth: 1.5, borderColor: C.border, marginTop: 4 }}
                 onPress={() => navigation.navigate('CreateTrigger', { pageId })}
               >
-                <Ionicons name="add" size={16} color={C.navy} />
-                <Text style={{ color: C.navy, fontSize: 13, fontWeight: '700' }}>Create Custom Trigger</Text>
+                <Ionicons name="add-circle-outline" size={17} color={C.navy} />
+                <Text style={{ color: C.navy, fontSize: 14, fontWeight: '700' }}>Create Custom Trigger</Text>
               </TouchableOpacity>
             </View>
           ) : (
             triggers.map((trigger, triggerIndex) => (
-              <View key={trigger.id} style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: C.border }}>
-                {/* Priority + Keywords */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <View key={trigger.id} style={{ backgroundColor: C.white, borderRadius: 20, marginBottom: 10, borderWidth: 1, borderColor: C.border, overflow: 'hidden', shadowColor: C.navy, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 }}>
+                {/* Card header */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 14, paddingBottom: 12, gap: 8 }}>
                   {triggers.length > 1 && (
-                    <View style={{ alignItems: 'center', marginRight: 4 }}>
-                      <TouchableOpacity onPress={() => handleMove(triggerIndex, 'up')} disabled={triggerIndex === 0} style={{ padding: 2 }}>
-                        <Ionicons name="chevron-up" size={15} color={triggerIndex === 0 ? C.text3 : C.blue} />
+                    <View style={{ alignItems: 'center', gap: 1, marginRight: 2 }}>
+                      <TouchableOpacity onPress={() => handleMove(triggerIndex, 'up')} disabled={triggerIndex === 0} style={{ padding: 3 }} activeOpacity={0.7}>
+                        <Ionicons name="chevron-up" size={14} color={triggerIndex === 0 ? C.text3 : C.blue} />
                       </TouchableOpacity>
                       <Text style={{ color: C.text3, fontSize: 10, fontWeight: '800' }}>{triggerIndex + 1}</Text>
-                      <TouchableOpacity onPress={() => handleMove(triggerIndex, 'down')} disabled={triggerIndex === triggers.length - 1} style={{ padding: 2 }}>
-                        <Ionicons name="chevron-down" size={15} color={triggerIndex === triggers.length - 1 ? C.text3 : C.blue} />
+                      <TouchableOpacity onPress={() => handleMove(triggerIndex, 'down')} disabled={triggerIndex === triggers.length - 1} style={{ padding: 3 }} activeOpacity={0.7}>
+                        <Ionicons name="chevron-down" size={14} color={triggerIndex === triggers.length - 1 ? C.text3 : C.blue} />
                       </TouchableOpacity>
                     </View>
                   )}
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, flex: 1 }}>
                     {trigger.keywords.map((kw) => (
-                      <View key={kw} style={{ backgroundColor: C.light, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: C.border }}>
+                      <View key={kw} style={{ backgroundColor: C.light, borderRadius: 99, paddingHorizontal: 11, paddingVertical: 5, borderWidth: 1, borderColor: C.border }}>
                         <Text style={{ color: C.navy, fontSize: 12, fontWeight: '700' }}>{kw}</Text>
                       </View>
                     ))}
                   </View>
+                  <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderRadius: 99, backgroundColor: trigger.is_active ? C.greenBg : C.navyFade, borderWidth: 1, borderColor: trigger.is_active ? 'rgba(22,163,74,0.20)' : C.border }}>
+                    <Text style={{ fontSize: 10, fontWeight: '800', color: trigger.is_active ? C.green : C.text3 }}>
+                      {trigger.is_active ? 'Active' : 'Paused'}
+                    </Text>
+                  </View>
                 </View>
 
                 {/* Reply preview */}
-                <Text style={{ color: C.text2, fontSize: 13, lineHeight: 19, marginBottom: 12 }} numberOfLines={2}>
-                  {trigger.response_text}
-                </Text>
+                <View style={{ paddingHorizontal: 14, paddingBottom: 12 }}>
+                  <Text style={{ color: C.text2, fontSize: 13, lineHeight: 19 }} numberOfLines={2}>
+                    {trigger.response_text}
+                  </Text>
+                </View>
 
                 {/* Image thumbnail */}
                 {trigger.image_url && (
-                  <Image source={{ uri: trigger.image_url }} style={{ width: '100%', height: 120, borderRadius: 12, marginBottom: 12 }} resizeMode="cover" />
+                  <Image source={{ uri: trigger.image_url }} style={{ width: '100%', height: 120, marginBottom: 12 }} resizeMode="cover" />
                 )}
 
                 {/* Quick reply chips */}
                 {(trigger.quick_replies?.length ?? 0) > 0 && (
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 14, paddingBottom: 12 }}>
                     {trigger.quick_replies!.map((qr) => (
-                      <View key={qr.payload} style={{ backgroundColor: C.light, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1, borderColor: C.border }}>
+                      <View key={qr.payload} style={{ backgroundColor: C.navyFade, borderRadius: 99, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1, borderColor: C.border }}>
                         <Text style={{ color: C.navy, fontSize: 11, fontWeight: '600' }}>{qr.title}</Text>
                       </View>
                     ))}
                   </View>
                 )}
 
-                {/* Fire count */}
-                {(trigger.fire_count ?? 0) > 0 && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 12 }}>
-                    <Ionicons name="flash" size={11} color={C.blue} />
-                    <Text style={{ color: C.text3, fontSize: 11 }}>
-                      Fired {trigger.fire_count}×
-                      {trigger.last_fired_at ? ` · ${formatRelativeTime(trigger.last_fired_at)}` : ''}
-                    </Text>
-                  </View>
-                )}
-
                 {/* Footer */}
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, borderTopWidth: 1, borderTopColor: C.border }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 11, paddingHorizontal: 14, borderTopWidth: 1, borderTopColor: C.border, backgroundColor: C.bg }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    {(trigger.fire_count ?? 0) > 0 && (
+                      <>
+                        <Ionicons name="flash" size={12} color={C.blue} />
+                        <Text style={{ color: C.text3, fontSize: 11, fontWeight: '600' }}>
+                          {trigger.fire_count}× fired
+                          {trigger.last_fired_at ? ` · ${formatRelativeTime(trigger.last_fired_at)}` : ''}
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                     <Switch
                       value={trigger.is_active}
                       onValueChange={() => handleToggle(trigger)}
                       trackColor={{ false: C.border, true: C.blue }}
                       thumbColor={trigger.is_active ? C.white : C.text3}
                     />
-                    <Text style={{ fontSize: 13, fontWeight: '600', color: trigger.is_active ? C.green : C.text3 }}>
-                      {trigger.is_active ? 'Active' : 'Paused'}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate('CreateTrigger', { pageId, triggerId: trigger.id })}>
-                      <Ionicons name="pencil" size={18} color={C.blue} />
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('CreateTrigger', { pageId, triggerId: trigger.id })}
+                      activeOpacity={0.7}
+                      style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center', marginLeft: 4 }}
+                    >
+                      <Ionicons name="pencil" size={15} color={C.navy} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDelete(trigger)}>
-                      <Ionicons name="trash" size={18} color={C.red} />
+                    <TouchableOpacity
+                      onPress={() => handleDelete(trigger)}
+                      activeOpacity={0.7}
+                      style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: C.redBg, alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <Ionicons name="trash" size={15} color={C.red} />
                     </TouchableOpacity>
                   </View>
                 </View>

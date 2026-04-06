@@ -58,8 +58,6 @@ type PageStats = {
   revenue_today: number;
 };
 
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
 export default function DashboardScreen() {
   const navigation = useNavigation<DashboardNav>();
   const { setActivePage } = useActivePage();
@@ -133,69 +131,56 @@ export default function DashboardScreen() {
     });
   }, [pages]);
 
-  const activeCount = pages.filter((p) => p.is_active).length;
   const now         = new Date();
   const hour        = now.getHours();
   const greeting    = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const dateLabel   = `${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* ── Header ── */}
-      <View style={{
-        paddingTop: insets.top + 14,
-        paddingBottom: 18,
-        paddingHorizontal: 20,
-        backgroundColor: C.white,
-        borderBottomWidth: 1,
-        borderBottomColor: C.border,
-      }}>
-        {/* Top row: logo + date + profile */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
-            <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
-              <Image source={require('../assets/reili.png')} style={{ width: 20, height: 20 }} resizeMode="contain" />
-            </View>
-            <Text style={{ color: C.text, fontSize: 17, fontWeight: '800', letterSpacing: -0.3 }}>Reili</Text>
+      {/* ── Navy Hero Header ── */}
+      <View style={{ backgroundColor: C.navy, paddingTop: insets.top + 12, paddingBottom: 24, paddingHorizontal: 20 }}>
+        {/* Top row */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 18 }}>
+          <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)', alignItems: 'center', justifyContent: 'center', marginRight: 8 }}>
+            <Image source={require('../assets/reili.png')} style={{ width: 19, height: 19 }} resizeMode="contain" />
           </View>
-          <Text style={{ color: C.text3, fontSize: 12, marginRight: 10 }}>{dateLabel}</Text>
+          <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '800', letterSpacing: -0.3, flex: 1 }}>Reili</Text>
           <TouchableOpacity
             onPress={() => setShowLogout(true)}
-            style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}
+            activeOpacity={0.75}
+            style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Ionicons name="person-outline" size={15} color={C.navy} />
+            <Ionicons name="person-outline" size={16} color="rgba(255,255,255,0.85)" />
           </TouchableOpacity>
         </View>
 
-        {/* Greeting + status row */}
-        <Text style={{ color: C.text3, fontSize: 13, marginBottom: 4 }}>{greeting} 👋</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text style={{ color: C.text, fontSize: 22, fontWeight: '800', letterSpacing: -0.5 }}>Your Pages</Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            {activeCount > 0 && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: C.greenBg, borderRadius: 99, paddingHorizontal: 11, paddingVertical: 5, borderWidth: 1, borderColor: 'rgba(22,163,74,0.20)' }}>
-                <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: C.green }} />
-                <Text style={{ color: C.green, fontSize: 11, fontWeight: '700' }}>{activeCount} active</Text>
+        {/* Greeting + title */}
+        <Text style={{ color: 'rgba(214,228,240,0.65)', fontSize: 13, marginBottom: 2 }}>{greeting}</Text>
+        <Text style={{ color: '#FFFFFF', fontSize: 26, fontWeight: '800', letterSpacing: -0.6 }}>Your Pages</Text>
+
+        {/* Summary stats — only visible once loaded */}
+        {!loading && pages.length > 0 && (
+          <View style={{ flexDirection: 'row', marginTop: 18, gap: 8 }}>
+            {[
+              { label: 'Messages', value: Object.values(pageStats).reduce((a, s) => a + (s?.messages_today ?? 0), 0) },
+              { label: 'Unread', value: Object.values(pageStats).reduce((a, s) => a + (s?.unread_count ?? 0), 0) },
+              { label: 'Orders', value: Object.values(pageStats).reduce((a, s) => a + (s?.orders_today ?? 0), 0) },
+            ].map((stat) => (
+              <View key={stat.label} style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.09)', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.10)' }}>
+                <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.5 }}>{stat.value}</Text>
+                <Text style={{ color: 'rgba(214,228,240,0.60)', fontSize: 10, marginTop: 2 }}>{stat.label}</Text>
               </View>
-            )}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ConnectPage')}
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: C.light, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 7, borderWidth: 1, borderColor: C.border }}
-            >
-              <Ionicons name="add" size={14} color={C.navy} />
-              <Text style={{ color: C.navy, fontSize: 12, fontWeight: '700' }}>Add Page</Text>
-            </TouchableOpacity>
+            ))}
           </View>
-        </View>
+        )}
       </View>
 
       {/* ── States ── */}
       {loading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator size="large" color={C.blue} />
-          <Text style={{ color: C.text3, fontSize: 13 }}>Loading your pages...</Text>
         </View>
       ) : error ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32, gap: 14 }}>
@@ -218,130 +203,140 @@ export default function DashboardScreen() {
           contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.blue} />}
         >
-          {/* ── Empty state ── */}
           {pages.length === 0 ? (
-            <View style={{ backgroundColor: C.white, borderRadius: 26, alignItems: 'center', paddingVertical: 56, paddingHorizontal: 32, borderWidth: 1, borderColor: C.border, marginTop: 8 }}>
-              <View style={{ width: 80, height: 80, borderRadius: 26, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center', marginBottom: 18, borderWidth: 1, borderColor: C.border }}>
+            <View style={{ alignItems: 'center', paddingVertical: 60, paddingHorizontal: 32 }}>
+              <View style={{ width: 80, height: 80, borderRadius: 24, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                 <Ionicons name="logo-facebook" size={40} color={C.blue} />
               </View>
               <Text style={{ color: C.text, fontWeight: '800', fontSize: 18, letterSpacing: -0.4 }}>No pages yet</Text>
-              <Text style={{ color: C.text2, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
-                Connect your Facebook Page to start automating Messenger replies instantly.
+              <Text style={{ color: C.text3, fontSize: 13, marginTop: 8, textAlign: 'center', lineHeight: 21 }}>
+                Connect your Facebook Page to start{"\n"}automating Messenger replies.
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ConnectPage')}
-                style={{ marginTop: 24, backgroundColor: C.navy, borderRadius: 16, paddingHorizontal: 28, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}
+                activeOpacity={0.85}
+                style={{ marginTop: 24, backgroundColor: C.navy, borderRadius: 14, paddingHorizontal: 28, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}
               >
-                <Ionicons name="add-circle-outline" size={17} color="#fff" />
+                <Ionicons name="add-circle-outline" size={16} color="#fff" />
                 <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14 }}>Connect a Page</Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ gap: 14 }}>
+            <View style={{ gap: 12 }}>
               {pages.map((page) => {
-                const s      = pageStats[page.id];
-                const unread = s?.unread_count ?? 0;
-                const trigs  = triggerCounts[page.id] ?? 0;
-                const convos = s?.conversation_count ?? 0;
-                const msgs   = s?.messages_today ?? 0;
+                const s       = pageStats[page.id];
+                const unread  = s?.unread_count ?? 0;
+                const trigs   = triggerCounts[page.id] ?? 0;
+                const convos  = s?.conversation_count ?? 0;
+                const msgs    = s?.messages_today ?? 0;
+                const orders  = s?.orders_today ?? 0;
 
                 return (
                   <View
                     key={page.id}
-                    style={{ backgroundColor: C.white, borderRadius: 24, borderWidth: 1, borderColor: C.border, overflow: 'hidden' }}
+                    style={{
+                      backgroundColor: C.white,
+                      borderRadius: 20,
+                      overflow: 'hidden',
+                      borderWidth: 1,
+                      borderColor: C.border,
+                      shadowColor: C.navy,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.07,
+                      shadowRadius: 8,
+                      elevation: 2,
+                    }}
                   >
-                    {/* Top accent line */}
-                    <View style={{ height: 3, backgroundColor: page.is_active ? C.blue : C.light }} />
-
-                    <View style={{ padding: 16 }}>
-                      {/* ── Identity row ── */}
-                      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 14 }}>
-                        <View style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center', marginRight: 12, borderWidth: 1, borderColor: C.border }}>
-                          <Ionicons name="logo-facebook" size={24} color={C.blue} />
-                        </View>
-
-                        <View style={{ flex: 1 }}>
-                          <Text style={{ color: C.text, fontWeight: '800', fontSize: 15, letterSpacing: -0.3 }} numberOfLines={1}>
-                            {page.page_name}
+                    {/* ── Card header ── */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+                      <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                        <Ionicons name="logo-facebook" size={22} color={C.blue} />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ color: C.text, fontWeight: '800', fontSize: 15, letterSpacing: -0.3 }} numberOfLines={1}>
+                          {page.page_name}
+                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 3 }}>
+                          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: page.is_active ? C.green : C.text3 }} />
+                          <Text style={{ color: page.is_active ? C.green : C.text3, fontSize: 11, fontWeight: '700' }}>
+                            {page.is_active ? 'Bot Active' : 'Bot Paused'}
                           </Text>
-                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 5 }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: page.is_active ? C.greenBg : C.navyFade, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3, borderWidth: 1, borderColor: page.is_active ? 'rgba(22,163,74,0.20)' : C.border }}>
-                              <View style={{ width: 5, height: 5, borderRadius: 3, backgroundColor: page.is_active ? C.green : C.text3 }} />
-                              <Text style={{ color: page.is_active ? C.green : C.text3, fontSize: 10, fontWeight: '700' }}>
-                                {page.is_active ? 'Bot Active' : 'Bot Paused'}
-                              </Text>
-                            </View>
-                            {unread > 0 && (
-                              <View style={{ backgroundColor: C.light, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 3, borderWidth: 1, borderColor: C.border }}>
-                                <Text style={{ color: C.navy, fontSize: 10, fontWeight: '800' }}>{unread} unread</Text>
-                              </View>
-                            )}
-                          </View>
-                        </View>
-
-                        <Switch
-                          value={page.is_active}
-                          onValueChange={() => handleToggle(page)}
-                          trackColor={{ false: C.light, true: C.blue }}
-                          thumbColor={C.white}
-                        />
-                      </View>
-
-                      {/* ── Stats row ── */}
-                      <View style={{ flexDirection: 'row', gap: 8, marginBottom: 14 }}>
-                        <StatPill icon="flash-outline"       value={trigs}  label="Triggers" color={C.navy} />
-                        <StatPill icon="chatbubbles-outline" value={convos} label="Chats"    color={C.blue} />
-                        <StatPill icon="trending-up-outline" value={msgs}   label="Today"    color={C.green} />
-                      </View>
-
-                      {/* ── Actions ── */}
-                      <View style={{ flexDirection: 'row', gap: 8 }}>
-                        <TouchableOpacity
-                          onPress={() => goChats(page)}
-                          activeOpacity={0.75}
-                          style={{ flex: 2, backgroundColor: C.navy, borderRadius: 14, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
-                        >
-                          <Ionicons name="chatbubbles" size={15} color="#fff" />
-                          <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>Chats</Text>
                           {unread > 0 && (
-                            <View style={{ backgroundColor: C.white, borderRadius: 99, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 }}>
-                              <Text style={{ color: C.navy, fontSize: 9, fontWeight: '800' }}>{unread}</Text>
+                            <View style={{ backgroundColor: C.blue, borderRadius: 99, paddingHorizontal: 7, paddingVertical: 2, marginLeft: 4 }}>
+                              <Text style={{ color: '#fff', fontSize: 10, fontWeight: '700' }}>{unread} unread</Text>
                             </View>
                           )}
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() => goOrders(page)}
-                          activeOpacity={0.75}
-                          style={{ flex: 2, backgroundColor: C.light, borderRadius: 14, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7 }}
-                        >
-                          <Ionicons name="bag-handle-outline" size={15} color={C.navy} />
-                          <Text style={{ color: C.navy, fontSize: 13, fontWeight: '700' }}>Orders</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() => setMenuPage(page)}
-                          activeOpacity={0.75}
-                          style={{ flex: 1, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, borderRadius: 14, paddingVertical: 12, alignItems: 'center', justifyContent: 'center' }}
-                        >
-                          <Ionicons name="ellipsis-horizontal" size={18} color={C.navy} />
-                        </TouchableOpacity>
+                        </View>
                       </View>
+                      <Switch
+                        value={page.is_active}
+                        onValueChange={() => handleToggle(page)}
+                        trackColor={{ false: C.light, true: C.blue }}
+                        thumbColor={C.white}
+                      />
+                    </View>
+
+                    {/* ── Stats row ── */}
+                    <View style={{ flexDirection: 'row', paddingVertical: 14, paddingHorizontal: 8 }}>
+                      {[
+                        { label: 'Triggers', value: trigs },
+                        { label: 'Chats', value: convos },
+                        { label: 'Today', value: msgs },
+                        { label: 'Orders', value: orders },
+                      ].map((stat, i) => (
+                        <View key={stat.label} style={{ flex: 1, alignItems: 'center', borderRightWidth: i < 3 ? 1 : 0, borderRightColor: C.border }}>
+                          <Text style={{ color: C.text, fontSize: 19, fontWeight: '800', letterSpacing: -0.5 }}>{stat.value}</Text>
+                          <Text style={{ color: C.text3, fontSize: 10, marginTop: 2, fontWeight: '600' }}>{stat.label}</Text>
+                        </View>
+                      ))}
+                    </View>
+
+                    {/* ── Quick actions ── */}
+                    <View style={{ flexDirection: 'row', padding: 12, paddingTop: 0, gap: 8 }}>
+                      <TouchableOpacity
+                        onPress={() => goChats(page)}
+                        activeOpacity={0.8}
+                        style={{ flex: 1, backgroundColor: C.navy, borderRadius: 11, paddingVertical: 11, alignItems: 'center', gap: 4 }}
+                      >
+                        <Ionicons name="chatbubbles-outline" size={15} color="#fff" />
+                        <Text style={{ color: '#fff', fontSize: 10, fontWeight: '700' }}>Chats</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => goOrders(page)}
+                        activeOpacity={0.8}
+                        style={{ flex: 1, backgroundColor: C.navyFade, borderRadius: 11, paddingVertical: 11, alignItems: 'center', gap: 4, borderWidth: 1, borderColor: C.border }}
+                      >
+                        <Ionicons name="bag-handle-outline" size={15} color={C.navy} />
+                        <Text style={{ color: C.navy, fontSize: 10, fontWeight: '700' }}>Orders</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => goTriggers(page)}
+                        activeOpacity={0.8}
+                        style={{ flex: 1, backgroundColor: C.navyFade, borderRadius: 11, paddingVertical: 11, alignItems: 'center', gap: 4, borderWidth: 1, borderColor: C.border }}
+                      >
+                        <Ionicons name="flash-outline" size={15} color={C.navy} />
+                        <Text style={{ color: C.navy, fontSize: 10, fontWeight: '700' }}>Triggers</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => setMenuPage(page)}
+                        activeOpacity={0.8}
+                        style={{ width: 42, backgroundColor: C.navyFade, borderRadius: 11, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: C.border }}
+                      >
+                        <Ionicons name="ellipsis-horizontal" size={16} color={C.navy} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 );
               })}
 
-              {/* Ghost add card */}
+              {/* Add page */}
               <TouchableOpacity
                 onPress={() => navigation.navigate('ConnectPage')}
                 activeOpacity={0.7}
-                style={{ borderRadius: 20, borderWidth: 1, borderColor: C.border, borderStyle: 'dashed', paddingVertical: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}
+                style={{ paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6 }}
               >
-                <View style={{ width: 28, height: 28, borderRadius: 9, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
-                  <Ionicons name="add" size={16} color={C.navy} />
-                </View>
-                <Text style={{ color: C.text3, fontSize: 13, fontWeight: '600' }}>Connect another page</Text>
+                <Ionicons name="add-circle-outline" size={18} color={C.text3} />
+                <Text style={{ color: C.text3, fontSize: 13, fontWeight: '600' }}>Add another page</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -427,20 +422,6 @@ export default function DashboardScreen() {
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
-
-function StatPill({ icon, value, label, color }: { icon: any; value: number; label: string; color: string }) {
-  return (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: C.navyFade, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 9, borderWidth: 1, borderColor: C.border }}>
-      <View style={{ width: 26, height: 26, borderRadius: 8, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center' }}>
-        <Ionicons name={icon} size={12} color={color} />
-      </View>
-      <View>
-        <Text style={{ color: C.text, fontSize: 13, fontWeight: '800', letterSpacing: -0.3 }}>{value}</Text>
-        <Text style={{ color: C.text3, fontSize: 9, fontWeight: '600' }}>{label}</Text>
-      </View>
-    </View>
-  );
-}
 
 function SheetRow({ icon, iconColor, iconBg, label, onPress, danger }: { icon: any; iconColor: string; iconBg: string; label: string; onPress: () => void; danger?: boolean }) {
   return (

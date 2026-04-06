@@ -181,23 +181,24 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
       <View style={{ flex: 1, backgroundColor: C.bg }}>
         <StatusBar style="dark" />
 
-        {/* Header */}
-        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingHorizontal: 16, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: C.border }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 4 }}>
-            <Ionicons name="arrow-back" size={22} color={C.navy} />
+        {/* Header — navy */}
+        <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingHorizontal: 16, paddingBottom: 14, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.75} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}>
+            <Ionicons name="arrow-back" size={18} color="#FFFFFF" />
           </TouchableOpacity>
-          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ color: C.navy, fontSize: 13, fontWeight: '800' }}>{initials}</Text>
+          <View style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: C.light, borderWidth: 1.5, borderColor: 'rgba(214,228,240,0.5)', alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ color: C.navy, fontSize: 14, fontWeight: '800', letterSpacing: -0.3 }}>{initials}</Text>
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ color: C.text, fontWeight: '800', fontSize: 15 }} numberOfLines={1}>{customerName}</Text>
-            <Text style={{ color: C.text3, fontSize: 11 }}>via Messenger</Text>
+            <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 15, letterSpacing: -0.3 }} numberOfLines={1}>{customerName}</Text>
+            <Text style={{ color: 'rgba(214,228,240,0.60)', fontSize: 11 }}>via Messenger</Text>
           </View>
           <TouchableOpacity
             onPress={() => { setSearchVisible((v) => !v); if (searchVisible) setSearchText(''); }}
-            style={{ padding: 8 }}
+            activeOpacity={0.75}
+            style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Ionicons name={searchVisible ? 'close' : 'search-outline'} size={19} color={C.text2} />
+            <Ionicons name={searchVisible ? 'close' : 'search-outline'} size={17} color="rgba(255,255,255,0.85)" />
           </TouchableOpacity>
         </View>
 
@@ -328,21 +329,21 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                         <View style={{ flexDirection: isInbound ? 'row' : 'row-reverse', alignItems: 'flex-end', gap: 8 }}>
                           {/* Customer avatar */}
                           {isInbound && (
-                            <View style={{ width: 26, height: 26, flexShrink: 0 }}>
+                            <View style={{ width: 28, height: 28, flexShrink: 0 }}>
                               {showAvatar && (
-                                <View style={{ width: 26, height: 26, borderRadius: 8, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ width: 28, height: 28, borderRadius: 9, backgroundColor: C.light, borderWidth: 1.5, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
                                   <Text style={{ color: C.navy, fontSize: 9, fontWeight: '800' }}>{initials}</Text>
                                 </View>
                               )}
                             </View>
                           )}
 
-                          <View style={{ maxWidth: '72%' }}>
+                          <View style={{ maxWidth: '74%' }}>
                             {/* Image */}
                             {msg.image_url && (
                               <Image
                                 source={{ uri: msg.image_url }}
-                                style={{ width: 200, height: 150, borderRadius: 14, marginBottom: msg.message_text ? 4 : 0 }}
+                                style={{ width: 210, height: 160, borderRadius: 16, marginBottom: msg.message_text ? 4 : 0 }}
                                 resizeMode="cover"
                               />
                             )}
@@ -351,20 +352,30 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
                               <View style={{
                                 paddingHorizontal: 14,
                                 paddingVertical: 10,
-                                borderRadius: 18,
+                                borderRadius: 20,
                                 ...(isInbound ? {
                                   backgroundColor: C.white,
                                   borderWidth: 1,
                                   borderColor: C.border,
-                                  borderBottomLeftRadius: 4,
+                                  borderBottomLeftRadius: 5,
+                                  shadowColor: C.navy,
+                                  shadowOffset: { width: 0, height: 1 },
+                                  shadowOpacity: 0.05,
+                                  shadowRadius: 3,
+                                  elevation: 1,
                                 } : isBot ? {
                                   backgroundColor: C.light,
                                   borderWidth: 1,
                                   borderColor: C.border,
-                                  borderBottomRightRadius: 4,
+                                  borderBottomRightRadius: 5,
                                 } : {
                                   backgroundColor: C.navy,
-                                  borderBottomRightRadius: 4,
+                                  borderBottomRightRadius: 5,
+                                  shadowColor: C.navy,
+                                  shadowOffset: { width: 0, height: 2 },
+                                  shadowOpacity: 0.2,
+                                  shadowRadius: 4,
+                                  elevation: 2,
                                 }),
                               }}>
                                 <Text style={{
@@ -392,23 +403,24 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
         )}
 
         {/* Reply input bar */}
-        <View style={{ backgroundColor: C.white, borderTopWidth: 1, borderTopColor: C.border, paddingHorizontal: 12, paddingVertical: 12 }}>
+        <View style={{ backgroundColor: C.white, borderTopWidth: 1, borderTopColor: C.border, paddingHorizontal: 12, paddingTop: 10, paddingBottom: 12, shadowColor: C.navy, shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 6 }}>
           {pendingImage && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 8 }}>
-              <Image source={{ uri: pendingImage }} style={{ width: 56, height: 56, borderRadius: 10 }} resizeMode="cover" />
-              <TouchableOpacity onPress={() => setPendingImage(null)}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 10, backgroundColor: C.navyFade, borderRadius: 12, padding: 8, borderWidth: 1, borderColor: C.border }}>
+              <Image source={{ uri: pendingImage }} style={{ width: 50, height: 50, borderRadius: 10 }} resizeMode="cover" />
+              <Text style={{ flex: 1, color: C.text3, fontSize: 12 }}>Image attached</Text>
+              <TouchableOpacity onPress={() => setPendingImage(null)} style={{ padding: 4 }}>
                 <Ionicons name="close-circle" size={20} color={C.text3} />
               </TouchableOpacity>
               {uploadingImage && <ActivityIndicator size="small" color={C.navy} />}
             </View>
           )}
           <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
-            <TouchableOpacity style={{ padding: 10, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border }} onPress={handlePickImage}>
+            <TouchableOpacity activeOpacity={0.75} style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }} onPress={handlePickImage}>
               <Ionicons name="image-outline" size={19} color={C.navy} />
             </TouchableOpacity>
-            <View style={{ flex: 1, backgroundColor: C.white, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 10, minHeight: 40, justifyContent: 'center', borderWidth: 1, borderColor: C.border }}>
+            <View style={{ flex: 1, backgroundColor: C.bg, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 10, minHeight: 40, justifyContent: 'center', borderWidth: 1, borderColor: C.border }}>
               <TextInput
-                placeholder="Aa"
+                placeholder="Type a message..."
                 placeholderTextColor={C.text3}
                 value={replyText}
                 onChangeText={setReplyText}
@@ -419,19 +431,22 @@ export default function ConversationThreadScreen({ route, navigation }: Props) {
               />
             </View>
             <TouchableOpacity
+              activeOpacity={0.85}
               style={{
-                padding: 10, borderRadius: 12,
+                width: 40, height: 40, borderRadius: 20,
                 backgroundColor: canSend ? C.navy : C.light,
                 borderWidth: 1,
                 borderColor: canSend ? C.navy : C.border,
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
               onPress={handleSend}
               disabled={!canSend || sending || uploadingImage}
             >
               {sending || uploadingImage ? (
-                <ActivityIndicator size="small" color={C.white} />
+                <ActivityIndicator size="small" color={canSend ? C.white : C.text3} />
               ) : (
-                <Ionicons name="send" size={17} color={canSend ? C.white : C.text3} />
+                <Ionicons name="send" size={16} color={canSend ? C.white : C.text3} style={{ marginLeft: 1 }} />
               )}
             </TouchableOpacity>
           </View>

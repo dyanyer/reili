@@ -82,28 +82,28 @@ export default function MoreScreen({ navigation }: Props) {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <StatusBar style="dark" />
 
-      {/* Header */}
-      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: C.border }}>
+      {/* Header — navy, matching Dashboard */}
+      <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 20, paddingHorizontal: 20 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center' }}>
-            <Image source={require('../assets/reili.png')} style={{ width: 20, height: 20 }} resizeMode="contain" />
+          <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.16)', alignItems: 'center', justifyContent: 'center' }}>
+            <Image source={require('../assets/reili.png')} style={{ width: 19, height: 19 }} resizeMode="contain" />
           </View>
-          <Text style={{ color: C.text, fontSize: 20, fontWeight: '800' }}>More</Text>
+          <Text style={{ color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>More</Text>
         </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
 
         {/* Active Page Card */}
-        <View style={{ marginHorizontal: 16, marginTop: 16, backgroundColor: C.white, borderRadius: 20, padding: 14, borderWidth: 1, borderColor: C.border }}>
+        <View style={{ marginHorizontal: 16, marginTop: 16, backgroundColor: C.white, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 1 }}>
           {activePage ? (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
-                <Ionicons name="logo-facebook" size={20} color={C.blue} />
+              <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                <Ionicons name="logo-facebook" size={22} color={C.blue} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 11, color: C.text3, fontWeight: '600' }}>Active Page</Text>
-                <Text style={{ fontSize: 14, fontWeight: '700', color: C.text, marginTop: 1 }} numberOfLines={1}>
+                <Text style={{ fontSize: 11, color: C.text3, fontWeight: '700', letterSpacing: 0.3, textTransform: 'uppercase' }}>Active Page</Text>
+                <Text style={{ fontSize: 15, fontWeight: '800', color: C.text, marginTop: 2, letterSpacing: -0.3 }} numberOfLines={1}>
                   {activePage.name}
                 </Text>
               </View>
@@ -115,12 +115,12 @@ export default function MoreScreen({ navigation }: Props) {
             </View>
           ) : (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
-                <Ionicons name="alert-circle-outline" size={20} color={C.text3} />
+              <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: C.navyFade, borderWidth: 1, borderColor: C.border, alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+                <Ionicons name="layers-outline" size={20} color={C.text3} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 14, fontWeight: '700', color: C.text }}>No page selected</Text>
-                <Text style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>Go to Home and tap a page to activate it</Text>
+                <Text style={{ fontSize: 12, color: C.text3, marginTop: 2, lineHeight: 17 }}>Go to Home and tap a page to activate it</Text>
               </View>
             </View>
           )}

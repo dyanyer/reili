@@ -54,16 +54,19 @@ function pctChange(current: number, previous: number) {
 
 function StatCard({ icon, label, value, color, change }: { icon: any; label: string; value: number; color: string; change?: number }) {
   return (
-    <View style={{ flex: 1, backgroundColor: C.white, borderRadius: 18, padding: 14, borderWidth: 1, borderColor: C.border }}>
-      <View style={{ width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginBottom: 10, backgroundColor: C.light }}>
-        <Ionicons name={icon} size={16} color={color} />
+    <View style={{ flex: 1, backgroundColor: C.white, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 }}>
+      <View style={{ width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginBottom: 12, backgroundColor: `${color}15`, borderWidth: 1, borderColor: `${color}25` }}>
+        <Ionicons name={icon} size={17} color={color} />
       </View>
-      <Text style={{ color: C.text, fontSize: 22, fontWeight: '800' }}>{value}</Text>
-      <Text style={{ color: C.text3, fontSize: 11, marginTop: 2 }}>{label}</Text>
+      <Text style={{ color: C.text, fontSize: 24, fontWeight: '800', letterSpacing: -0.5 }}>{value}</Text>
+      <Text style={{ color: C.text3, fontSize: 11, marginTop: 3, fontWeight: '600' }}>{label}</Text>
       {change !== undefined && (
-        <Text style={{ fontSize: 11, fontWeight: '700', marginTop: 4, color: change >= 0 ? C.green : C.red }}>
-          {change >= 0 ? '+' : ''}{change}% vs prev
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 6 }}>
+          <Ionicons name={change >= 0 ? 'trending-up' : 'trending-down'} size={11} color={change >= 0 ? C.green : C.red} />
+          <Text style={{ fontSize: 11, fontWeight: '700', color: change >= 0 ? C.green : C.red }}>
+            {change >= 0 ? '+' : ''}{change}%
+          </Text>
+        </View>
       )}
     </View>
   );
@@ -94,35 +97,37 @@ export default function AnalyticsScreen({ route, navigation }: Props) {
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
 
-      {/* Header */}
-      <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: C.border }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 12, padding: 4 }}>
-          <Ionicons name="arrow-back" size={22} color={C.navy} />
-        </TouchableOpacity>
-        <Text style={{ flex: 1, color: C.text, fontSize: 20, fontWeight: '800' }}>Analytics</Text>
-        <PageSwitcherPill
-          currentPageId={pageId}
-          currentPageName={pageName}
-          onSwitch={(id, name) => navigation.replace('Analytics', { pageId: id, pageName: name })}
-        />
-      </View>
-
-      {/* Date range selector */}
-      <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 16, paddingTop: 14, paddingBottom: 6 }}>
-        {DATE_RANGES.map((range) => {
-          const active = days === range.key;
-          return (
-            <TouchableOpacity
-              key={range.key}
-              onPress={() => { if (!active) setDays(range.key); }}
-              style={{ borderRadius: 12, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: active ? C.navy : C.light, borderWidth: 1, borderColor: active ? C.navy : C.border }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: '700', color: active ? '#FFFFFF' : C.navy }}>{range.label}</Text>
-            </TouchableOpacity>
-          );
-        })}
+      {/* Header — navy with date range pills */}
+      <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 16, paddingHorizontal: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+          <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.75} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center', marginRight: 12 }}>
+            <Ionicons name="arrow-back" size={18} color="#FFFFFF" />
+          </TouchableOpacity>
+          <Text style={{ flex: 1, color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: -0.4 }}>Analytics</Text>
+          <PageSwitcherPill
+            currentPageId={pageId}
+            currentPageName={pageName}
+            onSwitch={(id, name) => navigation.replace('Analytics', { pageId: id, pageName: name })}
+          />
+        </View>
+        {/* Date range pills */}
+        <View style={{ flexDirection: 'row', gap: 8 }}>
+          {DATE_RANGES.map((range) => {
+            const active = days === range.key;
+            return (
+              <TouchableOpacity
+                key={range.key}
+                onPress={() => { if (!active) setDays(range.key); }}
+                activeOpacity={0.8}
+                style={{ borderRadius: 99, paddingHorizontal: 14, paddingVertical: 7, backgroundColor: active ? '#FFFFFF' : 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: active ? '#FFFFFF' : 'rgba(255,255,255,0.18)' }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: '700', color: active ? C.navy : 'rgba(255,255,255,0.85)' }}>{range.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
 
       {loading ? (

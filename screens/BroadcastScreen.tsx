@@ -147,24 +147,31 @@ export default function BroadcastScreen({ route, navigation }: Props) {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={{ flex: 1, backgroundColor: C.bg }}>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
 
         {/* Header */}
-        <View style={{ backgroundColor: C.white, paddingTop: 56, paddingBottom: 14, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: C.border }}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 12, padding: 4 }}>
-            <Ionicons name="arrow-back" size={22} color={C.navy} />
-          </TouchableOpacity>
-          <Text style={{ flex: 1, color: C.navy, fontSize: 20, fontWeight: '800' }}>Broadcast</Text>
-          <PageSwitcherPill
-            currentPageId={pageId}
-            currentPageName={pageName}
-            onSwitch={(id, name) => navigation.replace('Broadcast', { pageId: id, pageName: name })}
-          />
-          {contactCount !== null && (
-            <View style={{ backgroundColor: C.navyFade, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5, marginLeft: 6, borderWidth: 1, borderColor: C.border }}>
-              <Text style={{ color: C.blue, fontSize: 11, fontWeight: '700' }}>{contactCount} contacts</Text>
+        <View style={{ backgroundColor: C.navy, paddingTop: 56, paddingBottom: 18, paddingHorizontal: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.14)', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Ionicons name="arrow-back" size={18} color={C.white} />
+            </TouchableOpacity>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: C.white, fontSize: 20, fontWeight: '800', letterSpacing: -0.3 }}>Broadcast</Text>
             </View>
-          )}
+            <PageSwitcherPill
+              currentPageId={pageId}
+              currentPageName={pageName}
+              onSwitch={(id, name) => navigation.replace('Broadcast', { pageId: id, pageName: name })}
+            />
+            {contactCount !== null && (
+              <View style={{ backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 10, paddingHorizontal: 10, paddingVertical: 5, borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)' }}>
+                <Text style={{ color: 'rgba(214,228,240,0.90)', fontSize: 11, fontWeight: '700' }}>{contactCount} contacts</Text>
+              </View>
+            )}
+          </View>
         </View>
 
         <ScrollView
@@ -172,19 +179,21 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={C.navy} />}
         >
           {/* Compose card */}
-          <View style={{ backgroundColor: C.white, borderRadius: 20, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: C.border }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <View style={{ width: 32, height: 32, borderRadius: 9, backgroundColor: 'rgba(251,191,36,0.15)', alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name="megaphone" size={15} color={AMBER} />
+          <View style={{ backgroundColor: C.white, borderRadius: 20, overflow: 'hidden', marginBottom: 14, borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOpacity: 0.07, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 3 }}>
+            {/* Card header strip */}
+            <View style={{ backgroundColor: 'rgba(251,191,36,0.08)', borderBottomWidth: 1, borderBottomColor: 'rgba(251,191,36,0.18)', paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: 'rgba(251,191,36,0.18)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(217,119,6,0.20)' }}>
+                <Ionicons name="megaphone" size={17} color={AMBER} />
               </View>
-              <Text style={{ color: C.navy, fontWeight: '700', fontSize: 15 }}>New Broadcast</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: C.navy, fontWeight: '800', fontSize: 15 }}>New Broadcast</Text>
+                <Text style={{ color: C.text3, fontSize: 11, marginTop: 1 }}>Send a message to your contacts</Text>
+              </View>
             </View>
-            <Text style={{ color: C.text3, fontSize: 12, marginBottom: 12, lineHeight: 17 }}>
-              Send a message to your contacts. Choose a segment below.
-            </Text>
+            <View style={{ padding: 16 }}>
 
             <TextInput
-              style={{ backgroundColor: C.white, borderWidth: 1, borderColor: C.border, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 12, color: C.navy, fontSize: 14, minHeight: 120, textAlignVertical: 'top' }}
+              style={{ backgroundColor: C.bg, borderWidth: 1, borderColor: C.border, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 12, color: C.navy, fontSize: 14, minHeight: 120, textAlignVertical: 'top' }}
               value={messageText}
               onChangeText={setMessageText}
               placeholder={'E.g. Sale ngayon! 50% off lahat ng items 🔥\n\nMessage lang para mag-order!'}
@@ -218,7 +227,9 @@ export default function BroadcastScreen({ route, navigation }: Props) {
             {/* Segment selector */}
             <View style={{ borderTopWidth: 1, borderTopColor: C.border, paddingTop: 14, marginBottom: 14 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                <Ionicons name="filter" size={13} color={C.blue} />
+                <View style={{ width: 22, height: 22, borderRadius: 7, backgroundColor: C.navyFade, alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name="people" size={12} color={C.blue} />
+                </View>
                 <Text style={{ color: C.navy, fontWeight: '700', fontSize: 13 }}>Send to</Text>
               </View>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -229,13 +240,13 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                     <TouchableOpacity
                       key={seg.key}
                       onPress={() => setSegment(seg.key)}
-                      style={{ borderRadius: 12, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: active ? C.navy : C.light, borderWidth: 1, borderColor: active ? C.navy : C.border }}
+                      style={{ borderRadius: 99, paddingHorizontal: 12, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: active ? C.navy : C.light, borderWidth: 1, borderColor: active ? C.navy : C.border }}
                     >
-                      <Ionicons name={seg.icon as any} size={12} color={active ? C.white : C.text3} />
+                      <Ionicons name={seg.icon as any} size={12} color={active ? C.white : C.blue} />
                       <Text style={{ fontSize: 12, fontWeight: '700', color: active ? C.white : C.text }}>{seg.label}</Text>
                       {count !== undefined && (
                         <View style={{ borderRadius: 99, paddingHorizontal: 6, paddingVertical: 2, backgroundColor: active ? 'rgba(255,255,255,0.20)' : C.navyFade }}>
-                          <Text style={{ fontSize: 10, fontWeight: '800', color: active ? C.white : C.text3 }}>{count}</Text>
+                          <Text style={{ fontSize: 10, fontWeight: '800', color: active ? C.white : C.text2 }}>{count}</Text>
                         </View>
                       )}
                     </TouchableOpacity>
@@ -243,7 +254,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                 })}
               </View>
               {segment !== 'all' && (
-                <Text style={{ color: C.text3, fontSize: 11, marginTop: 6 }}>
+                <Text style={{ color: C.text3, fontSize: 11, marginTop: 8, fontStyle: 'italic' }}>
                   {SEGMENTS.find((s) => s.key === segment)?.desc}
                 </Text>
               )}
@@ -253,7 +264,9 @@ export default function BroadcastScreen({ route, navigation }: Props) {
             <View style={{ borderTopWidth: 1, borderTopColor: C.border, paddingTop: 14, marginBottom: 14 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>
-                  <Ionicons name="calendar-outline" size={15} color={C.blue} />
+                  <View style={{ width: 22, height: 22, borderRadius: 7, backgroundColor: scheduleEnabled ? C.navyFade : C.navyFade, alignItems: 'center', justifyContent: 'center' }}>
+                    <Ionicons name="calendar-outline" size={12} color={scheduleEnabled ? C.navy : C.blue} />
+                  </View>
                   <Text style={{ color: C.navy, fontWeight: '700', fontSize: 13 }}>Schedule for later</Text>
                 </View>
                 <Switch
@@ -269,7 +282,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
               {scheduleEnabled && (
                 <View style={{ flexDirection: 'row', gap: 8 }}>
                   <TouchableOpacity
-                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 11 }}
+                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: C.bg, borderWidth: 1, borderColor: C.blue, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 11 }}
                     onPress={() => { setShowTimePicker(false); setShowDatePicker(true); }}
                   >
                     <Ionicons name="calendar" size={13} color={C.navy} />
@@ -278,7 +291,7 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: C.light, borderWidth: 1, borderColor: C.border, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 11 }}
+                    style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 7, backgroundColor: C.bg, borderWidth: 1, borderColor: C.blue, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 11 }}
                     onPress={() => { setShowDatePicker(false); setShowTimePicker(true); }}
                   >
                     <Ionicons name="time-outline" size={13} color={C.navy} />
@@ -301,10 +314,11 @@ export default function BroadcastScreen({ route, navigation }: Props) {
                 }} />
               )}
             </View>
+            </View>
 
-            {/* Send button */}
+            {/* Send button — full-width, outside padding View */}
             <TouchableOpacity
-              style={{ borderRadius: 16, paddingVertical: 14, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, backgroundColor: hasContent ? C.navy : C.light, borderWidth: 1, borderColor: hasContent ? C.navy : C.border }}
+              style={{ margin: 16, marginTop: 0, borderRadius: 16, paddingVertical: 15, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, backgroundColor: hasContent ? C.navy : C.light, borderWidth: 1, borderColor: hasContent ? C.navy : C.border, shadowColor: hasContent ? C.navy : 'transparent', shadowOpacity: 0.25, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: hasContent ? 4 : 0 }}
               onPress={handleSend}
               disabled={!hasContent || sending}
             >
@@ -320,70 +334,113 @@ export default function BroadcastScreen({ route, navigation }: Props) {
           </View>
 
           {/* Info banner */}
-          <View style={{ backgroundColor: C.light, borderRadius: 16, padding: 14, flexDirection: 'row', gap: 10, marginBottom: 18, borderWidth: 1, borderColor: C.border }}>
-            <Ionicons name="information-circle" size={18} color={C.navy} />
-            <Text style={{ color: C.navy, fontSize: 12, flex: 1, lineHeight: 18 }}>
+          <View style={{ backgroundColor: C.navyFade, borderRadius: 14, padding: 12, flexDirection: 'row', gap: 10, marginBottom: 20, borderWidth: 1, borderColor: C.border }}>
+            <View style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: C.light, alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Ionicons name="shield-checkmark" size={14} color={C.navy} />
+            </View>
+            <Text style={{ color: C.text2, fontSize: 12, flex: 1, lineHeight: 18 }}>
               Messages are sent one by one with a short delay to stay within Facebook's limits and keep your page safe.
             </Text>
           </View>
 
-          {/* History */}
-          <Text style={{ color: C.navy, fontSize: 15, fontWeight: '800', marginBottom: 12 }}>Broadcast History</Text>
+          {/* History header */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <Text style={{ color: C.navy, fontSize: 15, fontWeight: '800', flex: 1 }}>Broadcast History</Text>
+            {broadcasts.length > 0 && (
+              <View style={{ backgroundColor: C.navyFade, borderRadius: 99, paddingHorizontal: 9, paddingVertical: 3, borderWidth: 1, borderColor: C.border }}>
+                <Text style={{ color: C.text2, fontSize: 11, fontWeight: '700' }}>{broadcasts.length}</Text>
+              </View>
+            )}
+          </View>
 
           {loadingHistory ? (
-            <ActivityIndicator size="small" color={C.navy} />
+            <View style={{ paddingVertical: 32, alignItems: 'center', gap: 10 }}>
+              <ActivityIndicator size="small" color={C.navy} />
+              <Text style={{ color: C.text3, fontSize: 12 }}>Loading history…</Text>
+            </View>
           ) : historyError ? (
             <View style={{ alignItems: 'center', paddingVertical: 24 }}>
-              <Ionicons name="cloud-offline" size={36} color={C.text3} />
-              <Text style={{ color: C.text2, fontSize: 13, marginTop: 8, textAlign: 'center' }}>{historyError}</Text>
-              <TouchableOpacity style={{ marginTop: 12, backgroundColor: C.navy, borderRadius: 12, paddingHorizontal: 20, paddingVertical: 9 }} onPress={load}>
+              <View style={{ width: 52, height: 52, borderRadius: 16, backgroundColor: C.redBg, alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+                <Ionicons name="cloud-offline" size={26} color={C.red} />
+              </View>
+              <Text style={{ color: C.text2, fontSize: 13, marginBottom: 14, textAlign: 'center' }}>{historyError}</Text>
+              <TouchableOpacity style={{ backgroundColor: C.navy, borderRadius: 12, paddingHorizontal: 20, paddingVertical: 10 }} onPress={load}>
                 <Text style={{ color: C.white, fontSize: 13, fontWeight: '700' }}>Try Again</Text>
               </TouchableOpacity>
             </View>
           ) : broadcasts.length === 0 ? (
-            <View style={{ alignItems: 'center', paddingVertical: 32 }}>
-              <View style={{ width: 60, height: 60, borderRadius: 18, backgroundColor: 'rgba(251,191,36,0.12)', borderWidth: 1, borderColor: 'rgba(217,119,6,0.25)', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                <Ionicons name="megaphone-outline" size={28} color={AMBER} />
+            <View style={{ alignItems: 'center', paddingVertical: 36 }}>
+              <View style={{ width: 64, height: 64, borderRadius: 20, backgroundColor: 'rgba(251,191,36,0.12)', borderWidth: 1, borderColor: 'rgba(217,119,6,0.22)', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                <Ionicons name="megaphone-outline" size={30} color={AMBER} />
               </View>
-              <Text style={{ color: C.text2, fontSize: 13, textAlign: 'center' }}>No broadcasts sent yet.</Text>
+              <Text style={{ color: C.navy, fontSize: 14, fontWeight: '700', marginBottom: 4 }}>No broadcasts yet</Text>
+              <Text style={{ color: C.text3, fontSize: 12, textAlign: 'center' }}>Send your first broadcast above.</Text>
             </View>
           ) : (
             broadcasts.map((b) => {
               const cfg = STATUS_CONFIG[b.status] ?? STATUS_CONFIG.pending;
+              const progress = b.total_count > 0 ? Math.min(b.sent_count / b.total_count, 1) : 0;
+              const segMeta = SEGMENTS.find((s) => s.key === b.segment);
               return (
-                <View key={b.id} style={{ backgroundColor: C.white, borderRadius: 18, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: C.border }}>
-                  <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4, backgroundColor: cfg.bg, borderWidth: 1, borderColor: `${cfg.color}40` }}>
+                <View key={b.id} style={{ backgroundColor: C.white, borderRadius: 18, overflow: 'hidden', marginBottom: 10, borderWidth: 1, borderColor: C.border, shadowColor: C.navy, shadowOpacity: 0.05, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2 }}>
+                  {/* Card top row */}
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingTop: 12, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: C.border }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, borderRadius: 99, paddingHorizontal: 10, paddingVertical: 5, backgroundColor: cfg.bg, borderWidth: 1, borderColor: `${cfg.color}35` }}>
                       <Ionicons name={cfg.icon as any} size={11} color={cfg.color} />
                       <Text style={{ fontSize: 11, fontWeight: '700', color: cfg.color }}>{cfg.label}</Text>
                     </View>
                     <Text style={{ color: C.text3, fontSize: 11 }}>{formatDate(b.created_at)}</Text>
                   </View>
-                  <Text style={{ color: C.navy, fontSize: 13, lineHeight: 19, marginBottom: 8 }} numberOfLines={3}>{b.message_text}</Text>
-                  {b.image_url && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 6 }}>
-                      <Ionicons name="image" size={11} color={C.blue} />
-                      <Text style={{ color: C.blue, fontSize: 11, fontWeight: '600' }}>Image attached</Text>
-                    </View>
-                  )}
-                  {b.segment && b.segment !== 'all' && (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 6 }}>
-                      <Ionicons name="filter" size={11} color={C.text3} />
-                      <Text style={{ color: C.text3, fontSize: 11 }}>{SEGMENTS.find((s) => s.key === b.segment)?.label ?? b.segment}</Text>
-                    </View>
-                  )}
-                  {b.status === 'scheduled' && b.scheduled_at ? (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                      <Ionicons name="calendar-outline" size={12} color={C.blue} />
-                      <Text style={{ color: C.blue, fontSize: 11 }}>Sends {formatScheduled(b.scheduled_at)}</Text>
-                    </View>
-                  ) : (
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                      <Ionicons name="people-outline" size={12} color={C.text3} />
-                      <Text style={{ color: C.text3, fontSize: 11 }}>{b.sent_count} / {b.total_count} sent</Text>
-                      {b.status === 'sending' && <ActivityIndicator size="small" color={AMBER} style={{ marginLeft: 4 }} />}
-                    </View>
-                  )}
+                  {/* Message preview */}
+                  <View style={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 10 }}>
+                    <Text style={{ color: C.navy, fontSize: 13, lineHeight: 20, marginBottom: b.image_url || (b.segment && b.segment !== 'all') ? 8 : 0 }} numberOfLines={3}>{b.message_text || '(No text)'}</Text>
+                    {(b.image_url || (b.segment && b.segment !== 'all')) && (
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                        {b.image_url && (
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.navyFade, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 4 }}>
+                            <Ionicons name="image" size={11} color={C.blue} />
+                            <Text style={{ color: C.blue, fontSize: 11, fontWeight: '600' }}>Image</Text>
+                          </View>
+                        )}
+                        {b.segment && b.segment !== 'all' && segMeta && (
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.navyFade, borderRadius: 99, paddingHorizontal: 8, paddingVertical: 4 }}>
+                            <Ionicons name={segMeta.icon as any} size={11} color={C.blue} />
+                            <Text style={{ color: C.blue, fontSize: 11, fontWeight: '600' }}>{segMeta.label}</Text>
+                          </View>
+                        )}
+                      </View>
+                    )}
+                  </View>
+                  {/* Footer */}
+                  <View style={{ backgroundColor: C.bg, borderTopWidth: 1, borderTopColor: C.border, paddingHorizontal: 14, paddingVertical: 10 }}>
+                    {b.status === 'scheduled' && b.scheduled_at ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <Ionicons name="calendar-outline" size={13} color={C.blue} />
+                        <Text style={{ color: C.blue, fontSize: 12, fontWeight: '600' }}>Sends {formatScheduled(b.scheduled_at)}</Text>
+                      </View>
+                    ) : (
+                      <View style={{ gap: 6 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                            <Ionicons name="people-outline" size={13} color={C.text3} />
+                            <Text style={{ color: C.text2, fontSize: 12, fontWeight: '600' }}>{b.sent_count} / {b.total_count} sent</Text>
+                          </View>
+                          {b.status === 'sending' ? (
+                            <ActivityIndicator size="small" color={AMBER} />
+                          ) : (
+                            <Text style={{ color: C.text3, fontSize: 11 }}>
+                              {b.total_count > 0 ? `${Math.round(progress * 100)}%` : '—'}
+                            </Text>
+                          )}
+                        </View>
+                        {b.total_count > 0 && (
+                          <View style={{ height: 4, borderRadius: 99, backgroundColor: C.light, overflow: 'hidden' }}>
+                            <View style={{ height: 4, borderRadius: 99, backgroundColor: cfg.color, width: `${Math.round(progress * 100)}%` }} />
+                          </View>
+                        )}
+                      </View>
+                    )}
+                  </View>
                 </View>
               );
             })
